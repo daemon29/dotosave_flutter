@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'Widgets/LoginCard.dart';
 import 'Widgets/SocialIcons.dart';
 import 'CustomeIcon/CustomeIcon.dart';
 import 'sign_in.dart';
@@ -14,14 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _email, _password;
-  callback(email, password) {
-    setState(() {
-      _email = email;
-      _password = password;
-    });
-  }
-
+  String email = "", password = "";
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
@@ -76,7 +68,97 @@ class _MyAppState extends State<MyApp> {
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(180),
                     ),
-                    LoginCard(_email, _password, callback),
+                    Container(
+                      width: double.infinity,
+                      height: ScreenUtil.getInstance().setHeight(500),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0.0, 15.0),
+                                blurRadius: 15.0),
+                            BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0.0, -10.0),
+                                blurRadius: 15.0)
+                          ]),
+                      child: Padding(
+                        padding:
+                            EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Login",
+                              style: TextStyle(
+                                  fontFamily: "Poppins-Bold",
+                                  fontSize: ScreenUtil.getInstance().setSp(45),
+                                  letterSpacing: .6),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil.getInstance().setHeight(30),
+                            ),
+                            Text(
+                              "Email",
+                              style: TextStyle(
+                                fontFamily: "Poppins-Medium",
+                                fontSize: ScreenUtil.getInstance().setSp(26),
+                              ),
+                            ),
+                            TextField(
+                              onSubmitted: (value) {
+                                setState(() {
+                                  email = value.trim();
+                                });
+                              },
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: InputDecoration(
+                                  hintText: "Type your email here",
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey, fontSize: 12.0)),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil.getInstance().setHeight(30),
+                            ),
+                            Text("Password",
+                                style: TextStyle(
+                                  fontSize: ScreenUtil.getInstance().setSp(26),
+                                  fontFamily: "Poppins-Medium",
+                                )),
+                            TextField(
+                              onSubmitted: (value) {
+                                setState(() {
+                                  password = value.trim();
+                                });
+                              },
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                  hintText: "Password . . .",
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey, fontSize: 12.0)),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil.getInstance().setHeight(35),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  "Forgot Password?",
+                                  style: TextStyle(
+                                      fontFamily: "Poppins-Medium",
+                                      color: Colors.orange,
+                                      fontSize:
+                                          ScreenUtil.getInstance().setSp(28)),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(40),
                     ),
@@ -103,7 +185,9 @@ class _MyAppState extends State<MyApp> {
                               child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    signInWithEmail(this.email, this.password);
+                                  },
                                   child: Center(
                                     child: Text(
                                       "SIGNIN",

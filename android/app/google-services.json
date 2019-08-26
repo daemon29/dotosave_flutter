@@ -1,108 +1,42 @@
 {
   "project_info": {
-    "project_number": "756854302331",
-    "firebase_url": "https://donatetosave-2fec5.firebaseio.com",
-    "project_id": "donatetosave-2fec5",
-    "storage_bucket": "donatetosave-2fec5.appspot.com"
+    "project_number": "335428403872",
+    "firebase_url": "https://ladybug-vietnam.firebaseio.com",
+    "project_id": "ladybug-vietnam",
+    "storage_bucket": "ladybug-vietnam.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:756854302331:android:81c05390bebbd82a",
+        "mobilesdk_app_id": "1:335428403872:android:60bc1dcef5bfb622",
         "android_client_info": {
-          "package_name": "com.example.donatetosave"
+          "package_name": "com.ladybug.co"
         }
       },
       "oauth_client": [
         {
-          "client_id": "756854302331-mce7n98lbcnsith5habfblk6vo89c2ua.apps.googleusercontent.com",
+          "client_id": "335428403872-deibvgfs2jia9i5t62f5hldnt243qapk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.donatetosave",
+            "package_name": "com.ladybug.co",
             "certificate_hash": "4397d72694ba36ebb5c580747fc3ec03ed691a7a"
           }
         },
         {
-          "client_id": "756854302331-0tgjb230tjavu884p2np8snhbg8chab5.apps.googleusercontent.com",
+          "client_id": "335428403872-f4l6ptd7lenh4kita77lcf05c5ukdqg5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBMhADnoMDX9iyWKpjMj0eSDdgvIEK6JHM"
+          "current_key": "AIzaSyCFgvq9PWpMej20AWrKZZA52672RzjwQF8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "756854302331-0tgjb230tjavu884p2np8snhbg8chab5.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:756854302331:android:036bd8ab51cd6558",
-        "android_client_info": {
-          "package_name": "com.ladybug_flutter"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "756854302331-0tgjb230tjavu884p2np8snhbg8chab5.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBMhADnoMDX9iyWKpjMj0eSDdgvIEK6JHM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "756854302331-0tgjb230tjavu884p2np8snhbg8chab5.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:756854302331:android:60ba632ee2ebeece",
-        "android_client_info": {
-          "package_name": "com.ladybugcorp.ladybug"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "756854302331-s0b0l5lie9ueprrv6ng22knr6gnemmmg.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ladybugcorp.ladybug",
-            "certificate_hash": "4397d72694ba36ebb5c580747fc3ec03ed691a7a"
-          }
-        },
-        {
-          "client_id": "756854302331-0tgjb230tjavu884p2np8snhbg8chab5.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBMhADnoMDX9iyWKpjMj0eSDdgvIEK6JHM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "756854302331-0tgjb230tjavu884p2np8snhbg8chab5.apps.googleusercontent.com",
+              "client_id": "335428403872-f4l6ptd7lenh4kita77lcf05c5ukdqg5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

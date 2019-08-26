@@ -17,16 +17,19 @@ Future<String> signInWithGoogle() async {
   assert(await user.getIdToken() != null);
   final FirebaseUser currentuser = await _auth.currentUser();
   assert(user.uid == currentuser.uid);
+  print("here");
   return 'signInWithGoogle succeeded: $user';
 }
 
 Future<String> signInWithEmail(String email, String password) async {
+  print(email);
+  print(password);
   final FirebaseUser user =
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-  assert(!user.isAnonymous);
   assert(await user.getIdToken() != null);
   final FirebaseUser currentuser = await _auth.currentUser();
   assert(user.uid == currentuser.uid);
+  print(email + password);
   return 'signInWithemail succeeded: $user';
 }
 

@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class LoginCard extends StatelessWidget {
-  String _email, _password;
+class LoginForms extends StatefulWidget {
+  String email, password;
   Function(String, String) callback;
-  LoginCard(this._email, this._password, this.callback);
+  LoginForms(this.email, this.password, this.callback);
+
+  @override
+  LoginFormsState createState() => new LoginFormsState();
+}
+
+class LoginFormsState extends State<LoginForms> {
+  String email, password;
   @override
   Widget build(BuildContext context) {
     return new Container(
@@ -47,8 +54,8 @@ class LoginCard extends StatelessWidget {
             ),
             TextField(
               onSubmitted: (value) {
-                _email = value.trim();
-                callback(_email, _password);
+                email = value.trim();
+                widget.callback(email, password);
               },
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
@@ -65,8 +72,8 @@ class LoginCard extends StatelessWidget {
                 )),
             TextField(
               onSubmitted: (value) {
-                _password = value.trim();
-                callback(_email, _password);
+                password = value.trim();
+                widget.callback(email, password);
               },
               obscureText: true,
               decoration: InputDecoration(
