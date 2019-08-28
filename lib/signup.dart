@@ -1,18 +1,14 @@
-import 'package:LadyBug/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'Widgets/SocialIcons.dart';
-import 'Customize/CustomeIcon.dart';
-import 'signup.dart';
 import 'sign_in.dart';
 import 'main_screen.dart';
 
-class MyApp extends StatefulWidget {
+class SignUp extends StatefulWidget {
   @override
-  _MyAppState createState() => new _MyAppState();
+  _Signup createState() => new _Signup();
 }
 
-class _MyAppState extends State<MyApp> {
+class _Signup extends State<SignUp> {
   String email = "", password = "";
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -28,8 +24,12 @@ class _MyAppState extends State<MyApp> {
     ScreenUtil.instance =
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
     return new Scaffold(
+        appBar: AppBar(
+          title: Text("SIGNUP"),
+          backgroundColor: Color(0xfff5af19),
+        ),
         backgroundColor: Colors.white,
-        resizeToAvoidBottomPadding: true,
+        resizeToAvoidBottomPadding: false,
         body: Stack(
           fit: StackFit.expand,
           children: <Widget>[
@@ -91,7 +91,7 @@ class _MyAppState extends State<MyApp> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              "Login",
+                              "Signup",
                               style: TextStyle(
                                   fontFamily: "Poppins-Bold",
                                   fontSize: ScreenUtil.getInstance().setSp(45),
@@ -142,19 +142,6 @@ class _MyAppState extends State<MyApp> {
                             SizedBox(
                               height: ScreenUtil.getInstance().setHeight(35),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                Text(
-                                  "Forgot Password?",
-                                  style: TextStyle(
-                                      fontFamily: "Poppins-Medium",
-                                      color: Colors.orange,
-                                      fontSize:
-                                          ScreenUtil.getInstance().setSp(28)),
-                                )
-                              ],
-                            ),
                           ],
                         ),
                       ),
@@ -186,11 +173,23 @@ class _MyAppState extends State<MyApp> {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: () {
-                                    signInWithEmail(this.email, this.password);
+                                    signUpWithEmail(this.email, this.password)
+                                        .then((uid) {
+                                      if (uid != null)
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MainScreen();
+                                        }));
+                                      else
+                                        return;
+                                    }).catchError((onError) {
+                                      print(onError.toString());
+                                    });
                                   },
                                   child: Center(
                                     child: Text(
-                                      "SIGNIN",
+                                      "SIGNUP",
                                       style: TextStyle(
                                           fontFamily: "Poppins-Bold",
                                           color: Colors.white,
@@ -206,70 +205,6 @@ class _MyAppState extends State<MyApp> {
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(40),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        horizontalLine(),
-                        Text(
-                          "Social Login",
-                          style: TextStyle(
-                              fontSize: 16.0, fontFamily: "Poppins-Medium"),
-                        ),
-                        horizontalLine()
-                      ],
-                    ),
-                    SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(40),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SocialIcon(
-                          colors: Color(0xfff5af19),
-                          iconData: CustomIcons.facebook,
-                          onPressed: () {},
-                        ),
-                        SocialIcon(
-                          colors: Color(0xfff5af19),
-                          iconData: CustomIcons.googlePlus,
-                          onPressed: () {
-                            signInWithGoogle().whenComplete(() {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return MainScreen();
-                                  },
-                                ),
-                              );
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(30),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "New User? ",
-                          style: TextStyle(fontFamily: "Poppins-Medium"),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return SignUp();
-                            }));
-                          },
-                          child: Text("SignUp",
-                              style: TextStyle(
-                                  color: Color(0xfff5af19),
-                                  fontFamily: "Poppins-Bold")),
-                        )
-                      ],
-                    )
                   ],
                 ),
               ),

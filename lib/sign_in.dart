@@ -33,6 +33,12 @@ Future<String> signInWithEmail(String email, String password) async {
   return 'signInWithemail succeeded: $user';
 }
 
+Future<String> signUpWithEmail(String email, String password) async {
+  FirebaseUser user = await FirebaseAuth.instance
+      .createUserWithEmailAndPassword(email: email, password: password);
+  return user.uid;
+}
+
 void signOutGoogle() async {
   await googleSignIn.signOut();
   print("User sign out");

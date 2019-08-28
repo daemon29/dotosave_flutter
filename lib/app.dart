@@ -1,7 +1,7 @@
 import 'package:LadyBug/Customize/colors.dart';
 import 'package:flutter/material.dart';
 
-import 'colors.dart';
+import 'Customize/colors.dart';
 
 final ThemeData _kLadybugTheme = _buildLadybugTheme();
 
