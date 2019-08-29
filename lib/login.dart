@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
                       ],
                     ),
                     SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(180),
+                      height: ScreenUtil.getInstance().setHeight(70),
                     ),
                     Container(
                       width: double.infinity,
@@ -264,6 +264,27 @@ class _MyAppState extends State<MyApp> {
                             }));
                           },
                           child: Text("SignUp",
+                              style: TextStyle(
+                                  color: Color(0xfff5af19),
+                                  fontFamily: "Poppins-Bold")),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: ScreenUtil.instance.setHeight(30),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Create as an organisation? ",
+                          style: TextStyle(fontFamily: "Poppins-Medium"),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            organisationSignup();
+                          },
+                          child: Text("Click Here",
                               style: TextStyle(
                                   color: Color(0xfff5af19),
                                   fontFamily: "Poppins-Bold")),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
+import 'firebase_storage.dart';
 
 const String ssd = "SSD MobileNet";
 
@@ -22,6 +23,7 @@ class _MainScreen extends State<MainScreen> {
   double _imageHeight;
   double _imageWidth;
   bool _busy = false;
+  String body;
   Future predictImagePicker() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (image == null) return;
@@ -138,11 +140,32 @@ class _MainScreen extends State<MainScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     List<Widget> stackChildren = [];
+    List<Chip> listChip = [];
+
+    // _recognitions.map((res) {
+    //   items.add(res["detectedClass"]);
+    // });
+    // renderChip() {
+    //   return ListView.builder(
+    //     itemCount: items.length,
+    //     itemBuilder: (context, index) {
+    //       return Chip(
+    //         label: Text(items.elementAt(index)),
+    //         onDeleted: () {
+    //           setState(() {});
+    //         },
+    //       );
+    //     },
+    //   );
+    // }
+
     stackChildren.add(Positioned(
       top: 0.0,
       left: 0.0,
       width: size.width,
-      child: _image == null ? Text('No image selected.') : Image.file(_image),
+      child: _image == null
+          ? Image.asset("assets/images/EmptyImage.png")
+          : Image.file(_image),
     ));
 
     if (_model == ssd) {
@@ -263,12 +286,6 @@ class _MainScreen extends State<MainScreen> {
                     children: stackChildren,
                   ),
                 ),
-                // Stack(
-                //   children: stackChildren,
-                // ),
-                SizedBox(
-                  height: 20.0,
-                ),
                 Container(
                   width: double.infinity,
                   height: 500,
@@ -323,8 +340,10 @@ class _MainScreen extends State<MainScreen> {
                         TextField(
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
-                          onSubmitted: (value) {
-                            setState(() {});
+                          onChanged: (value) {
+                            setState(() {
+                              body = value;
+                            });
                           },
                           decoration: InputDecoration(
                               hintText: "Describe this ...",
@@ -332,6 +351,22 @@ class _MainScreen extends State<MainScreen> {
                                   color: Colors.grey, fontSize: 12.0)),
                         ),
                         SizedBox(),
+                        RaisedButton(
+                          child: Text("Submit"),
+                          onPressed: () {
+                            submit(_image, items, body).then((onValue) {
+                              new AlertDialog(
+                                content: Text(onValue),
+                                title: Text("Progress"),
+                              );
+                            }).catchError((error) => {
+                                  new AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(error.toString()),
+                                  )
+                                });
+                          },
+                        )
                       ],
                     ),
                   ),
