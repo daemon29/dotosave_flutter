@@ -25,52 +25,48 @@ class _Signup extends State<SignUp> {
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
     return new Scaffold(
         appBar: AppBar(
-          title: Text("SIGNUP"),
           backgroundColor: Color(0xfff5af19),
         ),
         backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: false,
         body: Stack(
-          fit: StackFit.expand,
+          // fit: StackFit.expand,
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            Stack(
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 20.0),
+                Positioned(
+                  top: 0,
                   child: Image.asset("assets/images/main_background.jpg"),
                 ),
-                Expanded(
-                  child: Container(),
-                ),
-                Image.asset("assets/images/image_02.png")
+                Positioned(
+                  bottom: 0,
+                  child: Image.asset("assets/images/image_02.png"))
               ],
             ),
             SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 60),
+                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 20),
                 child: Column(
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Image.asset(
-                          "assets/images/logo.png",
-                          width: ScreenUtil.getInstance().setWidth(110),
-                          height: ScreenUtil.getInstance().setHeight(110),
-                        ),
-                        Text("LADYBUG",
-                            style: TextStyle(
-                                fontSize: ScreenUtil.getInstance().setSp(46),
-                                letterSpacing: .6,
-                                fontWeight: FontWeight.bold))
-                      ],
-                    ),
-                    SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(180),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                      child: Row(
+                        children: <Widget>[
+                          Image.asset(
+                            "assets/images/logo.png",
+                            width: ScreenUtil.getInstance().setWidth(110),
+                            height: ScreenUtil.getInstance().setHeight(110),
+                          ),
+                          Text("LADYBUG",
+                              style: TextStyle(
+                                  fontSize: ScreenUtil.getInstance().setSp(46),
+                                  letterSpacing: .6,
+                                  fontWeight: FontWeight.bold))
+                        ],
+                      ),
                     ),
                     Container(
                       width: double.infinity,
-                      height: ScreenUtil.getInstance().setHeight(500),
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8.0),
@@ -85,16 +81,16 @@ class _Signup extends State<SignUp> {
                                 blurRadius: 15.0)
                           ]),
                       child: Padding(
-                        padding:
-                            EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                        padding: EdgeInsets.only(
+                            left: 16.0, right: 16.0, top: 16.0, bottom: 16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              "Signup",
+                              "Sign Up",
                               style: TextStyle(
                                   fontFamily: "Poppins-Bold",
-                                  fontSize: ScreenUtil.getInstance().setSp(45),
+                                  fontSize: ScreenUtil.getInstance().setSp(40),
                                   letterSpacing: .6),
                             ),
                             SizedBox(
@@ -189,7 +185,7 @@ class _Signup extends State<SignUp> {
                                   },
                                   child: Center(
                                     child: Text(
-                                      "SIGNUP",
+                                      "SIGN UP",
                                       style: TextStyle(
                                           fontFamily: "Poppins-Bold",
                                           color: Colors.white,
