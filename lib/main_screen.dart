@@ -1,11 +1,18 @@
 import 'dart:io';
+import 'package:LadyBug/donationmap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 import 'firebase_storage.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_maps_webservice/places.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'donationmap.dart';
 
 const String ssd = "SSD MobileNet";
+const place_api = 'AIzaSyApNZMEtoLsnu0ANWqepMBZUbCHbMMkP38';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -16,14 +23,63 @@ class _MainScreen extends State<MainScreen> {
   final TextEditingController _controller = new TextEditingController();
   PersistentBottomSheetController controller;
   File _image;
+  bool _pickaplacevisibility = true;
   Set<String> items = new Set();
   String _model = ssd;
-
+  String _address = "Pick a place...";
   List _recognitions;
   double _imageHeight;
+  GeoPoint geoPoint;
   double _imageWidth;
   bool _busy = false;
   String body;
+  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: place_api);
+
+  Future<void> onSeachBarButtonClick() async {
+    try {
+      // show input autocomplete with selected mode
+      // then get the Prediction selected
+      Prediction p = await PlacesAutocomplete.show(
+        context: context,
+        apiKey: place_api,
+        onError: (onError) {},
+        mode: Mode.overlay,
+        language: "vn",
+        components: [Component(Component.country, "vn")],
+      );
+      getPrediction(p);
+    } catch (e) {
+      return;
+    }
+  }
+
+  Future<void> getPrediction(Prediction p) async {
+    if (p != null) {
+      setState(() {
+        _pickaplacevisibility = true;
+      });
+      // get detail (lat/lng)
+      PlacesDetailsResponse detail =
+          await _places.getDetailsByPlaceId(p.placeId);
+      final lat = detail.result.geometry.location.lat;
+      final lng = detail.result.geometry.location.lng;
+
+      setState(() {
+        _address = detail.result.formattedAddress;
+      });
+      geoPoint = new GeoPoint(lat, lng);
+    }
+  }
+
+  Future<void> onGetCurrentLocationClick() async {
+    setState(() {
+      _pickaplacevisibility = false;
+    });
+    Position userLocation = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    geoPoint = new GeoPoint(userLocation.latitude, userLocation.longitude);
+  }
+
   Future predictImagePicker() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (image == null) return;
@@ -183,7 +239,7 @@ class _MainScreen extends State<MainScreen> {
         appBar: AppBar(
           title: Text("Donate"),
           backgroundColor: Color(0xfff5af19),
-          leading: IconButton(
+          /*leading: IconButton(
             icon: Icon(
               Icons.menu,
               semanticLabel: 'menu',
@@ -191,40 +247,99 @@ class _MainScreen extends State<MainScreen> {
             onPressed: () {
               print("Menu button");
             },
-          ),
+          ),*/
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          onTap: (int index) {
+            switch (index) {
+              case 0: //feed
+                {
+                  break;
+                }
+              case 1: //profile
+                {
+                  break;
+                }
+              case 2: //send
+                {
+                  break;
+                }
+              case 3: //map
+                {
+                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                         builder: (context) {
+                                            return DonationMap();
+                                          },
+                                        ),
+                                      );
+
+                  break;
+                }
+              case 4: // message
+                {
+                  break;
+                }
+              default:
+                {
+                  //setting
+                  break;
+                }
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.featured_play_list,
+                  color: Color.fromARGB(255, 0, 0, 0)),
+              title: Text(
+                "",
+                style: TextStyle(fontSize: 0),
+              ),
+            ),
+            BottomNavigationBarItem(
+              icon:
+                  Icon(Icons.account_box, color: Color.fromARGB(255, 0, 0, 0)),
+              title: Text(
+                "",
+                style: TextStyle(fontSize: 0),
+              ),
+            ),
+            BottomNavigationBarItem(
+              title: Text(
+                "",
+                style: TextStyle(fontSize: 0),
+              ),
+              icon: Icon(Icons.send, color: Color.fromARGB(255, 0, 0, 0)),
+            ),
+            BottomNavigationBarItem(
+              title: Text(
+                "",
+                style: TextStyle(fontSize: 0),
+              ),
+              icon: Icon(Icons.map, color: Color.fromARGB(255, 0, 0, 0)),
+            ),
+            BottomNavigationBarItem(
+              title: Text(
+                "",
+                style: TextStyle(fontSize: 0),
+              ),
+              icon: Icon(Icons.message, color: Color.fromARGB(255, 0, 0, 0)),
+            ),
+            BottomNavigationBarItem(
+              title: Text(
+                "",
+                style: TextStyle(fontSize: 0),
+              ),
+              icon: Icon(Icons.settings, color: Color.fromARGB(255, 0, 0, 0)),
+            )
+          ],
         ),
         body: Container(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        "Donate",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 46.0,
-                            letterSpacing: 1.0,
-                            fontFamily: "Poppins-Bold"),
-                      ),
-                      FloatingActionButton(
-                        onPressed: () {
-                          predictImagePicker();
-                        },
-                        tooltip: "Pick Image",
-                        child: Icon(Icons.add_a_photo),
-                        backgroundColor: Color(0xfff12711),
-                      )
-                    ],
-                  ),
-                ),
                 /*
                 SizedBox.fromSize(
                   size: Size.fromHeight(200),
@@ -281,7 +396,7 @@ class _MainScreen extends State<MainScreen> {
                     ],
                     */
                 SizedBox.fromSize(
-                  size: Size.fromHeight(500),
+                  size: Size.fromHeight(300),
                   child: Stack(
                     children: stackChildren,
                   ),
@@ -308,13 +423,99 @@ class _MainScreen extends State<MainScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
+                        /*Text(
                           "Submit",
                           style: TextStyle(
                               fontFamily: "Poppins-Bold",
                               fontSize: 45,
                               letterSpacing: .6),
+                        ),*/
+                        Row(
+                          children: <Widget>[
+                            RaisedButton(
+                              onPressed: () {
+                                predictImagePicker();
+                              },
+                              child: Icon(Icons.add_a_photo),
+                            )
+                          ],
                         ),
+                        Text("Describe",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontFamily: "Poppins-Medium",
+                            )),
+                        TextField(
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          onChanged: (value) {
+                            setState(() {
+                              body = value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                              hintText: "Describe this ...",
+                              hintStyle: TextStyle(
+                                  color: Colors.grey, fontSize: 12.0)),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            RaisedButton(
+                                textColor: Colors.white,
+                                onPressed: onSeachBarButtonClick,
+                                padding: const EdgeInsets.all(0.0),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      gradient: LinearGradient(colors: <Color>[
+                                    Color(0xfff12711),
+                                    Color(0xfff5af19)
+                                  ])),
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: const Text('Pick a place',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 13)),
+                                )),
+                            const Text("  Or  "),
+                            RaisedButton(
+                                textColor: Colors.white,
+                                padding: const EdgeInsets.all(0.0),
+                                onPressed: onGetCurrentLocationClick,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      gradient: LinearGradient(colors: <Color>[
+                                    Color(0xfff12711),
+                                    Color(0xfff5af19)
+                                  ])),
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: const Text('Get your location',
+                                      style: TextStyle(fontSize: 13)),
+                                ))
+                          ],
+                        ),
+                        Visibility(
+                          visible: _pickaplacevisibility,
+                          child: Text(
+                            _address,
+                            overflow: TextOverflow.clip,
+                          ),
+                        ),
+                        Visibility(
+                            visible: !_pickaplacevisibility,
+                            child: TextField(
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              onChanged: (value) {
+                                setState(() {
+                                  _address = value;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                  hintText: "Enter your address",
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey, fontSize: 12.0)),
+                            )),
                         TextField(
                           controller: _controller,
                           onSubmitted: (value) {
@@ -332,41 +533,32 @@ class _MainScreen extends State<MainScreen> {
                         SizedBox(
                           height: 20,
                         ),
-                        Text("Enter your describe ",
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontFamily: "Poppins-Medium",
-                            )),
-                        TextField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          onChanged: (value) {
-                            setState(() {
-                              body = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                              hintText: "Describe this ...",
-                              hintStyle: TextStyle(
-                                  color: Colors.grey, fontSize: 12.0)),
-                        ),
-                        SizedBox(),
                         RaisedButton(
-                          child: Text("Submit"),
-                          onPressed: () {
-                            submit(_image, items, body).then((onValue) {
-                              new AlertDialog(
-                                content: Text(onValue),
-                                title: Text("Progress"),
-                              );
-                            }).catchError((error) => {
-                                  new AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(error.toString()),
-                                  )
-                                });
-                          },
-                        )
+                            textColor: Colors.white,
+                            padding: const EdgeInsets.all(0.0),
+                            onPressed: () {
+                              submit(_image, items, body).then((onValue) {
+                                new AlertDialog(
+                                  content: Text(onValue),
+                                  title: Text("Progress"),
+                                );
+                              }).catchError((error) => {
+                                    new AlertDialog(
+                                      title: Text("Error"),
+                                      content: Text(error.toString()),
+                                    )
+                                  });
+                            },
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  gradient: LinearGradient(colors: <Color>[
+                                Color(0xfff12711),
+                                Color(0xfff5af19)
+                              ])),
+                              padding: const EdgeInsets.all(10.0),
+                              child: const Text('   Submit   ',
+                                  style: TextStyle(fontSize: 17)),
+                            ))
                       ],
                     ),
                   ),

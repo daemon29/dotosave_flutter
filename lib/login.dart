@@ -11,8 +11,7 @@ import 'package:flutter/services.dart';
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => new _MyAppState();
-}
-
+} 
 class _MyAppState extends State<MyApp> {
   String email = "", password = "";
   @override
@@ -172,10 +171,6 @@ class _MyAppState extends State<MyApp> {
                         ),
                       ),
                     ),
-                    /*
-                    SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(40),
-                    ),*/
                     Padding(
                         padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                         child: Row(
