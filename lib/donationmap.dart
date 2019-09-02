@@ -52,7 +52,7 @@ class _DonationMapState extends State<DonationMap> {
     return Scaffold(
         key: mapScaffold,
         appBar: AppBar(
-            backgroundColor: Color(0xfff5af19),
+            backgroundColor: Colors.green[300],
             title: const Text('Donation map'),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -227,66 +227,77 @@ class _DonationMapState extends State<DonationMap> {
           address_txt = doc["address"];
         });
         mapScaffold.currentState.showBottomSheet((context) => Container(
-            child: Padding(
-                padding: const EdgeInsets.all(7.0),
-                child: Container(
-                    height: 300,
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        new Flexible(
-                            flex: 1,
-                            child: Text(
-                              title_txt,
-                              //markerInformation[markerId]?.getTitle()??"",
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.clip,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 21),
-                            )),
-                        new Flexible(
-                            flex: 1,
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    size: 30,
-                                  ),
-                                  Text(
-                                    address_txt,
-                                    //markerInformation[markerId]?.getTitle()??"",
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.clip,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  )
-                                ])),
-                        new Flexible(
-                            flex: 4,
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  /*Icon(
+            width: MediaQuery.of(context).size.width,
+            height: 275,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [
+                  0.6,
+                  1
+                ],
+                    colors: <Color>[
+                  // Colors.cyan[100],
+                  Colors.yellow[50],
+                  Colors.green[300]
+                  //Color(0xfff5af19),
+                ])),
+            child: Stack(overflow: Overflow.clip, children: <Widget>[
+              Positioned(
+                  bottom: 0, child: Image.asset("assets/images/image_02.png")),
+             Padding(padding: EdgeInsets.all(5), child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 10,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                  /*Expanded(
+                      child:*/
+                  Text(
+                    title_txt,
+                    //markerInformation[markerId]?.getTitle()??"",
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
+                  ) //)
+                  ,
+                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    Icon(
+                      Icons.location_on,
+                      size: 27,
+                    ),
+                    Expanded(
+                        child: Text(
+                      address_txt,
+                      //markerInformation[markerId]?.getTitle()??"",
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ))
+                  ]),
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    /*Icon(
                                   Icons.details,
                                   size: 30,
                                 ),*/
-                                  Text(
-                                    body_txt,
-                                    overflow: TextOverflow.clip,
-                                    //softWrap: true,
-                                    //markerInformation[markerId]?.getBody()??"",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.normal),
-                                  )
-                                ])),
-                      ],
-                    )))));
+
+                    Text(
+                      "  " + body_txt,
+                      overflow: TextOverflow.clip,
+                      //softWrap: true,
+                      //markerInformation[markerId]?.getBody()??"",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontWeight: FontWeight.normal, fontSize: 17),
+                    )
+                  ]),
+                ],
+              ))
+            ])));
       },
       infoWindow:
           InfoWindow(title: typeOfMarker_(doc["type"]), snippet: doc["title"]),
