@@ -281,16 +281,11 @@ class _MainScreen extends State<MainScreen> {
                 {
                   break;
                 }
-              default:
-                {
-                  //setting
-                  break;
-                }
             }
           },
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.featured_play_list,
+              icon: Icon(Icons.home,
                   color: Color.fromARGB(255, 0, 0, 0)),
               title: Text(
                 "",
@@ -299,7 +294,7 @@ class _MainScreen extends State<MainScreen> {
             ),
             BottomNavigationBarItem(
               icon:
-                  Icon(Icons.account_box, color: Color.fromARGB(255, 0, 0, 0)),
+                  Icon(Icons.notifications, color: Color.fromARGB(255, 0, 0, 0)),
               title: Text(
                 "",
                 style: TextStyle(fontSize: 0),
@@ -326,13 +321,6 @@ class _MainScreen extends State<MainScreen> {
               ),
               icon: Icon(Icons.message, color: Color.fromARGB(255, 0, 0, 0)),
             ),
-            BottomNavigationBarItem(
-              title: Text(
-                "",
-                style: TextStyle(fontSize: 0),
-              ),
-              icon: Icon(Icons.settings, color: Color.fromARGB(255, 0, 0, 0)),
-            )
           ],
         ),
         body: Container(
@@ -453,7 +441,8 @@ class _MainScreen extends State<MainScreen> {
                               body = value;
                             });
                           },
-                          decoration: InputDecoration(
+
+decoration: InputDecoration(
                               hintText: "Describe this ...",
                               hintStyle: TextStyle(
                                   color: Colors.grey, fontSize: 12.0)),
