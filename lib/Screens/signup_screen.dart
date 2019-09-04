@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'main_screen.dart';
+import 'donate_screen.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -41,7 +41,7 @@ class _Signup extends State<SignUp> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => MainScreen(currentUserId: user.uid)));
+                builder: (context) => DonateScreen(currentUserId: user.uid)));
       } else {
         Fluttertoast.showToast(msg: "Sign in fail");
         this.setState(() {

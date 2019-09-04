@@ -1,4 +1,3 @@
-import 'package:LadyBug/friend_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,13 +6,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'Widgets/SocialIcons.dart';
-import 'Customize/CustomeIcon.dart';
-import 'sign_in.dart';
-import 'signup.dart';
-import 'main_screen.dart';
+import 'package:LadyBug/Widgets/SocialIcons.dart';
+import 'package:LadyBug/Customize/CustomeIcon.dart';
+import 'package:LadyBug/Screens/signup_screen.dart';
+import 'donate_screen.dart';
 import 'package:flutter/services.dart';
-
+import 'main_screen.dart';
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => new _MyAppState();
@@ -48,7 +46,7 @@ class _MyAppState extends State<MyApp> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  FriendScreen(currentUserId: prefs.getString('uid'))));
+                  Main_Screen(currentUserId: prefs.getString('uid'))));
     }
     this.setState(() {
       isLoading = false;
@@ -69,7 +67,7 @@ class _MyAppState extends State<MyApp> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MainScreen(
+              builder: (context) => DonateScreen(
                     currentUserId: firebaseUser.uid,
                   )));
     } else {
@@ -127,7 +125,7 @@ class _MyAppState extends State<MyApp> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  MainScreen(currentUserId: firebaseUser.uid)));
+                  Main_Screen(currentUserId: firebaseUser.uid)));
     } else {
       Fluttertoast.showToast(msg: "Sign in fail");
       this.setState(() {
@@ -319,10 +317,7 @@ class _MyAppState extends State<MyApp> {
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
-                                      onTap: () {
-                                        signInWithEmail(
-                                            this.email, this.password);
-                                      },
+                                      onTap: signinWithEmail,
                                       child: Center(
                                         child: Text(
                                           "SIGN IN",

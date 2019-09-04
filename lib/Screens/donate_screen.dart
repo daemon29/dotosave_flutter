@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:LadyBug/donationmap.dart';
+import 'package:LadyBug/Widgets/BottomNavigationBar.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,24 +11,27 @@ import 'package:uuid/uuid.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'donationmap.dart';
 
 const String ssd = "SSD MobileNet";
 const place_api = 'AIzaSyApNZMEtoLsnu0ANWqepMBZUbCHbMMkP38';
 
-class MainScreen extends StatefulWidget {
+class DonateScreen extends StatefulWidget {
   final String currentUserId;
-  MainScreen({Key key, @required this.currentUserId}) : super(key: key);
+  DonateScreen({Key key, @required this.currentUserId}) : super(key: key);
   @override
-  _MainScreen createState() => new _MainScreen(currentUserId: currentUserId);
+  _DonateScreen createState() =>
+      new _DonateScreen(currentUserId: currentUserId);
 }
 
-class _MainScreen extends State<MainScreen> {
-  _MainScreen({Key key, @required this.currentUserId});
+class _DonateScreen extends State<DonateScreen> {
+  _DonateScreen({Key key, @required this.currentUserId});
   final String currentUserId;
   final TextEditingController _controller = new TextEditingController();
   PersistentBottomSheetController controller;
   File _image;
+  TextStyle style_state = TextStyle(
+    fontStyle: FontStyle.italic,
+  );
   bool _pickaplacevisibility = true;
   Set<String> items = new Set();
   String _model = ssd;
@@ -305,7 +308,7 @@ class _MainScreen extends State<MainScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Donate"),
+          title: const Text("Donate"),
           backgroundColor: Color(0xfff5af19),
           /*leading: IconButton(
             icon: Icon(
@@ -317,80 +320,7 @@ class _MainScreen extends State<MainScreen> {
             },
           ),*/
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          onTap: (int index) {
-            switch (index) {
-              case 0: //feed
-                {
-                  break;
-                }
-              case 1: //profile
-                {
-                  break;
-                }
-              case 2: //send
-                {
-                  break;
-                }
-              case 3: //map
-                {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return DonationMap();
-                      },
-                    ),
-                  );
-
-                  break;
-                }
-              case 4: // message
-                {
-                  break;
-                }
-            }
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home,
-                  color: Color.fromARGB(255, 0, 0, 0)),
-              title: Text(
-                "",
-                style: TextStyle(fontSize: 0),
-              ),
-            ),
-            BottomNavigationBarItem(
-              icon:
-                  Icon(Icons.notifications, color: Color.fromARGB(255, 0, 0, 0)),
-              title: Text(
-                "",
-                style: TextStyle(fontSize: 0),
-              ),
-            ),
-            BottomNavigationBarItem(
-              title: Text(
-                "",
-                style: TextStyle(fontSize: 0),
-              ),
-              icon: Icon(Icons.send, color: Color.fromARGB(255, 0, 0, 0)),
-            ),
-            BottomNavigationBarItem(
-              title: Text(
-                "",
-                style: TextStyle(fontSize: 0),
-              ),
-              icon: Icon(Icons.map, color: Color.fromARGB(255, 0, 0, 0)),
-            ),
-            BottomNavigationBarItem(
-              title: Text(
-                "",
-                style: TextStyle(fontSize: 0),
-              ),
-              icon: Icon(Icons.message, color: Color.fromARGB(255, 0, 0, 0)),
-            ),
-          ],
-        ),
+        bottomNavigationBar: MyBottomNavigationBar(context, currentUserId),
         body: Container(
           child: SingleChildScrollView(
             child: Column(
@@ -509,8 +439,7 @@ class _MainScreen extends State<MainScreen> {
                               body = value;
                             });
                           },
-
-decoration: InputDecoration(
+                          decoration: InputDecoration(
                               hintText: "Describe this ...",
                               hintStyle: TextStyle(
                                   color: Colors.grey, fontSize: 12.0)),
@@ -530,9 +459,7 @@ decoration: InputDecoration(
                                   ])),
                                   padding: const EdgeInsets.all(10.0),
                                   child: const Text('Pick a place',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                          fontSize: 13)),
+                                      style: TextStyle(fontSize: 13)),
                                 )),
                             const Text("  Or  "),
                             RaisedButton(
@@ -556,6 +483,7 @@ decoration: InputDecoration(
                           child: Text(
                             _address,
                             overflow: TextOverflow.clip,
+                            style: style_state,
                           ),
                         ),
                         Visibility(
@@ -566,6 +494,9 @@ decoration: InputDecoration(
                               onChanged: (value) {
                                 setState(() {
                                   _address = value;
+                                  style_state = TextStyle(
+                                    fontStyle: FontStyle.normal,
+                                  );
                                 });
                               },
                               decoration: InputDecoration(
