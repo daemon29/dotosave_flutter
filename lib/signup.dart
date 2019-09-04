@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'sign_in.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'main_screen.dart';
 
 class SignUp extends StatefulWidget {
@@ -9,7 +10,8 @@ class SignUp extends StatefulWidget {
 }
 
 class _Signup extends State<SignUp> {
-  String email = "", password = "";
+  bool isLoading = false;
+  String email, password;
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
@@ -18,6 +20,37 @@ class _Signup extends State<SignUp> {
           color: Colors.black26.withOpacity(.2),
         ),
       );
+  Future<Null> signinWithEmail() async {
+    this.setState(() {
+      isLoading = true;
+    });
+    if (email == null || password == null) {
+      this.setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(msg: "Email or password cannot be empty");
+      return;
+    } else {
+      FirebaseUser user = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      if (user != null) {
+        this.setState(() {
+          isLoading = false;
+        });
+        Fluttertoast.showToast(msg: "Signup success!");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainScreen(currentUserId: user.uid)));
+      } else {
+        Fluttertoast.showToast(msg: "Sign in fail");
+        this.setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
@@ -25,48 +58,52 @@ class _Signup extends State<SignUp> {
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
     return new Scaffold(
         appBar: AppBar(
+          title: Text("SIGNUP"),
           backgroundColor: Color(0xfff5af19),
         ),
         backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: false,
         body: Stack(
-          // fit: StackFit.expand,
+          fit: StackFit.expand,
           children: <Widget>[
-            Stack(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Positioned(
-                  top: 0,
+                Padding(
+                  padding: EdgeInsets.only(top: 20.0),
                   child: Image.asset("assets/images/main_background.jpg"),
                 ),
-                Positioned(
-                  bottom: 0,
-                  child: Image.asset("assets/images/image_02.png"))
+                Expanded(
+                  child: Container(),
+                ),
+                Image.asset("assets/images/image_02.png")
               ],
             ),
             SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 20),
+                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 60),
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                      child: Row(
-                        children: <Widget>[
-                          Image.asset(
-                            "assets/images/logo.png",
-                            width: ScreenUtil.getInstance().setWidth(110),
-                            height: ScreenUtil.getInstance().setHeight(110),
-                          ),
-                          Text("LADYBUG",
-                              style: TextStyle(
-                                  fontSize: ScreenUtil.getInstance().setSp(46),
-                                  letterSpacing: .6,
-                                  fontWeight: FontWeight.bold))
-                        ],
-                      ),
+                    Row(
+                      children: <Widget>[
+                        Image.asset(
+                          "assets/images/logo.png",
+                          width: ScreenUtil.getInstance().setWidth(110),
+                          height: ScreenUtil.getInstance().setHeight(110),
+                        ),
+                        Text("LADYBUG",
+                            style: TextStyle(
+                                fontSize: ScreenUtil.getInstance().setSp(46),
+                                letterSpacing: .6,
+                                fontWeight: FontWeight.bold))
+                      ],
+                    ),
+                    SizedBox(
+                      height: ScreenUtil.getInstance().setHeight(180),
                     ),
                     Container(
                       width: double.infinity,
+                      height: ScreenUtil.getInstance().setHeight(500),
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8.0),
@@ -81,16 +118,16 @@ class _Signup extends State<SignUp> {
                                 blurRadius: 15.0)
                           ]),
                       child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 16.0, bottom: 16),
+                        padding:
+                            EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              "Sign Up",
+                              "Signup",
                               style: TextStyle(
                                   fontFamily: "Poppins-Bold",
-                                  fontSize: ScreenUtil.getInstance().setSp(40),
+                                  fontSize: ScreenUtil.getInstance().setSp(45),
                                   letterSpacing: .6),
                             ),
                             SizedBox(
@@ -168,24 +205,10 @@ class _Signup extends State<SignUp> {
                               child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  onTap: () {
-                                    signUpWithEmail(this.email, this.password)
-                                        .then((uid) {
-                                      if (uid != null)
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return MainScreen();
-                                        }));
-                                      else
-                                        return;
-                                    }).catchError((onError) {
-                                      print(onError.toString());
-                                    });
-                                  },
+                                  onTap: signinWithEmail,
                                   child: Center(
                                     child: Text(
-                                      "SIGN UP",
+                                      "SIGNUP",
                                       style: TextStyle(
                                           fontFamily: "Poppins-Bold",
                                           color: Colors.white,
