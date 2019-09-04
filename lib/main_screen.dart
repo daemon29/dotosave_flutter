@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:LadyBug/donationmap.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
-import 'firebase_storage.dart';
+import 'package:uuid/uuid.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,11 +17,15 @@ const String ssd = "SSD MobileNet";
 const place_api = 'AIzaSyApNZMEtoLsnu0ANWqepMBZUbCHbMMkP38';
 
 class MainScreen extends StatefulWidget {
+  final String currentUserId;
+  MainScreen({Key key, @required this.currentUserId}) : super(key: key);
   @override
-  _MainScreen createState() => new _MainScreen();
+  _MainScreen createState() => new _MainScreen(currentUserId: currentUserId);
 }
 
 class _MainScreen extends State<MainScreen> {
+  _MainScreen({Key key, @required this.currentUserId});
+  final String currentUserId;
   final TextEditingController _controller = new TextEditingController();
   PersistentBottomSheetController controller;
   File _image;
@@ -34,6 +40,68 @@ class _MainScreen extends State<MainScreen> {
   bool _busy = false;
   String body;
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: place_api);
+  Future submit() async {
+    this.setState(() {
+      _busy = true;
+    });
+    if (_image == null || body == null) {
+      this.setState(() {
+        _busy = false;
+      });
+      return;
+    } else {
+      var uuid = new Uuid();
+      String filename = currentUserId + uuid.v1();
+      StorageReference reference =
+          FirebaseStorage.instance.ref().child('Item/$filename');
+      StorageUploadTask uploadTask = reference.putFile(_image);
+      StorageTaskSnapshot storageTaskSnapshot;
+      uploadTask.onComplete.then((value) {
+        if (value.error == null) {
+          storageTaskSnapshot = value;
+          storageTaskSnapshot.ref.getDownloadURL().then((url) {
+            GeoPoint geoPoint = GeoPoint(90, -90);
+            Firestore.instance
+                .collection("User")
+                .document(currentUserId)
+                .collection("Item")
+                .document()
+                .setData({
+              "body": body,
+              "url": url,
+              "items": null,
+              "geo": geoPoint
+            }).then((onValue) {
+              this.setState(() {
+                _busy = false;
+              });
+              Fluttertoast.showToast(msg: "Upload success");
+            }).catchError((error) {
+              this.setState(() {
+                _busy = false;
+              });
+              Fluttertoast.showToast(msg: error.toString());
+            });
+          }).catchError((error) {
+            this.setState(() {
+              _busy = false;
+            });
+            Fluttertoast.showToast(msg: error.toString());
+          });
+        } else {
+          setState(() {
+            _busy = false;
+          });
+          Fluttertoast.showToast(msg: "This file is not an image");
+        }
+      }, onError: (err) {
+        setState(() {
+          _busy = false;
+        });
+        Fluttertoast.showToast(msg: err.toString());
+      });
+    }
+  }
 
   Future<void> onSeachBarButtonClick() async {
     try {
@@ -267,13 +335,13 @@ class _MainScreen extends State<MainScreen> {
                 }
               case 3: //map
                 {
-                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                         builder: (context) {
-                                            return DonationMap();
-                                          },
-                                        ),
-                                      );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return DonationMap();
+                      },
+                    ),
+                  );
 
                   break;
                 }
@@ -525,19 +593,7 @@ decoration: InputDecoration(
                         RaisedButton(
                             textColor: Colors.white,
                             padding: const EdgeInsets.all(0.0),
-                            onPressed: () {
-                              submit(_image, items, body).then((onValue) {
-                                new AlertDialog(
-                                  content: Text(onValue),
-                                  title: Text("Progress"),
-                                );
-                              }).catchError((error) => {
-                                    new AlertDialog(
-                                      title: Text("Error"),
-                                      content: Text(error.toString()),
-                                    )
-                                  });
-                            },
+                            onPressed: submit,
                             child: Container(
                               decoration: const BoxDecoration(
                                   gradient: LinearGradient(colors: <Color>[

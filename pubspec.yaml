@@ -39,6 +39,10 @@ dependencies:
   tflite:
   url_launcher:
   uuid:
+  fluttertoast:
+  cached_network_image:
+  shared_preferences:
+  intl:
   image: 2.0.5
   rxdart: 0.22.0
   google_maps_flutter: ^0.5.11
@@ -64,6 +68,27 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/stickers/penguin1.gif
+    - assets/stickers/penguin2.gif
+    - assets/stickers/penguin3.gif
+    - assets/stickers/penguin4.gif
+    - assets/stickers/penguin5.gif
+    - assets/stickers/penguin6.gif
+    - assets/stickers/penguin7.gif
+    - assets/stickers/penguin8.gif
+    - assets/stickers/penguin9.gif
+    - assets/stickers/penguin10.gif
+    - assets/stickers/penguin11.gif
+    - assets/stickers/penguin12.gif
+    - assets/stickers/mimi1.gif
+    - assets/stickers/mimi2.gif
+    - assets/stickers/mimi3.gif
+    - assets/stickers/mimi4.gif
+    - assets/stickers/mimi5.gif
+    - assets/stickers/mimi6.gif
+    - assets/stickers/mimi7.gif
+    - assets/stickers/mimi8.gif
+    - assets/stickers/mimi9.gif
     - assets/models/ssd_mobilenet.tflite
     - assets/models/ssd_mobilenet.txt
     # To add assets to your application, add an assets section, like this:

@@ -1,25 +1,147 @@
-import 'package:LadyBug/signup.dart';
+import 'package:LadyBug/friend_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'Widgets/SocialIcons.dart';
 import 'Customize/CustomeIcon.dart';
-import 'signup.dart';
 import 'sign_in.dart';
+import 'signup.dart';
 import 'main_screen.dart';
 import 'package:flutter/services.dart';
 
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => new _MyAppState();
-} 
+}
+
 class _MyAppState extends State<MyApp> {
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   String email = "", password = "";
+  FirebaseUser currentUser;
+  SharedPreferences prefs;
+
+  bool isLoading = false;
+  bool isLoogedIn = false;
   @override
   void initState() {
     super.initState();
+    isSignIn();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+  }
+
+  void isSignIn() async {
+    this.setState(() {
+      isLoading = true;
+    });
+    prefs = await SharedPreferences.getInstance();
+    isLoogedIn = await googleSignIn.isSignedIn();
+    if (isLoogedIn) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  FriendScreen(currentUserId: prefs.getString('uid'))));
+    }
+    this.setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future<Null> signinWithEmail() async {
+    this.setState(() {
+      isLoading = true;
+    });
+    final FirebaseUser firebaseUser = await firebaseAuth
+        .signInWithEmailAndPassword(email: email, password: password);
+    if (firebaseUser != null) {
+      Fluttertoast.showToast(msg: "Sign in Success");
+      this.setState(() {
+        isLoading = false;
+      });
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MainScreen(
+                    currentUserId: firebaseUser.uid,
+                  )));
+    } else {
+      Fluttertoast.showToast(msg: "Sign in fail");
+      this.setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<Null> startGoogleSignIn() async {
+    prefs = await SharedPreferences.getInstance();
+    this.setState(() {
+      isLoading = true;
+    });
+    GoogleSignInAccount googleUser = await googleSignIn.signIn();
+    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    FirebaseUser firebaseUser =
+        await firebaseAuth.signInWithCredential(credential);
+    if (firebaseUser != null) {
+      final QuerySnapshot result = await Firestore.instance
+          .collection('Uses')
+          .where('id', isEqualTo: firebaseUser.uid)
+          .getDocuments();
+      final List<DocumentSnapshot> documents = result.documents;
+      if (documents.length == 0) {
+        // Update data to server if new user
+        Firestore.instance
+            .collection('User')
+            .document(firebaseUser.uid)
+            .setData({
+          'name': firebaseUser.displayName,
+          'imageurl': firebaseUser.photoUrl,
+          'uid': firebaseUser.uid,
+          'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+        });
+        currentUser = firebaseUser;
+        await prefs.setString('uid', currentUser.uid);
+        await prefs.setString('name', currentUser.displayName);
+        await prefs.setString('imageurl', currentUser.photoUrl);
+      } else {
+        await prefs.setString('uid', documents[0]['uid']);
+        await prefs.setString('name', documents[0]['nickname']);
+        await prefs.setString('imageurl', documents[0]['imageurl']);
+      }
+      Fluttertoast.showToast(msg: "Sign in Success");
+      this.setState(() {
+        isLoading = false;
+      });
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MainScreen(currentUserId: firebaseUser.uid)));
+    } else {
+      Fluttertoast.showToast(msg: "Sign in fail");
+      this.setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future organisationSignup() async {
+    const url = 'https://www.facebook.com/';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else
+      return;
   }
 
   Widget horizontalLine() => Padding(
@@ -254,17 +376,7 @@ class _MyAppState extends State<MyApp> {
                                 SocialIcon(
                                   colors: Color(0xfff5af19),
                                   iconData: CustomIcons.googlePlus,
-                                  onPressed: () {
-                                    signInWithGoogle().whenComplete(() {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return MainScreen();
-                                          },
-                                        ),
-                                      );
-                                    });
-                                  },
+                                  onPressed: startGoogleSignIn,
                                 ),
                               ],
                             ),
@@ -302,9 +414,7 @@ class _MyAppState extends State<MyApp> {
                                         ScreenUtil.getInstance().setSp(26)),
                               ),
                               InkWell(
-                                onTap: () {
-                                  organisationSignup();
-                                },
+                                onTap: organisationSignup,
                                 child: Text("Click Here",
                                     style: TextStyle(
                                         color: Color(0xfff5af19),
@@ -316,7 +426,20 @@ class _MyAppState extends State<MyApp> {
                   ],
                 ),
               ),
-            )
+            ),
+            Positioned(
+              child: isLoading
+                  ? Container(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xfff5a623)),
+                        ),
+                      ),
+                      color: Colors.white.withOpacity(0.8),
+                    )
+                  : Container(),
+            ),
           ],
         ));
   }
