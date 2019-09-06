@@ -320,7 +320,7 @@ class _DonateScreen extends State<DonateScreen> {
             },
           ),*/
         ),
-        bottomNavigationBar: MyBottomNavigationBar(context, currentUserId),
+        bottomNavigationBar: MyBottomNavigationBar(context, currentUserId,2),
         body: Container(
           child: SingleChildScrollView(
             child: Column(

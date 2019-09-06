@@ -23,7 +23,6 @@ class _MyAppState extends State<MyApp> {
   String email = "", password = "";
   FirebaseUser currentUser;
   SharedPreferences prefs;
-
   bool isLoading = false;
   bool isLoogedIn = false;
   @override
