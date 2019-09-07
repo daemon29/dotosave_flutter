@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:LadyBug/Screens/AddPost_screen.dart';
 import 'package:LadyBug/Widgets/BottomNavigationBar.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/Card_View.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:LadyBug/Widgets/Main_Screen/CircleAvatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Main_Screen extends StatefulWidget {

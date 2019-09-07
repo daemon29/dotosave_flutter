@@ -128,7 +128,8 @@ class ChatScreenState extends State<ChatScreen> {
 
   Future uploadFile() async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+    StorageReference reference =
+        FirebaseStorage.instance.ref().child('Mess/$fileName');
     StorageUploadTask uploadTask = reference.putFile(imageFile);
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
     storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
@@ -465,7 +466,8 @@ class ChatScreenState extends State<ChatScreen> {
 
   Widget buildSticker() {
     return Container(
-      child: Column(
+      child: ListView(
+        shrinkWrap: true,
         children: <Widget>[
           Row(
             children: <Widget>[
@@ -598,27 +600,27 @@ class ChatScreenState extends State<ChatScreen> {
           Row(
             children: <Widget>[
               FlatButton(
-                onPressed: () => onSendMessage('mimi1', 2),
+                onPressed: () => onSendMessage('cat1', 2),
                 child: new Image.asset(
-                  'assets/stickers/mimi1.gif',
+                  'assets/stickers/cat1.gif',
                   width: 50.0,
                   height: 50.0,
                   fit: BoxFit.cover,
                 ),
               ),
               FlatButton(
-                onPressed: () => onSendMessage('mimi2', 2),
+                onPressed: () => onSendMessage('cat2', 2),
                 child: new Image.asset(
-                  'assets/stickers/mimi2.gif',
+                  'assets/stickers/cat2.gif',
                   width: 50.0,
                   height: 50.0,
                   fit: BoxFit.cover,
                 ),
               ),
               FlatButton(
-                onPressed: () => onSendMessage('mimi3', 2),
+                onPressed: () => onSendMessage('cat3', 2),
                 child: new Image.asset(
-                  'assets/stickers/mimi3.gif',
+                  'assets/stickers/cat3.gif',
                   width: 50.0,
                   height: 50.0,
                   fit: BoxFit.cover,
@@ -630,27 +632,27 @@ class ChatScreenState extends State<ChatScreen> {
           Row(
             children: <Widget>[
               FlatButton(
-                onPressed: () => onSendMessage('mimi4', 2),
+                onPressed: () => onSendMessage('cat4', 2),
                 child: new Image.asset(
-                  'assets/stickers/mimi4.gif',
+                  'assets/stickers/cat4.gif',
                   width: 50.0,
                   height: 50.0,
                   fit: BoxFit.cover,
                 ),
               ),
               FlatButton(
-                onPressed: () => onSendMessage('mimi5', 2),
+                onPressed: () => onSendMessage('cat5', 2),
                 child: new Image.asset(
-                  'assets/stickers/mimi5.gif',
+                  'assets/stickers/cat5.gif',
                   width: 50.0,
                   height: 50.0,
                   fit: BoxFit.cover,
                 ),
               ),
               FlatButton(
-                onPressed: () => onSendMessage('mimi6', 2),
+                onPressed: () => onSendMessage('cat6', 2),
                 child: new Image.asset(
-                  'assets/stickers/mimi6.gif',
+                  'assets/stickers/cat6.gif',
                   width: 50.0,
                   height: 50.0,
                   fit: BoxFit.cover,
@@ -662,27 +664,27 @@ class ChatScreenState extends State<ChatScreen> {
           Row(
             children: <Widget>[
               FlatButton(
-                onPressed: () => onSendMessage('mimi7', 2),
+                onPressed: () => onSendMessage('cat7', 2),
                 child: new Image.asset(
-                  'images/mimi7.gif',
+                  'assets/stickers/cat7.gif',
                   width: 50.0,
                   height: 50.0,
                   fit: BoxFit.cover,
                 ),
               ),
               FlatButton(
-                onPressed: () => onSendMessage('mimi8', 2),
+                onPressed: () => onSendMessage('cat8', 2),
                 child: new Image.asset(
-                  'images/mimi8.gif',
+                  'assets/stickers/cat8.gif',
                   width: 50.0,
                   height: 50.0,
                   fit: BoxFit.cover,
                 ),
               ),
               FlatButton(
-                onPressed: () => onSendMessage('mimi9', 2),
+                onPressed: () => onSendMessage('cat9', 2),
                 child: new Image.asset(
-                  'images/mimi9.gif',
+                  'assets/stickers/cat9.gif',
                   width: 50.0,
                   height: 50.0,
                   fit: BoxFit.cover,
@@ -692,7 +694,7 @@ class ChatScreenState extends State<ChatScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           )
         ],
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       ),
       decoration: new BoxDecoration(
           border:

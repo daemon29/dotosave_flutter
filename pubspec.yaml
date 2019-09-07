@@ -80,15 +80,15 @@ flutter:
     - assets/stickers/penguin10.gif
     - assets/stickers/penguin11.gif
     - assets/stickers/penguin12.gif
-    - assets/stickers/mimi1.gif
-    - assets/stickers/mimi2.gif
-    - assets/stickers/mimi3.gif
-    - assets/stickers/mimi4.gif
-    - assets/stickers/mimi5.gif
-    - assets/stickers/mimi6.gif
-    - assets/stickers/mimi7.gif
-    - assets/stickers/mimi8.gif
-    - assets/stickers/mimi9.gif
+    - assets/stickers/cat1.gif
+    - assets/stickers/cat2.gif
+    - assets/stickers/cat3.gif
+    - assets/stickers/cat4.gif
+    - assets/stickers/cat5.gif
+    - assets/stickers/cat6.gif
+    - assets/stickers/cat7.gif
+    - assets/stickers/cat8.gif
+    - assets/stickers/cat9.gif
     - assets/models/ssd_mobilenet.tflite
     - assets/models/ssd_mobilenet.txt
     # To add assets to your application, add an assets section, like this:
