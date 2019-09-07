@@ -45,6 +45,7 @@ class AddPostState extends State<AddPost> {
               'like': [],
               'share': [],
               'owner': uid,
+              'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
             });
           });
         }
@@ -57,6 +58,7 @@ class AddPostState extends State<AddPost> {
         'like': [],
         'share': [],
         'owner': uid,
+        'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
       });
     }
     Navigator.pop(context);
@@ -84,7 +86,7 @@ class AddPostState extends State<AddPost> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                         /* new Flexible(
+                          /* new Flexible(
                               flex: 1,
                               child: FutureBuilder(
                                   future: Firestore.instance
@@ -99,7 +101,7 @@ class AddPostState extends State<AddPost> {
                                       return MyCircleAvatar(
                                           snapshot.data['imageurl']);
                                   })),*/
-                      
+
                           new Flexible(
                               flex: 5,
                               child: new Column(
@@ -116,11 +118,12 @@ class AddPostState extends State<AddPost> {
                                           setState(() {
                                             _send_clickable = true;
                                           });
-                                        } else{
+                                        } else {
                                           content = str;
-                                        setState(() {
-                                          _send_clickable = false;
-                                        });}
+                                          setState(() {
+                                            _send_clickable = false;
+                                          });
+                                        }
                                       },
                                       maxLines: null,
                                     ),
