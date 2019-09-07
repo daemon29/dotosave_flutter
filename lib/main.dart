@@ -1,4 +1,4 @@
+import 'package:LadyBug/Screens/loading_screen.dart';
 import 'package:flutter/material.dart';
-import 'Screens/login_screen.dart';
 
-void main() => runApp(MaterialApp(home: MyApp()));
+void main() => runApp(MaterialApp(home: Loading()));

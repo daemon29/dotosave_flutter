@@ -12,6 +12,7 @@ import 'package:LadyBug/Screens/signup_screen.dart';
 import 'donate_screen.dart';
 import 'package:flutter/services.dart';
 import 'main_screen.dart';
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => new _MyAppState();
@@ -56,8 +57,22 @@ class _MyAppState extends State<MyApp> {
     this.setState(() {
       isLoading = true;
     });
+    if (email == "" || password == "") {
+      this.setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(msg: "Email or Password is invalid");
+      return;
+    }
     final FirebaseUser firebaseUser = await firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: password);
+        .signInWithEmailAndPassword(email: email, password: password)
+        .catchError((onError) {
+      this.setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(msg: "Login fail" + onError.toString());
+      return;
+    });
     if (firebaseUser != null) {
       Fluttertoast.showToast(msg: "Sign in Success");
       this.setState(() {
@@ -76,6 +91,13 @@ class _MyAppState extends State<MyApp> {
       });
     }
   }
+
+  // Future<Null> startFacebookSignIn() async {
+  //   final FacebookLoginResult result =
+  //       await facebookLogin.logInWithReadPermissions(['email']);
+  //   FirebaseUser firebaseUser = await firebaseAuth.sign;
+
+  // }
 
   Future<Null> startGoogleSignIn() async {
     prefs = await SharedPreferences.getInstance();
@@ -347,12 +369,6 @@ class _MyAppState extends State<MyApp> {
                         ],
                       ),
                     ),
-                    //child: Stack(children: <Widget>[
-                    /*Image.asset(
-                        "assets/images/image_02.png",
-                        // height: double.infinity,
-                        width: double.infinity,
-                      ),*/
                     Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
