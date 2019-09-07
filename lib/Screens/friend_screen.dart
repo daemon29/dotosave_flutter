@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'chat.dart';
+import 'chat_screen.dart';
 
 class FriendScreen extends StatefulWidget {
   final String currentUserId;
@@ -20,7 +20,7 @@ class FriendScreenState extends State<FriendScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Main'),
+        title: Text('Message'),
         centerTitle: true,
       ),
       body: WillPopScope(

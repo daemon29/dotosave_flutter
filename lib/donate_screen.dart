@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:LadyBug/donationmap.dart';
+import 'package:LadyBug/Screens/donationmap_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,20 +11,19 @@ import 'package:uuid/uuid.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'donationmap.dart';
 
 const String ssd = "SSD MobileNet";
 const place_api = 'AIzaSyApNZMEtoLsnu0ANWqepMBZUbCHbMMkP38';
 
-class MainScreen extends StatefulWidget {
+class DonateScreen extends StatefulWidget {
   final String currentUserId;
-  MainScreen({Key key, @required this.currentUserId}) : super(key: key);
+  DonateScreen({Key key, @required this.currentUserId}) : super(key: key);
   @override
-  _MainScreen createState() => new _MainScreen(currentUserId: currentUserId);
+  _DonateScreen createState() => new _DonateScreen(currentUserId: currentUserId);
 }
 
-class _MainScreen extends State<MainScreen> {
-  _MainScreen({Key key, @required this.currentUserId});
+class _DonateScreen extends State<DonateScreen> {
+  _DonateScreen({Key key, @required this.currentUserId});
   final String currentUserId;
   final TextEditingController _controller = new TextEditingController();
   PersistentBottomSheetController controller;
@@ -349,16 +348,11 @@ class _MainScreen extends State<MainScreen> {
                 {
                   break;
                 }
-              default:
-                {
-                  //setting
-                  break;
-                }
             }
           },
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.featured_play_list,
+              icon: Icon(Icons.home,
                   color: Color.fromARGB(255, 0, 0, 0)),
               title: Text(
                 "",
@@ -367,7 +361,7 @@ class _MainScreen extends State<MainScreen> {
             ),
             BottomNavigationBarItem(
               icon:
-                  Icon(Icons.account_box, color: Color.fromARGB(255, 0, 0, 0)),
+                  Icon(Icons.notifications, color: Color.fromARGB(255, 0, 0, 0)),
               title: Text(
                 "",
                 style: TextStyle(fontSize: 0),
@@ -394,13 +388,6 @@ class _MainScreen extends State<MainScreen> {
               ),
               icon: Icon(Icons.message, color: Color.fromARGB(255, 0, 0, 0)),
             ),
-            BottomNavigationBarItem(
-              title: Text(
-                "",
-                style: TextStyle(fontSize: 0),
-              ),
-              icon: Icon(Icons.settings, color: Color.fromARGB(255, 0, 0, 0)),
-            )
           ],
         ),
         body: Container(
@@ -521,7 +508,8 @@ class _MainScreen extends State<MainScreen> {
                               body = value;
                             });
                           },
-                          decoration: InputDecoration(
+
+decoration: InputDecoration(
                               hintText: "Describe this ...",
                               hintStyle: TextStyle(
                                   color: Colors.grey, fontSize: 12.0)),
@@ -542,7 +530,7 @@ class _MainScreen extends State<MainScreen> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: const Text('Pick a place',
                                       style: TextStyle(
-                                          fontStyle: FontStyle.italic,
+                                          fontStyle: FontStyle.normal,
                                           fontSize: 13)),
                                 )),
                             const Text("  Or  "),
