@@ -25,7 +25,7 @@ class CardTopBar extends StatelessWidget {
           ? '1 min'
           : temp.inMinutes.toString() + ' mins';
     }
-    return 'now';
+    return 'Now';
   }
 
   @override

@@ -19,7 +19,10 @@ class _Main_Screen extends State<Main_Screen> {
   _Main_Screen({Key key, @required this.currentUserId});
 
   Future getPosts() async {
-    QuerySnapshot qs = await _firestore.collection('Post').orderBy('timestamp',descending: true).getDocuments();
+    QuerySnapshot qs = await _firestore
+        .collection('Post')
+        .orderBy('timestamp', descending: true)
+        .getDocuments();
     return qs.documents;
   }
 
@@ -48,13 +51,15 @@ class _Main_Screen extends State<Main_Screen> {
             future: (getPosts()),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting)
-                return Center(child: Text('Loading data... Please wait'));
+                return Center(child: CircularProgressIndicator());
               else {
                 return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
-                      return
-                          Card_View(snapshot.data[index].data,index,currentUserId);
+                      return Padding(
+                          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                          child: Card_View(
+                              snapshot.data[index].data, index, currentUserId));
                     });
               }
             },

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Post_screen/Post_screen.dart';
 
@@ -9,44 +10,56 @@ class CardContent extends StatelessWidget {
   CardContent(this.post, this.clipText, this.uid);
   @override
   Widget build(BuildContext context) {
-    if (post['image'] != null) {
+    if (post['image'] != "" && post['image'] != null) {
       return Column(
         children: <Widget>[
           Padding(
               padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
               child: GestureDetector(
-                  onTap: clipText?null:() {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return PostSreen(uid, post);
+                  onTap: clipText
+                      ? null
+                      : () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return PostSreen(uid, post);
+                              },
+                            ),
+                          );
                         },
-                      ),
-                    );
-                  },
-                  child: Container (
-                    width: MediaQuery.of(context).size.width,
-                    child:Text(
-                    post['content'],
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 17),
-                    overflow:
-                        clipText ? TextOverflow.clip : TextOverflow.ellipsis,
-                    maxLines: 9,
-                  )))),
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text(
+                        post['content'],
+                        textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 17),
+                        overflow: clipText
+                            ? TextOverflow.clip
+                            : TextOverflow.ellipsis,
+                        maxLines: 9,
+                      )))),
           GestureDetector(
-              onTap: clipText?null:() {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return PostSreen(uid, post);
+              onTap: clipText
+                  ? null
+                  : () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return PostSreen(uid, post);
+                          },
+                        ),
+                      );
                     },
-                  ),
-                );
-              },
               child: Container(
-                  child: Image(
+                /*child: Image(
                 image: NetworkImage(post['image']),
+                */
+                constraints: BoxConstraints(minHeight: 40),
+                child: Center(
+                child: CachedNetworkImage(
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  imageUrl: post['image'],
+                ),
               )))
         ],
       );
@@ -54,15 +67,17 @@ class CardContent extends StatelessWidget {
       return Padding(
           padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
           child: GestureDetector(
-              onTap: clipText?null:() {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return PostSreen(uid, post);
+              onTap: clipText
+                  ? null
+                  : () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return PostSreen(uid, post);
+                          },
+                        ),
+                      );
                     },
-                  ),
-                );
-              },
               child: Text(
                 post['content'],
                 textAlign: TextAlign.left,

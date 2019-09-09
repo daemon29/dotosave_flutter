@@ -132,8 +132,6 @@ class _DonationMapState extends State<DonationMap> {
 
   Future<void> onSeachBarButtonClick() async {
     try {
-      // show input autocomplete with selected mode
-      // then get the Prediction selected
       Prediction p = await PlacesAutocomplete.show(
         context: context,
         apiKey: place_api,

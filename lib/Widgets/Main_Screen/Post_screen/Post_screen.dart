@@ -21,32 +21,24 @@ class PostSreenState extends State<PostSreen> {
     return Scaffold(
         appBar: AppBar(title: Text('View Post')),
         body: ListView(children: [
-          Container(
-              decoration: BoxDecoration(
-                color: Colors.blue[50],
-                border: Border(
-                    bottom: BorderSide(
-                  color: Colors.blue[600],
-                  width: 1.0,
-                )),
-              ),
+          Card(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  CardTopBar(post['owner'],
-                      DateTime.fromMillisecondsSinceEpoch(post['timestamp'])),
-                  Divider(),
-                  CardContent(post, true, uid),
-                  SizedBox(height: 10,),
-                  Divider(
-                    height: 0,
-                  ),
-                ],
-              )),
-          CardBottomBar(post, false, false, false),
-          Divider(
-            height: 0,
-          ),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                CardTopBar(post['owner'],
+                    DateTime.fromMillisecondsSinceEpoch(post['timestamp'])),
+                SizedBox(
+                  height: 10,
+                ),
+                CardContent(post, true, uid),
+                SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  height: 0,
+                ),
+                CardBottomBar(post, false, false, false),
+              ])),
         ]),
         bottomNavigationBar: MyBottomNavigationBar(context, uid, 0));
   }
