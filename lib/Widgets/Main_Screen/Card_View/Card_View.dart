@@ -12,33 +12,36 @@ class Card_View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      new Container(
+      new Card(
           //width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            color: Colors.blue[50],
-          ),
+          /*  decoration: BoxDecoration(
+                //color: Colors.white,
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.blueGrey[200],
+                  width: 1,
+                )),*/
           //padding: EdgeInsets.fromLTRB(0, 1, 1, 10),
 
-          padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              CardTopBar(post['owner'],
-                  DateTime.fromMillisecondsSinceEpoch(post['timestamp'])),
-              Divider(),
-              CardContent(post, false, uid),
-              SizedBox(
-                height: 10,
-              ),
-            ],
-          )),
-      Divider(
-        height: 0,
-      ),
-      CardBottomBar(post, false, false, false),
-      Divider(
-        height: 16,
-      ),
+          //padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+          child: Padding(
+              padding: EdgeInsets.all(5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  CardTopBar(post['owner'],
+                      DateTime.fromMillisecondsSinceEpoch(post['timestamp'])),
+                  SizedBox(height: 10),
+                  CardContent(post, false, uid),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Divider(
+                    height: 0,
+                  ),
+                  CardBottomBar(post, false, false, false),
+                ],
+              ))),
     ]);
   }
 }

@@ -1,11 +1,13 @@
-import 'package:LadyBug/Widgets/Main_Screen/CircleAvatar.dart';
+import 'dart:async';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:uuid/uuid.dart';
-
 class AddPost extends StatefulWidget {
   final String uid;
   AddPost(this.uid);
@@ -15,20 +17,34 @@ class AddPost extends StatefulWidget {
 
 class AddPostState extends State<AddPost> {
   final String uid;
-  var _file = null;
+  File _file = null;
   bool _visible = false;
   bool _send_clickable = false;
+ 
+
   Image getImage(var _file) {
-    if (_file == null) return Image.asset("Images/image_02.png");
-    return Image.file(_file);
+    if (_file == null)
+      return Image.asset(
+        "Images/image_02.png",
+      );
+    else {
+      return Image.file(_file,);
+    }
   }
 
   AddPostState(this.uid);
+  Future<File> writeToFile(ByteData data, String path) {
+    final buffer = data.buffer;
+    return new File(path).writeAsBytes(
+        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+  }
 
   String content = "";
-  void UpLoadPost() {
+  void UpLoadPost() async {
     if (_visible) {
+      
       var uuid = new Uuid();
+      ///File image = await testCompressAndGetFile(_file, "tempimg");
       String filename = uid + uuid.v1();
       final StorageReference storageRef =
           FirebaseStorage.instance.ref().child('Images').child(filename);
@@ -50,6 +66,7 @@ class AddPostState extends State<AddPost> {
           });
         }
       });
+      // image.delete();
     } else {
       Firestore.instance.collection('Post').document().setData({
         'content': content,
@@ -73,35 +90,12 @@ class AddPostState extends State<AddPost> {
         body: ListView(children: [
           Padding(
               padding: EdgeInsets.fromLTRB(1, 1, 1, 10),
-              child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                  ),
+              child: Card(
                   child: Padding(
                       padding: EdgeInsets.all(2),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          /* new Flexible(
-                              flex: 1,
-                              child: FutureBuilder(
-                                  future: Firestore.instance
-                                      .collection('User')
-                                      .document(uid)
-                                      .get(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting)
-                                      return Container();
-                                    else
-                                      return MyCircleAvatar(
-                                          snapshot.data['imageurl']);
-                                  })),*/
-
                           new Flexible(
                               flex: 5,
                               child: new Column(
@@ -165,8 +159,8 @@ class AddPostState extends State<AddPost> {
                                           onPressed: () async {
                                             var image =
                                                 await ImagePicker.pickImage(
-                                                    source:
-                                                        ImageSource.gallery);
+                                                    source: ImageSource.gallery,
+                                                    imageQuality: 10);
                                             if (image == null) return;
                                             setState(() {
                                               _file = image;
