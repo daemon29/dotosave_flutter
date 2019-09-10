@@ -3,18 +3,20 @@ import 'package:flutter/material.dart';
 
 class CardBottomBar extends StatefulWidget {
   final bool liked, commented, shared;
+  final String postId;
   Map<String, dynamic> post;
-  CardBottomBar(this.post, this.liked, this.commented, this.shared);
+  CardBottomBar(this.postId,this.post, this.liked, this.commented, this.shared);
 
   @override
   CardBottomBarState createState() =>
-      CardBottomBarState(post, liked, commented, shared);
+      CardBottomBarState(postId, post, liked, commented, shared);
 }
 
 class CardBottomBarState extends State<CardBottomBar> {
   bool liked, commented, shared;
+  final String postId;
   Map<String, dynamic> post;
-  CardBottomBarState(this.post, this.liked, this.commented, this.shared);
+  CardBottomBarState(this.postId,this.post, this.liked, this.commented, this.shared);
   @override
   Widget build(BuildContext context) {
     return Row(

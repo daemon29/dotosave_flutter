@@ -1,3 +1,4 @@
+import 'package:LadyBug/Screens/Profile_screen.dart';
 import 'package:LadyBug/Screens/login_screen.dart';
 import 'package:LadyBug/Screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,6 +21,8 @@ class LoadingState extends State<Loading> {
     if (currentUser == null) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
     } else {
+      
+
       Navigator.push(
           context,
           MaterialPageRoute(

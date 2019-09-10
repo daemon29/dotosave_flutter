@@ -5,10 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
-class CardTopBar extends StatelessWidget {
-  final String uid, currentUserID;
+class CommentTop extends StatelessWidget {
+  final String uid, currentUserID,name;
   final DateTime time;
-  CardTopBar(this.uid, this.time, this.currentUserID);
+  CommentTop(this.uid, this.name,this.time, this.currentUserID);
   String GetDuration() {
     Duration temp = DateTime.now().difference(time);
     if (temp > Duration(days: 365)) {
@@ -37,30 +37,16 @@ class CardTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: Firestore.instance.collection('User').document(uid).get(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Container();
-          else
-            return new Row(
-              children: <Widget>[
-                MyCircleAvatar(snapshot.data['uid'], snapshot.data['imageurl'],50.0, currentUserID,true),
-                SizedBox(
-                  width: 5,
-                ),
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Post_Owner(snapshot.data['name'], uid),
-                      Text(
-                        GetDuration(),
-                        style: TextStyle(color: greyColor),
-                      )
-                    ])
+    return  Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Post_Owner(name, uid),
+                Text(
+                  GetDuration(),
+                  style: TextStyle(color: greyColor),
+                )
               ],
             );
-        });
   }
 }

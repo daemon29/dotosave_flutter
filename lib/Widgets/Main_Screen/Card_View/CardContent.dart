@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:LadyBug/Widgets/Main_Screen/Post_screen/Post_screen.dart';
+import 'package:LadyBug/Screens/Post_screen.dart';
 
 class CardContent extends StatelessWidget {
   Map<String, dynamic> post;
-  final String uid;
+  final String uid,currentUserId,postId;
   bool imageVisible = false;
   bool clipText;
-  CardContent(this.post, this.clipText, this.uid);
+  CardContent(this.postId,this.post, this.clipText, this.uid, this.currentUserId);
   @override
   Widget build(BuildContext context) {
     if (post['image'] != "" && post['image'] != null) {
@@ -22,7 +22,7 @@ class CardContent extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
-                                return PostSreen(uid, post);
+                                return PostSreen(postId,uid, post,currentUserId);
                               },
                             ),
                           );
@@ -45,7 +45,7 @@ class CardContent extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return PostSreen(uid, post);
+                            return PostSreen(postId,uid, post,currentUserId);
                           },
                         ),
                       );
@@ -73,7 +73,7 @@ class CardContent extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return PostSreen(uid, post);
+                            return PostSreen(postId,uid, post,currentUserId);
                           },
                         ),
                       );
