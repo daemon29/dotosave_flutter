@@ -8,19 +8,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:uuid/uuid.dart';
-class AddPost extends StatefulWidget {
-  final String uid;
-  AddPost(this.uid);
+
+class CommentBox extends StatefulWidget {
+  final String uid, postId;
+  CommentBox(this.uid, this.postId);
   @override
-  AddPostState createState() => AddPostState(uid);
+  _CommentBox createState() => _CommentBox(this.uid, this.postId);
 }
 
-class AddPostState extends State<AddPost> {
-  final String uid;
+class _CommentBox extends State<CommentBox> {
+  final String uid, postId;
   File _file = null;
   bool _visible = false;
   bool _send_clickable = false;
- 
 
   Image getImage(var _file) {
     if (_file == null)
@@ -28,11 +28,13 @@ class AddPostState extends State<AddPost> {
         "Images/image_02.png",
       );
     else {
-      return Image.file(_file,);
+      return Image.file(
+        _file,
+      );
     }
   }
 
-  AddPostState(this.uid);
+  _CommentBox(this.uid, this.postId);
   Future<File> writeToFile(ByteData data, String path) {
     final buffer = data.buffer;
     return new File(path).writeAsBytes(
@@ -42,8 +44,8 @@ class AddPostState extends State<AddPost> {
   String content = "";
   void UpLoadPost() async {
     if (_visible) {
-      
       var uuid = new Uuid();
+
       ///File image = await testCompressAndGetFile(_file, "tempimg");
       String filename = uid + uuid.v1();
       final StorageReference storageRef =
@@ -54,13 +56,12 @@ class AddPostState extends State<AddPost> {
         if (value.error == null) {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
-            Firestore.instance.collection('Post').document().setData({
+            Firestore.instance.collection('Comment').document().setData({
               'content': content,
-              'comment': [],
               'image': url,
               'like': [],
-              'share': [],
               'owner': uid,
+              'postId': postId,
               'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
             });
           });
@@ -68,13 +69,12 @@ class AddPostState extends State<AddPost> {
       });
       // image.delete();
     } else {
-      Firestore.instance.collection('Post').document().setData({
+      Firestore.instance.collection('Comment').document().setData({
         'content': content,
-        'comment': [],
         'image': "",
         'like': [],
-        'share': [],
         'owner': uid,
+        'postId': postId,
         'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
       });
     }
@@ -85,7 +85,7 @@ class AddPostState extends State<AddPost> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Create Post"),
+          title: const Text("Write a comment"),
         ),
         body: ListView(children: [
           Padding(
@@ -104,7 +104,7 @@ class AddPostState extends State<AddPost> {
                                     TextField(
                                       decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          hintText: 'What\'s on your mind?'),
+                                          hintText: 'Write a comment...'),
                                       keyboardType: TextInputType.multiline,
                                       onChanged: (str) {
                                         if (str.length > 0) {
