@@ -49,7 +49,7 @@ class PostSreenState extends State<PostSreen> {
                     return PostTop(
                         postId,
                         currentUserId,
-                        DateTime.fromMicrosecondsSinceEpoch(post['timestamp']),
+                        DateTime.fromMillisecondsSinceEpoch(post['timestamp']),
                         post);
                   } else {
                     return CommentCard(

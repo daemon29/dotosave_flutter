@@ -11,6 +11,7 @@ class CommentContent extends StatelessWidget {
   Widget build(BuildContext context) {
     if (image != "" && image != null) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
               padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
@@ -24,17 +25,18 @@ class CommentContent extends StatelessWidget {
                         clipText ? TextOverflow.clip : TextOverflow.ellipsis,
                     maxLines: 9,
                   ))),
-          Container(
-              /*child: Image(
+              Container(
+                  /*child: Image(
                 image: NetworkImage(post['image']),
                 */
-              constraints: BoxConstraints(minHeight: 40),
-              child: Center(
-                child: CachedNetworkImage(
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  imageUrl: image,
-                ),
-              ))
+                  constraints: BoxConstraints(
+                    maxHeight: 350,
+                  ),
+                  child: CachedNetworkImage(
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    imageUrl: image,
+                    fit: BoxFit.scaleDown,
+                  ))
         ],
       );
     } else {

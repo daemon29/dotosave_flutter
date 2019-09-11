@@ -41,8 +41,11 @@ class _CommentCard extends State<CommentCard> {
             children: <Widget>[
               MyCircleAvatar(comment['owner'], snapshot.data['imageurl'], 40.0,
                   currentUserId, true),
-                SizedBox(width: 10,),
-              Column(
+              SizedBox(
+                width: 10,
+              ),
+              Flexible(
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   CommentTop(
@@ -52,9 +55,6 @@ class _CommentCard extends State<CommentCard> {
                       currentUserId),
                   CommentContent(comment['content'], comment['image'], true,
                       comment['owner'], currentUserId),
-                  Divider(
-                    height: 0,
-                  ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
@@ -69,7 +69,7 @@ class _CommentCard extends State<CommentCard> {
                         Text(comment['like'].length.toString()),
                       ])
                 ],
-              )
+              ))
             ],
           );
         }

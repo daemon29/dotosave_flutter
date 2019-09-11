@@ -6,9 +6,9 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 class CommentTop extends StatelessWidget {
-  final String uid, currentUserID,name;
+  final String uid, currentUserID, name;
   final DateTime time;
-  CommentTop(this.uid, this.name,this.time, this.currentUserID);
+  CommentTop(this.uid, this.name, this.time, this.currentUserID);
   String GetDuration() {
     Duration temp = DateTime.now().difference(time);
     if (temp > Duration(days: 365)) {
@@ -37,16 +37,16 @@ class CommentTop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Post_Owner(name, uid),
-                Text(
-                  GetDuration(),
-                  style: TextStyle(color: greyColor),
-                )
-              ],
-            );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Post_Owner(name, uid),
+        Text(
+          GetDuration(),
+          style: TextStyle(color: greyColor),
+        )
+      ],
+    );
   }
 }
