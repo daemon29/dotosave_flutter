@@ -71,11 +71,8 @@ class _ProfileScreen extends State<ProfileScreen> {
                     else
                       return Padding(
                           padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                          child: Card_View(
-                              snapshot.data[index - 1].documentID,
-                              snapshot.data[index - 1].data,
-                              uid,
-                              currentUserID));
+                          child: Card_View(snapshot.data[index - 1].documentID,
+                              snapshot.data[index - 1].data, currentUserID));
                   });
             }
           },

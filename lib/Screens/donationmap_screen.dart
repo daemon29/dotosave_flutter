@@ -19,12 +19,18 @@ class RoutesWidget extends StatelessWidget {
 */
 
 class DonationMap extends StatefulWidget {
+  final String currentUserId;
+  DonationMap(this.currentUserId);
   @override
-  _DonationMapState createState() => _DonationMapState();
+  _DonationMapState createState() => _DonationMapState(currentUserId);
 }
 
 class _DonationMapState extends State<DonationMap> {
+  final String currentUserId;
+
   final GlobalKey<ScaffoldState> mapScaffold = GlobalKey<ScaffoldState>();
+  _DonationMapState(this.currentUserId);
+
   Map<String, dynamic> markerInformation;
   String markerId = "";
   Map<String, String> _Infor_Org;
@@ -32,6 +38,9 @@ class _DonationMapState extends State<DonationMap> {
   bool itemMarkerVisible = true;
   bool eventMarkerVisible = true;
   Set<Marker> markers = Set();
+  Set<Marker> imarkers = Set();
+  Set<Marker> cmarkers = Set();
+  Set<Marker> emarkers = Set();
   String title_txt = "";
   String body_txt = "";
   String address_txt = "";
@@ -47,74 +56,127 @@ class _DonationMapState extends State<DonationMap> {
     getLastKnownLocation();
   }
 
+  Set<Marker> getMarkerSet() {
+    Set<Marker> set1 = Set();
+    Set<Marker> set2 = Set();
+    Set<Marker> set3 = Set();
+    return (itemMarkerVisible ? imarkers : set1).union(
+        (eventMarkerVisible ? emarkers : set2)
+            .union((campaignMarkerVisible ? cmarkers : set3)));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: mapScaffold,
+        /* persistentFooterButtons: <Widget>[
+          IconButton(
+            icon: Icon(Icons.visibility, color: Colors.green),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                        child:
+                            Column(mainAxisSize: MainAxisSize.min, children: [
+                      Row(),
+                      Row(),
+                      Row(),
+                    ]));
+                  });
+            },
+          ),
+          
+        ],*/
+        endDrawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              ListTile(
+                  leading: Icon(
+                    Icons.visibility,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    'Visibility',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  onTap: null),
+              ListTile(
+                leading: eventMarkerVisible
+                    ? Icon(Icons.check_box, color: Colors.green)
+                    : Icon(
+                        Icons.check_box,
+                        color: Colors.grey[700],
+                      ),
+                title:
+                    Text('Events', style: TextStyle(color: Colors.grey[700])),
+                onTap: () {
+                  setState(() {
+                    eventMarkerVisible = !eventMarkerVisible;
+                    markers = getMarkerSet();
+                  });
+                },
+              ),
+              ListTile(
+                  leading: campaignMarkerVisible
+                      ? Icon(Icons.check_box, color: Colors.green)
+                      : Icon(
+                          Icons.check_box,
+                          color: Colors.grey[700],
+                        ),
+                  title: Text('Campain',
+                      style: TextStyle(color: Colors.grey[700])),
+                  onTap: () {
+                    setState(() {
+                      campaignMarkerVisible = !campaignMarkerVisible;
+                      markers = getMarkerSet();
+                    });
+                  }),
+              ListTile(
+                leading: itemMarkerVisible
+                    ? Icon(Icons.check_box, color: Colors.green)
+                    : Icon(
+                        Icons.check_box,
+                        color: Colors.grey[700],
+                      ),
+                title: Text('Items', style: TextStyle(color: Colors.grey[700])),
+                onTap: () {
+                  setState(() {
+                    itemMarkerVisible = !itemMarkerVisible;
+                    markers = getMarkerSet();
+                  });
+                },
+              )
+            ],
+          ),
+        ),
         appBar: AppBar(
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.search, color: Colors.white),
+                onPressed: () {
+                  onSeachBarButtonClick();
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.my_location, color: Colors.white),
+                onPressed: () {
+                  onGetCurrentLocationClick();
+                },
+              ),
+            ],
             backgroundColor: Colors.green[300],
             title: const Text('Donation map'),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context, false),
             )),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          onTap: (int index) {
-            switch (index) {
-              case 0: //search
-                {
-                  onSeachBarButtonClick();
-                  break;
-                }
-              case 1: //mylocation
-                {
-                  onGetCurrentLocationClick();
-                  break;
-                }
-              default:
-                {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Dialog(
-                            child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                              Row(),
-                              Row(),
-                              Row(),
-                            ]));
-                      });
-                  break;
-                }
-            }
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search, color: Color.fromARGB(255, 0, 0, 0)),
-              title: Text(
-                "",
-                style: TextStyle(fontSize: 0),
-              ),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.location_searching,
-                  color: Color.fromARGB(255, 0, 0, 0)),
-              title: Text(
-                "",
-                style: TextStyle(fontSize: 0),
-              ),
-            ),
-            BottomNavigationBarItem(
-              title: Text(
-                "",
-                style: TextStyle(fontSize: 0),
-              ),
-              icon: Icon(Icons.visibility, color: Color.fromARGB(255, 0, 0, 0)),
-            ),
-          ],
-        ),
         body: Container(
             child: Stack(children: [
           GoogleMap(
@@ -173,6 +235,9 @@ class _DonationMapState extends State<DonationMap> {
     mapController.animateCamera(CameraUpdate.newLatLngZoom(
         new LatLng(userLocation.latitude, userLocation.longitude), 18));
     createMarkerList(userLocation, 5000);
+    setState(() {
+      markers = getMarkerSet();
+    });
   }
 
   void createMarkerList(Position location, double radius) {
@@ -215,7 +280,7 @@ class _DonationMapState extends State<DonationMap> {
     GeoPoint geo = doc["geo"];
     Marker resultMarker = Marker(
       markerId: MarkerId(doc.documentID),
-      visible: campaignMarkerVisible,
+      visible: doc["type"] == 2 ? campaignMarkerVisible : eventMarkerVisible,
       icon: BitmapDescriptor.defaultMarkerWithHue(typeOfMarker(doc["type"])),
       onTap: () {
         setState(() {
@@ -244,57 +309,65 @@ class _DonationMapState extends State<DonationMap> {
             child: Stack(overflow: Overflow.clip, children: <Widget>[
               Positioned(
                   bottom: 0, child: Image.asset("assets/images/image_02.png")),
-             Padding(padding: EdgeInsets.all(5), child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 10,
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                  /*Expanded(
-                      child:*/
-                  Text(
-                    title_txt,
-                    //markerInformation[markerId]?.getTitle()??"",
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.clip,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
-                  ) //)
-                  ,
-                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    Icon(
-                      Icons.location_on,
-                      size: 27,
-                    ),
-                    Expanded(
-                        child: Text(
-                      address_txt,
-                      //markerInformation[markerId]?.getTitle()??"",
-                      textAlign: TextAlign.start,
-                      overflow: TextOverflow.clip,
-                      style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.normal,
+              Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                        width: MediaQuery.of(context).size.width,
                       ),
-                    ))
-                  ]),
-                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    /*Icon(
+                      /*Expanded(
+                      child:*/
+                      Text(
+                        title_txt,
+                        //markerInformation[markerId]?.getTitle()??"",
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.clip,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 21),
+                      ) //)
+                      ,
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              size: 27,
+                            ),
+                            Expanded(
+                                child: Text(
+                              address_txt,
+                              //markerInformation[markerId]?.getTitle()??"",
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.clip,
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ))
+                          ]),
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            /*Icon(
                                   Icons.details,
                                   size: 30,
                                 ),*/
 
-                    Text(
-                      "  " + body_txt,
-                      overflow: TextOverflow.clip,
-                      //softWrap: true,
-                      //markerInformation[markerId]?.getBody()??"",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontWeight: FontWeight.normal, fontSize: 17),
-                    )
-                  ]),
-                ],
-              ))
+                            Text(
+                              "  " + body_txt,
+                              overflow: TextOverflow.clip,
+                              //softWrap: true,
+                              //markerInformation[markerId]?.getBody()??"",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal, fontSize: 17),
+                            )
+                          ]),
+                    ],
+                  ))
             ])));
       },
       infoWindow:
@@ -302,7 +375,10 @@ class _DonationMapState extends State<DonationMap> {
       position: LatLng(geo.latitude, geo.longitude),
     );
     setState(() {
-      markers.add(resultMarker);
+      if (doc["type"] == 1)
+        emarkers.add(resultMarker);
+      else
+        cmarkers.add(resultMarker);
     });
   }
 
@@ -329,7 +405,7 @@ class _DonationMapState extends State<DonationMap> {
     GeoPoint geo = doc["geo"];
     Marker resultMarker = Marker(
       markerId: MarkerId(doc.documentID),
-      visible: campaignMarkerVisible,
+      visible: itemMarkerVisible,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
       onTap: () {
         setState(() {
@@ -341,7 +417,7 @@ class _DonationMapState extends State<DonationMap> {
       position: LatLng(geo.latitude, geo.longitude),
     );
     setState(() {
-      markers.add(resultMarker);
+      imarkers.add(resultMarker);
     });
   }
 }

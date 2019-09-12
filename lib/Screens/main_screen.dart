@@ -1,6 +1,9 @@
 import 'package:LadyBug/Screens/AddPost_screen.dart';
-import 'package:LadyBug/Widgets/BottomNavigationBar.dart';
+import 'package:LadyBug/Screens/donationmap_screen.dart';
+import 'package:LadyBug/Screens/friend_screen.dart';
+import 'package:LadyBug/Widgets/HomeDrawer.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/Card_View.dart';
+import 'package:LadyBug/Screens/donate_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +14,8 @@ class Main_Screen extends StatefulWidget {
   @override
   _Main_Screen createState() => new _Main_Screen(currentUserId: currentUserId);
 }
+
+GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 
 class _Main_Screen extends State<Main_Screen> {
   final String currentUserId;
@@ -27,24 +32,68 @@ class _Main_Screen extends State<Main_Screen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
+          key: _scaffoldKey,
+          drawer: HomeDrawer(currentUserId),
           appBar: AppBar(
             title: const Text("Home"),
             actions: <Widget>[
-
+              IconButton(
+                icon: Icon(
+                  Icons.map,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return DonationMap(currentUserId);
+                      },
+                    ),
+                  );
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.send,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return DonateScreen(
+                          currentUserId: currentUserId,
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+              IconButton(
+                  icon: Icon(Icons.message),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return FriendScreen(
+                            currentUserId: currentUserId,
+                          );
+                        },
+                      ),
+                    );
+                  })
             ],
             actionsIconTheme: IconThemeData(color: Colors.white),
             leading: IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white,),
-              onPressed: null,
+              icon: const Icon(
+                Icons.menu,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                _scaffoldKey.currentState.openDrawer();
+              },
             ),
           ),
           body:
@@ -62,9 +111,8 @@ class _Main_Screen extends State<Main_Screen> {
                     itemBuilder: (context, index) {
                       return Padding(
                           padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                          child: Card_View(
-                            snapshot.data[index].documentID,
-                              snapshot.data[index].data, currentUserId,currentUserId));
+                          child: Card_View(snapshot.data[index].documentID,
+                              snapshot.data[index].data, currentUserId));
                     });
               }
             },
@@ -87,7 +135,7 @@ class _Main_Screen extends State<Main_Screen> {
             ),
             backgroundColor: Colors.blue,
           ),
-          bottomNavigationBar: MyBottomNavigationBar(context, currentUserId, 0),
+          // bottomNavigationBar: MyBottomNavigationBar(context, currentUserId, 0),
         ));
   }
 }
