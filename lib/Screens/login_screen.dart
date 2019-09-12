@@ -127,6 +127,9 @@ class _MyAppState extends State<MyApp> {
           'name': firebaseUser.displayName,
           'imageurl': firebaseUser.photoUrl,
           'uid': firebaseUser.uid,
+          'nickname': "",
+          'bio': "",
+          'backgroundurl': "",
           'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
         });
         currentUser = firebaseUser;

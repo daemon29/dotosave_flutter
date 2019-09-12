@@ -38,8 +38,12 @@ class _Main_Screen extends State<Main_Screen> {
         child: Scaffold(
           appBar: AppBar(
             title: const Text("Home"),
+            actions: <Widget>[
+
+            ],
+            actionsIconTheme: IconThemeData(color: Colors.white),
             leading: IconButton(
-              icon: const Icon(Icons.menu),
+              icon: const Icon(Icons.menu, color: Colors.white,),
               onPressed: null,
             ),
           ),
