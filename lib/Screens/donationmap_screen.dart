@@ -235,9 +235,6 @@ class _DonationMapState extends State<DonationMap> {
     mapController.animateCamera(CameraUpdate.newLatLngZoom(
         new LatLng(userLocation.latitude, userLocation.longitude), 18));
     createMarkerList(userLocation, 5000);
-    setState(() {
-      markers = getMarkerSet();
-    });
   }
 
   void createMarkerList(Position location, double radius) {
@@ -273,6 +270,9 @@ class _DonationMapState extends State<DonationMap> {
         .snapshots()
         .listen(
             (data) => data.documents.forEach((doc) => createItemMarker(doc)));
+    setState(() {
+      markers = getMarkerSet();
+    });
   }
 
   void createCampaignMarker(DocumentSnapshot doc) {
