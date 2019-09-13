@@ -35,6 +35,10 @@ class _MyAppState extends State<MyApp> {
     ]);
   }
 
+  Future signOutGoogleAcount() async {
+    await googleSignIn.signOut();
+  }
+
   void isSignIn() async {
     this.setState(() {
       isLoading = true;
@@ -139,7 +143,7 @@ class _MyAppState extends State<MyApp> {
       } else {
         await prefs.setString('uid', (result.documents[0]['uid']));
         await prefs.setString('name', (result.documents[0]['nickname']));
-        await prefs.setString('imageurl',(result.documents[0]['imageurl']));
+        await prefs.setString('imageurl', (result.documents[0]['imageurl']));
       }
       Fluttertoast.showToast(msg: "Sign in Success");
       this.setState(() {
