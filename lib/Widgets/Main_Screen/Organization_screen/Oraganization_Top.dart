@@ -2,21 +2,26 @@ import 'package:LadyBug/Widgets/Main_Screen/CircleAvatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class Proflie_Top extends StatefulWidget {
+class    OrganizationTop extends StatefulWidget {
   final String currentuid;
-  final Map<String, dynamic> user;
-  Proflie_Top(this.user, this.currentuid);
+  final Map<String, dynamic> organization;
+  OrganizationTop(this.organization, this.currentuid);
   @override
-  _Proflie_Top createState() => _Proflie_Top(this.user, this.currentuid);
+  _OrganizationTop createState() =>
+      _OrganizationTop(this.organization, this.currentuid);
 }
 
-class _Proflie_Top extends State<Proflie_Top> {
+class _OrganizationTop extends State<OrganizationTop> {
   final String currentuid;
-  final Map<String, dynamic> user;
-  _Proflie_Top(this.user, this.currentuid);
+  final Map<String, dynamic> organization;
+  _OrganizationTop(this.organization, this.currentuid);
+  @override
+  void initState() {
+    print(organization);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
         child: Column(children: <Widget>[
       SizedBox(
@@ -32,19 +37,19 @@ class _Proflie_Top extends State<Proflie_Top> {
                     child: SizedBox(
                         height: 170.0,
                         width: MediaQuery.of(context).size.width,
-                        child: (user['backgroundurl'] == "")
+                        child: (organization['backgroundurl'] == "")
                             ? Container()
                             : CachedNetworkImage(
                                 placeholder: (context, url) =>
                                     CircularProgressIndicator(),
-                                imageUrl: user['backgroundurl'],
+                                imageUrl: organization['backgroundurl'],
                                 fit: BoxFit.cover)),
                   )),
               Positioned(
                 left: 10,
                 top: 90,
-                child: MyCircleAvatar(
-                    user['uid'], user['imageurl'], 120.0, currentuid, false,false),
+                child: MyCircleAvatar(organization['oid'],
+                    organization['imageurl'], 120.0, currentuid, false,true),
               ),
             ],
           )),
@@ -53,7 +58,7 @@ class _Proflie_Top extends State<Proflie_Top> {
           child: Padding(
               padding: EdgeInsets.only(left: 10),
               child: Text(
-                user["name"],
+                organization["name"],
                 style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
@@ -63,13 +68,14 @@ class _Proflie_Top extends State<Proflie_Top> {
           width: MediaQuery.of(context).size.width,
           child: Padding(
               padding: EdgeInsets.only(left: 10),
-              child: (user['nickname'] == '')
-                  ? Container()
-                  : Text(
-                      '(' + user["nickname"] + ')',
-                      style: TextStyle(color: Colors.grey[700]),
-                      overflow: TextOverflow.clip,
-                    ))),
+              child:Row(children: [
+                      Icon(Icons.location_on, size: 17,),
+                      Text(
+                        organization["address"],
+                        style: TextStyle(color: Colors.grey[700]),
+                        overflow: TextOverflow.clip,
+                      )
+                    ]))),
       SizedBox(
         height: 10,
       ),
@@ -78,10 +84,10 @@ class _Proflie_Top extends State<Proflie_Top> {
           child: Padding(
               padding: EdgeInsets.only(left: 10),
               child: Text(
-                user["bio"],
+                organization["describe"],
                 style: TextStyle(color: Colors.black),
-                maxLines: 6,
-                overflow: TextOverflow.clip,
+                maxLines: 10,
+                overflow: TextOverflow.ellipsis,
               ))),
       SizedBox(
         height: 10,

@@ -4,11 +4,11 @@ import 'package:LadyBug/Screens/Post_screen.dart';
 
 class CardContent extends StatelessWidget {
   Map<String, dynamic> post;
-  final String uid, currentUserId, postId;
+  final String id, currentUserId, postId;
   bool imageVisible = false;
   bool clipText;
   CardContent(
-      this.postId, this.post, this.clipText, this.uid, this.currentUserId);
+      this.postId, this.post, this.clipText, this.id, this.currentUserId);
   @override
   Widget build(BuildContext context) {
     if (post['image'] != "" && post['image'] != null) {
@@ -24,7 +24,7 @@ class CardContent extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) {
                                 return PostSreen(
-                                    postId, uid, post, currentUserId);
+                                    postId, id, post, currentUserId);
                               },
                             ),
                           );
@@ -47,7 +47,7 @@ class CardContent extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return PostSreen(postId, uid, post, currentUserId);
+                            return PostSreen(postId, id, post, currentUserId);
                           },
                         ),
                       );
@@ -76,7 +76,7 @@ class CardContent extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return PostSreen(postId, uid, post, currentUserId);
+                            return PostSreen(postId, id, post, currentUserId);
                           },
                         ),
                       );

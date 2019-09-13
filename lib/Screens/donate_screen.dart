@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:LadyBug/Widgets/BottomNavigationBar.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,7 +34,7 @@ class _DonateScreen extends State<DonateScreen> {
   bool _pickaplacevisibility = true;
   Set<String> items = new Set();
   String _model = ssd;
-  String _address = "Pick a place...";
+  String _address = "Your address will show up here!";
   List _recognitions;
   double _imageHeight;
   GeoPoint geoPoint;
@@ -291,8 +290,11 @@ class _DonateScreen extends State<DonateScreen> {
       left: 0.0,
       width: size.width,
       child: _image == null
-          ? Image.asset("assets/images/EmptyImage.png")
-          : Image.file(_image),
+          ? Image.asset(
+              "assets/images/EmptyImage.png",
+              fit: BoxFit.scaleDown,
+            )
+          : Image.file(_image, fit: BoxFit.scaleDown),
     ));
 
     if (_model == ssd) {
@@ -320,8 +322,11 @@ class _DonateScreen extends State<DonateScreen> {
             },
           ),*/
         ),
-        bottomNavigationBar: MyBottomNavigationBar(context, currentUserId,2),
-        body: Container(
+        bottomNavigationBar: null,
+        body: new GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -381,164 +386,226 @@ class _DonateScreen extends State<DonateScreen> {
                             ),
                     ],
                     */
-                SizedBox.fromSize(
-                  size: Size.fromHeight(300),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 220,
                   child: Stack(
                     children: stackChildren,
                   ),
                 ),
                 Container(
-                  width: double.infinity,
-                  height: 500,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(0.0, 15.0),
-                            blurRadius: 15.0),
-                        BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(0.0, -10.0),
-                            blurRadius: 15.0)
-                      ]),
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        /*Text(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0.0, 15.0),
+                              blurRadius: 15.0),
+                          BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0.0, -10.0),
+                              blurRadius: 15.0)
+                        ]),
+                    child: Padding(
+                        padding:
+                            EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              /*Text(
                           "Submit",
                           style: TextStyle(
                               fontFamily: "Poppins-Bold",
                               fontSize: 45,
                               letterSpacing: .6),
                         ),*/
-                        Row(
-                          children: <Widget>[
-                            RaisedButton(
-                              onPressed: () {
-                                predictImagePicker();
-                              },
-                              child: Icon(Icons.add_a_photo),
-                            )
-                          ],
-                        ),
-                        Text("Describe",
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontFamily: "Poppins-Medium",
-                            )),
-                        TextField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          onChanged: (value) {
-                            setState(() {
-                              body = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                              hintText: "Describe this ...",
-                              hintStyle: TextStyle(
-                                  color: Colors.grey, fontSize: 12.0)),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            RaisedButton(
-                                textColor: Colors.white,
-                                onPressed: onSeachBarButtonClick,
-                                padding: const EdgeInsets.all(0.0),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      gradient: LinearGradient(colors: <Color>[
+                              Padding(
+                                  padding: EdgeInsets.only(left: 5, right: 5),
+                                  child: Row(
+                                    children: <Widget>[
+                                      RaisedButton(
+                                        onPressed: () {
+                                          predictImagePicker();
+                                        },
+                                        color: Color(0xfff5af19),
+                                        child: Icon(
+                                          Icons.add_a_photo,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  )),
+                              Divider(),
+                              Padding(
+                                  padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Center(
+                                          child: Text("Information",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: "Poppins-Medium",
+                                              ))),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text("Describe",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: "Poppins-Medium",
+                                          )),
+                                      TextField(
+                                        keyboardType: TextInputType.multiline,
+                                        maxLines: null,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            body = value;
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                            hintText: "Describe this ...",
+                                            hintStyle: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12.0)),
+                                      ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text("Address",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: "Poppins-Medium",
+                                          )),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          RaisedButton(
+                                              textColor: Colors.white,
+                                              onPressed: onSeachBarButtonClick,
+                                              padding:
+                                                  const EdgeInsets.all(0.0),
+                                              child: Container(
+                                                decoration: const BoxDecoration(
+                                                    color: Color(0xfff5af19)
+                                                    /* gradient: LinearGradient(colors: <Color>[
                                     Color(0xfff12711),
                                     Color(0xfff5af19)
-                                  ])),
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: const Text('Pick a place',
-                                      style: TextStyle(fontSize: 13)),
-                                )),
-                            const Text("  Or  "),
-                            RaisedButton(
-                                textColor: Colors.white,
-                                padding: const EdgeInsets.all(0.0),
-                                onPressed: onGetCurrentLocationClick,
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      gradient: LinearGradient(colors: <Color>[
-                                    Color(0xfff12711),
-                                    Color(0xfff5af19)
-                                  ])),
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: const Text('Get your location',
-                                      style: TextStyle(fontSize: 13)),
-                                ))
-                          ],
-                        ),
-                        Visibility(
-                          visible: _pickaplacevisibility,
-                          child: Text(
-                            _address,
-                            overflow: TextOverflow.clip,
-                            style: style_state,
-                          ),
-                        ),
-                        Visibility(
-                            visible: !_pickaplacevisibility,
-                            child: TextField(
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              onChanged: (value) {
-                                setState(() {
-                                  _address = value;
-                                  style_state = TextStyle(
-                                    fontStyle: FontStyle.normal,
-                                  );
-                                });
-                              },
-                              decoration: InputDecoration(
-                                  hintText: "Enter your address",
-                                  hintStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 12.0)),
-                            )),
-                        TextField(
-                          controller: _controller,
-                          onSubmitted: (value) {
-                            setState(() {
-                              items.add(value);
-                            });
-                            _controller.clear();
-                          },
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                              hintText: "Enter a missing item",
-                              hintStyle: TextStyle(
-                                  color: Colors.grey, fontSize: 12.0)),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        RaisedButton(
-                            textColor: Colors.white,
-                            padding: const EdgeInsets.all(0.0),
-                            onPressed: submit,
-                            child: Container(
-                              decoration: const BoxDecoration(
+                                  ])*/
+                                                    ),
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: const Text(
+                                                    'Pick a place',
+                                                    style: TextStyle(
+                                                        fontSize: 13)),
+                                              )),
+                                          const Text("  Or  "),
+                                          RaisedButton(
+                                              textColor: Colors.white,
+                                              padding:
+                                                  const EdgeInsets.all(0.0),
+                                              onPressed:
+                                                  onGetCurrentLocationClick,
+                                              child: Container(
+                                                decoration: const BoxDecoration(
+                                                  color: Color(0xfff5af19),
+                                                  /*gradient: LinearGradient(colors: <Color>[
+                                        Color(0xfff12711),
+                                        Color(0xfff5af19)
+                                      ])*/
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: const Text(
+                                                    'Get your location',
+                                                    style: TextStyle(
+                                                        fontSize: 13)),
+                                              ))
+                                        ],
+                                      ),
+                                      Visibility(
+                                        visible: _pickaplacevisibility,
+                                        child: Text(
+                                          _address,
+                                          overflow: TextOverflow.clip,
+                                          style: style_state,
+                                        ),
+                                      ),
+                                      Visibility(
+                                          visible: !_pickaplacevisibility,
+                                          child: TextField(
+                                            keyboardType:
+                                                TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _address = value;
+                                                style_state = TextStyle(
+                                                  fontStyle: FontStyle.normal,
+                                                );
+                                              });
+                                            },
+                                            decoration: InputDecoration(
+                                                hintText: "Enter your address",
+                                                hintStyle: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 12.0)),
+                                          )),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text("Item types:",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: "Poppins-Medium",
+                                          )),
+                                      TextField(
+                                        controller: _controller,
+                                        onSubmitted: (value) {
+                                          setState(() {
+                                            items.add(value);
+                                          });
+                                          _controller.clear();
+                                        },
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        decoration: InputDecoration(
+                                            hintText: "Enter a missing item",
+                                            hintStyle: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12.0)),
+                                      ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                    ],
+                                  )),
+                            ]))),
+                SizedBox(
+                  height: 10,
+                ),
+                RaisedButton(
+                    textColor: Colors.white,
+                    padding: const EdgeInsets.all(0.0),
+                    onPressed: submit,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Color(
+                            0xfff5af19), /*
                                   gradient: LinearGradient(colors: <Color>[
                                 Color(0xfff12711),
                                 Color(0xfff5af19)
-                              ])),
-                              padding: const EdgeInsets.all(10.0),
-                              child: const Text('   Submit   ',
-                                  style: TextStyle(fontSize: 17)),
-                            ))
-                      ],
-                    ),
-                  ),
-                ),
+                              ])*/
+                      ),
+                      padding: const EdgeInsets.all(10.0),
+                      child: const Text('   Submit   ',
+                          style: TextStyle(fontSize: 17)),
+                    ))
               ],
             ),
           ),

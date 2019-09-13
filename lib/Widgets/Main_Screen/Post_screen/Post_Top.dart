@@ -6,30 +6,45 @@ import 'package:flutter/widgets.dart';
 
 class PostTop extends StatelessWidget {
   final String postId, currentUserId;
-  final Map<String,dynamic> post;
+  final Map<String, dynamic> post;
   final DateTime time;
-  PostTop(this.postId,this.currentUserId,this.time,this.post);
+  PostTop(this.postId, this.currentUserId, this.time, this.post);
   @override
   Widget build(BuildContext context) {
-    return Card(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-          CardTopBar(
-              post['owner'],
-              time,
-              currentUserId),
-          SizedBox(
-            height: 10,
-          ),
-          CardContent(postId, post, true, post['owner'], currentUserId),
-          SizedBox(
-            height: 10,
-          ),
-          Divider(
-            height: 0,
-          ),
-          CardBottomBar(postId, post, false, false, false),
-        ]));
+    return (post['owner(oid)'] == null)
+        ? Card(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                CardTopBar(post['owner'], time, currentUserId, false),
+                SizedBox(
+                  height: 10,
+                ),
+                CardContent(postId, post, true, post['owner'], currentUserId),
+                SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  height: 0,
+                ),
+                CardBottomBar(postId, post, false, false, false),
+              ]))
+        : Card(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                CardTopBar(post['owner(oid)'], time, currentUserId, true),
+                SizedBox(
+                  height: 10,
+                ),
+                CardContent(postId, post, true, post['owner(oid)'], currentUserId),
+                SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  height: 0,
+                ),
+                CardBottomBar(postId, post, false, false, false),
+              ]));
   }
 }

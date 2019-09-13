@@ -21,7 +21,6 @@ class FriendScreenState extends State<FriendScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Message'),
-        centerTitle: true,
       ),
       body: WillPopScope(
         child: Stack(

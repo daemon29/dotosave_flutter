@@ -114,11 +114,11 @@ class _MyAppState extends State<MyApp> {
         await firebaseAuth.signInWithCredential(credential);
     if (firebaseUser != null) {
       final QuerySnapshot result = await Firestore.instance
-          .collection('Uses')
-          .where('id', isEqualTo: firebaseUser.uid)
+          .collection('User')
+          .where('uid', isEqualTo: firebaseUser.uid)
           .getDocuments();
-      final List<DocumentSnapshot> documents = result.documents;
-      if (documents.length == 0) {
+      print("here the length" + result.documents.length.toString());
+      if (result.documents.length == 0) {
         // Update data to server if new user
         Firestore.instance
             .collection('User')
@@ -127,6 +127,9 @@ class _MyAppState extends State<MyApp> {
           'name': firebaseUser.displayName,
           'imageurl': firebaseUser.photoUrl,
           'uid': firebaseUser.uid,
+          'nickname': "",
+          'bio': "",
+          'backgroundurl': "",
           'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
         });
         currentUser = firebaseUser;
@@ -134,9 +137,9 @@ class _MyAppState extends State<MyApp> {
         await prefs.setString('name', currentUser.displayName);
         await prefs.setString('imageurl', currentUser.photoUrl);
       } else {
-        await prefs.setString('uid', documents[0]['uid']);
-        await prefs.setString('name', documents[0]['nickname']);
-        await prefs.setString('imageurl', documents[0]['imageurl']);
+        await prefs.setString('uid', (result.documents[0]['uid']));
+        await prefs.setString('name', (result.documents[0]['nickname']));
+        await prefs.setString('imageurl',(result.documents[0]['imageurl']));
       }
       Fluttertoast.showToast(msg: "Sign in Success");
       this.setState(() {

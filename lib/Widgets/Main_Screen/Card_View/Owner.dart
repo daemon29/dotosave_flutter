@@ -13,7 +13,8 @@ class Post_Owner extends StatelessWidget {
         child: Text(
           name,
           style: TextStyle(
-            color: Colors.blue,
+            color: Colors.black,
+            fontWeight: FontWeight.bold
           ),
         ));
   }

@@ -1,9 +1,6 @@
-import 'package:LadyBug/Widgets/BottomNavigationBar.dart';
 import 'package:LadyBug/Widgets/CommentBox.dart';
 import 'package:LadyBug/Widgets/Comment_Card/Comment_Card.dart';
-import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardBottomBar.dart';
-import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardContent.dart';
-import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardTopBar.dart';
+
 import 'package:LadyBug/Widgets/Main_Screen/Post_screen/Post_Top.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +73,7 @@ class PostSreenState extends State<PostSreen> {
           ),
           backgroundColor: Colors.blue,
         ),
-        bottomNavigationBar: MyBottomNavigationBar(context, uid, 0));
+        //bottomNavigationBar: MyBottomNavigationBar(context, uid, 0)
+        );
   }
 }

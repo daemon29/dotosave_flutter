@@ -1,12 +1,13 @@
+import 'package:LadyBug/Screens/Oraganization_screen.dart';
 import 'package:LadyBug/Screens/Profile_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class MyCircleAvatar extends StatelessWidget {
-  final String uid, url, currentUserId;
+  final String id, url, currentUserId;
   final size;
-  final bool cantap;
-  MyCircleAvatar(this.uid, this.url, this.size, this.currentUserId,this.cantap);
+  final bool cantap,isOrganization;
+  MyCircleAvatar(this.id, this.url, this.size, this.currentUserId,this.cantap,this.isOrganization);
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -15,7 +16,7 @@ class MyCircleAvatar extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      ProfileScreen(currentUserId,uid)));
+                     (isOrganization)?OrganizationScreen(currentUserId,id) :ProfileScreen(currentUserId,id)));
         }:null,
         child: Container(
             width: size,
