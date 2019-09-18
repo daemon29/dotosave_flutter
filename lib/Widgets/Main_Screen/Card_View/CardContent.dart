@@ -5,9 +5,10 @@ import 'package:LadyBug/Widgets/Main_Screen/Post_screen/Post_screen.dart';
 class CardContent extends StatelessWidget {
   Map<String, dynamic> post;
   final String uid;
+  String docId;
   bool imageVisible = false;
   bool clipText;
-  CardContent(this.post, this.clipText, this.uid);
+  CardContent(this.post, this.clipText, this.uid, this.docId);
   @override
   Widget build(BuildContext context) {
     if (post['image'] != "" && post['image'] != null) {
@@ -22,7 +23,7 @@ class CardContent extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
-                                return PostSreen(uid, post);
+                                return PostSreen(uid, post, docId);
                               },
                             ),
                           );
@@ -45,22 +46,23 @@ class CardContent extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return PostSreen(uid, post);
+                            return PostSreen(uid, post, docId);
                           },
                         ),
                       );
                     },
               child: Container(
-                /*child: Image(
+                  /*child: Image(
                 image: NetworkImage(post['image']),
                 */
-                constraints: BoxConstraints(minHeight: 40),
-                child: Center(
-                child: CachedNetworkImage(
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  imageUrl: post['image'],
-                ),
-              )))
+                  constraints: BoxConstraints(minHeight: 40),
+                  child: Center(
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      imageUrl: post['image'],
+                    ),
+                  )))
         ],
       );
     } else {
@@ -73,7 +75,7 @@ class CardContent extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return PostSreen(uid, post);
+                            return PostSreen(uid, post, docId);
                           },
                         ),
                       );

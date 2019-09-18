@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 class Card_View extends StatelessWidget {
   //String name, uid, content, image;
   Map<String, dynamic> post;
+  String docid;
   int index;
   final String uid;
-  Card_View(this.post, this.index, this.uid);
+
+  Card_View(this.post, this.index, this.uid, this.docid);
+
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -27,19 +30,20 @@ class Card_View extends StatelessWidget {
           child: Padding(
               padding: EdgeInsets.all(5),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   CardTopBar(post['owner'],
                       DateTime.fromMillisecondsSinceEpoch(post['timestamp'])),
                   SizedBox(height: 10),
-                  CardContent(post, false, uid),
+                  CardContent(post, false, uid, docid),
                   SizedBox(
                     height: 10,
                   ),
                   Divider(
                     height: 0,
                   ),
-                  CardBottomBar(post, false, false, false),
+                  CardBottomBar(post, false, false, false, docid),
                 ],
               ))),
     ]);

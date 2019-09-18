@@ -13,19 +13,19 @@ class CardTopBar extends StatelessWidget {
     if (temp >= Duration(days: 1)) {
       return (temp.inDays == 1)
           ? 'Yesterday'
-          : temp.inDays.toString() + ' days';
+          : temp.inDays.toString() + ' days ago';
     }
     if (temp >= Duration(hours: 1)) {
       return (temp.inHours == 1)
           ? '1 hour'
-          : temp.inHours.toString() + ' hours';
+          : temp.inHours.toString() + ' hours ago';
     }
     if (temp >= Duration(minutes: 1)) {
       return (temp.inMinutes == 1)
           ? '1 min'
-          : temp.inMinutes.toString() + ' mins';
+          : temp.inMinutes.toString() + ' mins ago';
     }
-    return 'Now';
+    return 'Just now';
   }
 
   @override
@@ -43,14 +43,15 @@ class CardTopBar extends StatelessWidget {
                   width: 5,
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start
-                  ,mainAxisAlignment: MainAxisAlignment.start, children: [
-                  Post_Owner(snapshot.data['name'], uid),
-                  Text(
-                    GetDuration(),
-                    style: TextStyle(color: greyColor),
-                  )
-                ])
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Post_Owner(snapshot.data['name'], uid),
+                      Text(
+                        GetDuration(),
+                        style: TextStyle(color: greyColor),
+                      )
+                    ])
               ],
             );
         });

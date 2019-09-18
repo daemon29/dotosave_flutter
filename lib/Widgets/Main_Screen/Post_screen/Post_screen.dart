@@ -6,16 +6,18 @@ import 'package:flutter/material.dart';
 
 class PostSreen extends StatefulWidget {
   final String uid;
+  String docId;
   Map<String, dynamic> post;
-  PostSreen(this.uid, this.post);
+  PostSreen(this.uid, this.post, this.docId);
   @override
-  PostSreenState createState() => PostSreenState(uid, post);
+  PostSreenState createState() => PostSreenState(uid, post, docId);
 }
 
 class PostSreenState extends State<PostSreen> {
   final String uid;
+  String docId;
   Map<String, dynamic> post;
-  PostSreenState(this.uid, this.post);
+  PostSreenState(this.uid, this.post, this.docId);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,14 +32,14 @@ class PostSreenState extends State<PostSreen> {
                 SizedBox(
                   height: 10,
                 ),
-                CardContent(post, true, uid),
+                CardContent(post, true, uid, docId),
                 SizedBox(
                   height: 10,
                 ),
                 Divider(
                   height: 0,
                 ),
-                CardBottomBar(post, false, false, false),
+                CardBottomBar(post, false, false, false, docId),
               ])),
         ]),
         bottomNavigationBar: MyBottomNavigationBar(context, uid, 0));

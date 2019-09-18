@@ -114,8 +114,8 @@ class _MyAppState extends State<MyApp> {
         await firebaseAuth.signInWithCredential(credential);
     if (firebaseUser != null) {
       final QuerySnapshot result = await Firestore.instance
-          .collection('Uses')
-          .where('id', isEqualTo: firebaseUser.uid)
+          .collection('User')
+          .where('uid', isEqualTo: firebaseUser.uid)
           .getDocuments();
       final List<DocumentSnapshot> documents = result.documents;
       if (documents.length == 0) {

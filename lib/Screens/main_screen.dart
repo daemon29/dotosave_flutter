@@ -58,8 +58,8 @@ class _Main_Screen extends State<Main_Screen> {
                     itemBuilder: (context, index) {
                       return Padding(
                           padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                          child: Card_View(
-                              snapshot.data[index].data, index, currentUserId));
+                          child: Card_View(snapshot.data[index].data, index,
+                              currentUserId, snapshot.data[index].documentID));
                     });
               }
             },

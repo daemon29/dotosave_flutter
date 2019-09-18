@@ -1,7 +1,9 @@
+import 'package:LadyBug/Screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'donate_screen.dart';
 
 class SignUp extends StatefulWidget {
@@ -10,6 +12,12 @@ class SignUp extends StatefulWidget {
 }
 
 class _Signup extends State<SignUp> {
+  Future<Null> signOut() async {
+    await GoogleSignIn().signOut();
+    await FirebaseAuth.instance.signOut();
+    MaterialPageRoute(builder: (context) => MyApp());
+  }
+
   bool isLoading = false;
   String email, password;
   Widget horizontalLine() => Padding(
