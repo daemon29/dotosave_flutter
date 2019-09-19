@@ -3,14 +3,27 @@ import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardContent.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardTopBar.dart';
 import 'package:flutter/material.dart';
 
-class Card_View extends StatelessWidget {
+class Card_View extends StatefulWidget {
+  Map<String, dynamic> post;
+  String docid;
+  int index;
+  final String uid;
+  Card_View(this.post, this.index, this.uid, this.docid);
+
+  @override
+  State createState() {
+    Card_View_State(post, index, uid, docid);
+  }
+}
+
+class Card_View_State extends State<Card_View> {
   //String name, uid, content, image;
   Map<String, dynamic> post;
   String docid;
   int index;
   final String uid;
 
-  Card_View(this.post, this.index, this.uid, this.docid);
+  Card_View_State(this.post, this.index, this.uid, this.docid);
 
   @override
   Widget build(BuildContext context) {
