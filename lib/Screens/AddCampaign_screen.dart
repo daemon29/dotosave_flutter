@@ -109,7 +109,8 @@ class AddCampaignState extends State<AddCampaign> {
               'tags': tags,
               'needvol': _vol,
               'needdonor': _do,
-              'type': _selectedType
+              'type': _selectedType,
+              'timestamp': DateTime.now().millisecondsSinceEpoch
             }).then((onValue) {
               this.setState(() {
                 _busy = false;

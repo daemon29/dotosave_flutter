@@ -2,6 +2,7 @@ import 'package:LadyBug/Screens/AddPost_screen.dart';
 import 'package:LadyBug/Screens/donationmap_screen.dart';
 import 'package:LadyBug/Screens/friend_screen.dart';
 import 'package:LadyBug/Widgets/HomeDrawer.dart';
+import 'package:LadyBug/Widgets/Main_Screen/CampaignCard/CampaignCard.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/Card_View.dart';
 import 'package:LadyBug/Screens/donate_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,6 +27,14 @@ class _Main_Screen extends State<Main_Screen> {
   Future getPosts() async {
     QuerySnapshot qs = await _firestore
         .collection('Post')
+        .orderBy('timestamp', descending: true)
+        .getDocuments();
+    return qs.documents;
+  }
+
+  Future getCampaigns() async {
+    QuerySnapshot qs = await _firestore
+        .collection('Campaign')
         .orderBy('timestamp', descending: true)
         .getDocuments();
     return qs.documents;
@@ -111,7 +120,24 @@ class _Main_Screen extends State<Main_Screen> {
         Flexible(
             child: ,*/
                   TabBarView(children: [
-                Container(),
+                FutureBuilder(
+                    future: (getCampaigns()),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting)
+                        return Center(child: CircularProgressIndicator());
+                      else {
+                        return ListView.builder(
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                  child: CampaignCard(
+                                      snapshot.data[index].data,
+                                      snapshot.data[index].documentID,
+                                      currentUserId));
+                            });
+                      }
+                    }),
                 FutureBuilder(
                   future: (getPosts()),
                   builder: (context, snapshot) {

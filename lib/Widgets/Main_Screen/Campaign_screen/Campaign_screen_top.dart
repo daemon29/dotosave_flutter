@@ -20,24 +20,30 @@ class CampainScreenTop extends StatelessWidget {
     return Container(
         child: Column(
       children: <Widget>[
-        CachedNetworkImage(
-          placeholder: (context, url) => CircularProgressIndicator(),
-          imageUrl: campaign['imageurl'],
-          fit: BoxFit.contain,
-        ),
-        SizedBox(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            color: Colors.blue,
-            child: Text(campaign["title"],
-                overflow: TextOverflow.clip,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white)),
+        Stack(children: [
+          CachedNetworkImage(
+            placeholder: (context, url) => CircularProgressIndicator(),
+            imageUrl: campaign['imageurl'],
+            fit: BoxFit.contain,
           ),
-        ),
+          Positioned(
+              left: 0,
+              bottom: 0,
+              child: SizedBox(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.blue.withOpacity(0.8),
+                  child: Text(campaign["title"],
+                      overflow: TextOverflow.clip,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white)),
+                ),
+              )),
+        ]),
         (campaign['startDate'] == null)
             ? Container()
             : SizedBox(
