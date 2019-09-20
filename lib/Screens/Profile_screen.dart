@@ -42,7 +42,11 @@ class _ProfileScreen extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Profile"),
+          title: Text("Profile",
+              style: const TextStyle(
+                fontSize: 22,
+                fontFamily: 'Manjari',
+              )),
         ),
         body: FutureBuilder(
           future: (getPosts()),
@@ -51,7 +55,7 @@ class _ProfileScreen extends State<ProfileScreen> {
               return Center(child: CircularProgressIndicator());
             else if (snapshot.connectionState == ConnectionState.done) {
               return ListView.builder(
-                  itemCount: (snapshot?.data?.length??0 )+ 1,
+                  itemCount: (snapshot?.data?.length ?? 0) + 1,
                   itemBuilder: (context, index) {
                     if (index == 0)
                       return FutureBuilder(

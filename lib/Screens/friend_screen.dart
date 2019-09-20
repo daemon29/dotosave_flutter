@@ -20,7 +20,11 @@ class FriendScreenState extends State<FriendScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Message'),
+        title: Text('Message',
+            style: const TextStyle(
+              fontSize: 22,
+              fontFamily: 'Manjari',
+            )),
       ),
       body: WillPopScope(
         child: Stack(
@@ -107,7 +111,8 @@ class FriendScreenState extends State<FriendScreen> {
                       Container(
                         child: Text(
                           '${document['name']}',
-                          style: TextStyle(color: Color(0xff203152)),
+                          style: TextStyle(
+                              fontFamily: 'Segoeu', color: Color(0xff203152)),
                         ),
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),

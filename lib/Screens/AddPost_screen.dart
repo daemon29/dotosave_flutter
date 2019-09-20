@@ -84,7 +84,11 @@ class AddPostState extends State<AddPost> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Create Post"),
+          title: const Text("Create Post",
+              style: const TextStyle(
+                fontSize: 22,
+                fontFamily: 'Manjari',
+              )),
         ),
         body: ListView(children: [
           Padding(
@@ -191,7 +195,7 @@ class AddPostState extends State<AddPost> {
                                           child: Text(
                                             "Send",
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                TextStyle(fontFamily: 'Segoeu',color: Colors.white),
                                           ),
                                         )
                                       ],

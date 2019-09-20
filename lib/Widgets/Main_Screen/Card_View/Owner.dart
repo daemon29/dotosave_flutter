@@ -13,9 +13,9 @@ class Post_Owner extends StatelessWidget {
         child: Text(
           name,
           style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold
-          ),
+              fontFamily: 'Segoeu',
+              color: Colors.black,
+              fontWeight: FontWeight.bold),
         ));
   }
 }

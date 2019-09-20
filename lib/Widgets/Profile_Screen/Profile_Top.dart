@@ -62,11 +62,11 @@ class _Proflie_Top extends State<Proflie_Top> {
                         },
                         child: Text(
                           "Edit profile",
-                          style: TextStyle(color: Colors.white,fontSize: 13),
+                          style: TextStyle( fontFamily: 'Segoeu',color: Colors.white, fontSize: 13),
                         ),
                       ),
                     )
-                  : null
+                  : Container()
             ],
           )),
       SizedBox(
@@ -76,7 +76,8 @@ class _Proflie_Top extends State<Proflie_Top> {
               child: Text(
                 user["name"],
                 style: TextStyle(
-                    fontSize: 20,
+                    fontFamily: 'Segoeu',
+                    fontSize: 18,
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
               ))),
@@ -88,7 +89,8 @@ class _Proflie_Top extends State<Proflie_Top> {
                   ? Container()
                   : Text(
                       '(' + user["nickname"] + ')',
-                      style: TextStyle(color: Colors.grey[700]),
+                      style: TextStyle(
+                          fontFamily: 'Segoeu', color: Colors.grey[700]),
                       overflow: TextOverflow.clip,
                     ))),
       SizedBox(
@@ -100,14 +102,16 @@ class _Proflie_Top extends State<Proflie_Top> {
               padding: EdgeInsets.only(left: 10),
               child: Text(
                 user["bio"],
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(fontFamily: 'Segoeu', color: Colors.black),
                 maxLines: 6,
                 overflow: TextOverflow.clip,
               ))),
       SizedBox(
         height: 10,
       ),
-      Divider(color: Colors.blue,)
+      Divider(
+        color: Colors.blue,
+      )
     ]));
   }
 }

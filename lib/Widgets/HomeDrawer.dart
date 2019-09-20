@@ -56,6 +56,7 @@ class HomeDrawer extends StatelessWidget {
                           overflow: TextOverflow.clip,
                           maxLines: 2,
                           style: TextStyle(
+                              fontFamily: 'Segoeu',
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
@@ -73,6 +74,21 @@ class HomeDrawer extends StatelessWidget {
                     ),
                     title: Text('Notifications'),
                     onTap: () {},
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.group_work,
+                      color: Colors.black,
+                    ),
+                    title: Text('Organizations'),
+                    onTap: () {
+                      // Update the state of the app.
+                      // ...
+                      Navigator.push(
+                          context,
+                          SlideRightRoute(
+                              page: OrganizationList(currentUserId)));
+                    },
                   ),
                   ListTile(
                     leading: Icon(
@@ -114,6 +130,7 @@ class HomeDrawer extends StatelessWidget {
                               currentUserId: currentUserId,
                             )));
                       }),
+                  /*
                   ListTile(
                     leading: Icon(
                       Icons.group,
@@ -130,21 +147,7 @@ class HomeDrawer extends StatelessWidget {
                       );*/
                     },
                   ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.group_work,
-                      color: Colors.black,
-                    ),
-                    title: Text('Organizations'),
-                    onTap: () {
-                      // Update the state of the app.
-                      // ...
-                      Navigator.push(
-                          context,
-                          SlideRightRoute(
-                              page: OrganizationList(currentUserId)));
-                    },
-                  ),
+*/
                   /*
                   ListTile(
                     leading: Icon(

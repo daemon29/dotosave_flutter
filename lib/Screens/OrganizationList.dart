@@ -28,7 +28,11 @@ class OrganizationList extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text("Organizations"),
+        title: Text("Organizations",
+            style: const TextStyle(
+              fontSize: 22,
+              fontFamily: 'Manjari',
+            )),
       ),
       body: FutureBuilder(
         future: getYourOrganizationList(),
@@ -49,7 +53,9 @@ class OrganizationList extends StatelessWidget {
                           child: Text(
                             "Your organizations",
                             style: const TextStyle(
-                                color: Colors.white, fontSize: 18),
+                                fontFamily: 'Segoeu',
+                                color: Colors.white,
+                                fontSize: 18),
                           ));
                     else if (index == length1 + 1)
                       return Container(
@@ -57,7 +63,9 @@ class OrganizationList extends StatelessWidget {
                           color: Colors.blue,
                           child: Text("Followed",
                               style: const TextStyle(
-                                  color: Colors.white, fontSize: 18)));
+                                  fontFamily: 'Segoeu',
+                                  color: Colors.white,
+                                  fontSize: 18)));
                     else if (index <= length1)
                       return InkWell(
                         onTap: () {
@@ -87,7 +95,9 @@ class OrganizationList extends StatelessWidget {
                                     child: Text(
                                       _snapshot.data['name'],
                                       style: const TextStyle(
-                                          color: Colors.black, fontSize: 17),
+                                          fontFamily: 'Segoeu',
+                                          color: Colors.black,
+                                          fontSize: 17),
                                     ));
                               else
                                 return Container();
@@ -123,6 +133,7 @@ class OrganizationList extends StatelessWidget {
                                         : Colors.grey[100],
                                     child: Text(_snapshot.data['name'],
                                         style: const TextStyle(
+                                            fontFamily: 'Segoeu',
                                             color: Colors.black,
                                             fontSize: 17)));
                               else

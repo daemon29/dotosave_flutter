@@ -1,22 +1,16 @@
 import 'dart:async';
+import 'package:LadyBug/Screens/Campaign_screen.dart';
+import 'package:LadyBug/Screens/Item_infomation_screen.dart';
+import 'package:LadyBug/Widgets/SlideRightRoute.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 const place_api = 'AIzaSyApNZMEtoLsnu0ANWqepMBZUbCHbMMkP38';
-/*
-class RoutesWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) => MaterialApp(
-        routes: {
-          "/": (_) => DonationMap(),
-        },
-      );
-}
-*/
 
 class DonationMap extends StatefulWidget {
   final String currentUserId;
@@ -44,6 +38,7 @@ class _DonationMapState extends State<DonationMap> {
   String title_txt = "";
   String body_txt = "";
   String address_txt = "";
+  String exp_txt = "";
   double radius = 5000;
   //String _text = "empty";
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: place_api);
@@ -85,7 +80,7 @@ class _DonationMapState extends State<DonationMap> {
                   ),
                   title: Text(
                     'Visibility',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(fontFamily: 'Segoeu', color: Colors.black),
                   ),
                   onTap: null),
               ListTile(
@@ -95,8 +90,9 @@ class _DonationMapState extends State<DonationMap> {
                         Icons.check_box,
                         color: Colors.grey[700],
                       ),
-                title:
-                    Text('Events', style: TextStyle(color: Colors.grey[700])),
+                title: Text('Events',
+                    style: TextStyle(
+                        fontFamily: 'Segoeu', color: Colors.grey[700])),
                 onTap: () {
                   setState(() {
                     eventMarkerVisible = !eventMarkerVisible;
@@ -112,7 +108,8 @@ class _DonationMapState extends State<DonationMap> {
                           color: Colors.grey[700],
                         ),
                   title: Text('Campain',
-                      style: TextStyle(color: Colors.grey[700])),
+                      style: TextStyle(
+                          fontFamily: 'Segoeu', color: Colors.grey[700])),
                   onTap: () {
                     setState(() {
                       campaignMarkerVisible = !campaignMarkerVisible;
@@ -126,7 +123,9 @@ class _DonationMapState extends State<DonationMap> {
                         Icons.check_box,
                         color: Colors.grey[700],
                       ),
-                title: Text('Items', style: TextStyle(color: Colors.grey[700])),
+                title: Text('Items',
+                    style: TextStyle(
+                        fontFamily: 'Segoeu', color: Colors.grey[700])),
                 onTap: () {
                   setState(() {
                     itemMarkerVisible = !itemMarkerVisible;
@@ -153,7 +152,11 @@ class _DonationMapState extends State<DonationMap> {
               ),
             ],
             backgroundColor: Colors.blue,
-            title: const Text('Donation map'),
+            title: const Text('Map',
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontFamily: 'Manjari',
+                )),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context, false),
@@ -269,30 +272,50 @@ class _DonationMapState extends State<DonationMap> {
           title_txt = doc["title"];
           body_txt = doc["introduction"];
           address_txt = doc["address"];
+          exp_txt = (doc['startDate'] != null)
+              ? ('From' +
+                  DateFormat("dd MMMM yyyy").format(
+                      DateTime.fromMillisecondsSinceEpoch(doc['startDate'])))
+              : "";
+          exp_txt += (doc['endDate'] != null)
+              ? ('to' +
+                  DateFormat("dd MMMM yyyy").format(
+                      DateTime.fromMillisecondsSinceEpoch(doc['endDate'])))
+              : "";
         });
         mapScaffold.currentState.showBottomSheet((context) => InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  SlideRightRoute(
+                      page: CampaignScreen(doc.data,doc.documentID, currentUserId)));
+            },
             child: Container(
                 width: MediaQuery.of(context).size.width,
-                height: 200,
+                height: 250,
                 child: Column(children: <Widget>[
                   Flexible(
                       child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.blue,
-                          padding: EdgeInsets.all(5),
-                          child: Text(
-                            title_txt,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.clip,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 21),
-                          ) //)
-                          )),
-                  SizedBox(
-                    height: 3,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.blue,
+                    padding: EdgeInsets.all(5),
+                    child: Text(title_txt,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.clip,
+                        style: TextStyle(
+                            fontFamily: 'Segoeu',
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14)),
+                  ) //)
+                      ),
+                  (exp_txt == "")?Container():Text(
+                    exp_txt,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                     Icon(
@@ -307,6 +330,7 @@ class _DonationMapState extends State<DonationMap> {
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.clip,
                       style: TextStyle(
+                        fontFamily: 'Segoeu',
                         fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.normal,
                       ),
@@ -315,13 +339,16 @@ class _DonationMapState extends State<DonationMap> {
                   Divider(
                     color: Colors.blue,
                   ),
-                  Text(
+                  Flexible(
+                      child: Text(
                     "  " + body_txt,
                     overflow: TextOverflow.clip,
                     textAlign: TextAlign.start,
-                    style:
-                        TextStyle(fontWeight: FontWeight.normal, fontSize: 17),
-                  )
+                    style: TextStyle(
+                        fontFamily: 'Segoeu',
+                        fontWeight: FontWeight.normal,
+                        fontSize: 13),
+                  ))
                 ]))));
       },
       infoWindow:
@@ -364,8 +391,76 @@ class _DonationMapState extends State<DonationMap> {
       onTap: () {
         setState(() {
           markerId = doc.documentID;
+          title_txt = doc["title"];
+          address_txt = doc['address'];
           body_txt = doc["describe"];
+          exp_txt = DateFormat("dd MMMM yyyy")
+              .format(DateTime.fromMillisecondsSinceEpoch(doc['exp']));
         });
+        mapScaffold.currentState.showBottomSheet((context) => InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  SlideRightRoute(
+                      page: ItemInformationScreen(
+                          doc.documentID, currentUserId)));
+            },
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 220,
+                child: Column(children: <Widget>[
+                  Flexible(
+                      child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.blue,
+                          padding: EdgeInsets.all(5),
+                          child: Text(
+                            title_txt,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.clip,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14),
+                          ) //)
+                          )),
+                  Text(
+                    'Exp: ' + exp_txt,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    Icon(
+                      Icons.location_on,
+                      size: 27,
+                      color: Colors.blue,
+                    ),
+                    Flexible(
+                        child: Text(
+                      address_txt,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ))
+                  ]),
+                  Divider(
+                    color: Colors.blue,
+                  ),
+                  Flexible(
+                      child: Text(
+                    "  " + body_txt,
+                    overflow: TextOverflow.clip,
+                    textAlign: TextAlign.start,
+                    style:
+                        TextStyle(fontWeight: FontWeight.normal, fontSize: 13),
+                  ))
+                ]))));
       },
       infoWindow: InfoWindow(title: "Item", snippet: doc["title"]),
       position: LatLng(geo.latitude, geo.longitude),

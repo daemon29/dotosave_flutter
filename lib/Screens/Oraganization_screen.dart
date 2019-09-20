@@ -54,7 +54,11 @@ class _OrganizationScreen extends State<OrganizationScreen> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text("Organization"),
+        title: Text("Organization", style: const TextStyle(
+                  fontSize: 22,
+                  fontFamily: 'Manjari',
+                )
+                ),
       ),
       floatingActionButton: FutureBuilder(
         future: isMember(),
@@ -121,7 +125,7 @@ class _OrganizationScreen extends State<OrganizationScreen> {
             return Center(child: CircularProgressIndicator());
           else if (snapshot.connectionState == ConnectionState.done) {
             return ListView.builder(
-                itemCount: (snapshot?.data?.length ?? 0 )+ 1,
+                itemCount: (snapshot?.data?.length ?? 0) + 1,
                 itemBuilder: (context, index) {
                   if (index == 0)
                     return FutureBuilder(

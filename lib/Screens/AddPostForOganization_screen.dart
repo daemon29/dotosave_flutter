@@ -9,10 +9,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
 class AddPostOrganization extends StatefulWidget {
-  final String uid,oid;
-  AddPostOrganization(this.uid,this.oid);
+  final String uid, oid;
+  AddPostOrganization(this.uid, this.oid);
   @override
-  AddPostState createState() => AddPostState(uid,oid);
+  AddPostState createState() => AddPostState(uid, oid);
 }
 
 class AddPostState extends State<AddPostOrganization> {
@@ -33,7 +33,7 @@ class AddPostState extends State<AddPostOrganization> {
     }
   }
 
-  AddPostState(this.uid,this.oid);
+  AddPostState(this.uid, this.oid);
   Future<File> writeToFile(ByteData data, String path) {
     final buffer = data.buffer;
     return new File(path).writeAsBytes(
@@ -84,7 +84,11 @@ class AddPostState extends State<AddPostOrganization> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Create Post"),
+          title: const Text("Create Post",
+              style: const TextStyle(
+                fontSize: 22,
+                fontFamily: 'Manjari',
+              )),
         ),
         body: ListView(children: [
           Padding(
@@ -191,7 +195,7 @@ class AddPostState extends State<AddPostOrganization> {
                                           child: Text(
                                             "Send",
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                TextStyle(fontFamily: 'Segoeu',color: Colors.white),
                                           ),
                                         )
                                       ],

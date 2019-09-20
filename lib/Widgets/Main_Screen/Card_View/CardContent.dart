@@ -34,7 +34,7 @@ class CardContent extends StatelessWidget {
                       child: Text(
                         post['content'],
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 17),
+                        style: TextStyle(fontFamily: 'Segoeu',fontSize: 17),
                         overflow: clipText
                             ? TextOverflow.clip
                             : TextOverflow.ellipsis,
@@ -87,7 +87,7 @@ class CardContent extends StatelessWidget {
                     post['content'],
                     textAlign: TextAlign.left,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 17),
+                    style: TextStyle(fontFamily: 'Segoeu',fontSize: 17),
                     maxLines: 7,
                   ))));
     }

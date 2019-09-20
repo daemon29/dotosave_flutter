@@ -123,6 +123,7 @@ class _Test extends State<Test> {
           child: Text(
             "${re["detectedClass"]} ${(re["confidenceInClass"] * 100).toStringAsFixed(0)}%",
             style: TextStyle(
+              fontFamily: 'Segoeu',
               background: Paint()..color = blue,
               color: Colors.white,
               fontSize: 12.0,

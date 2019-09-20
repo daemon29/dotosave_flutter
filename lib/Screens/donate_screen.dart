@@ -31,6 +31,7 @@ class _DonateScreen extends State<DonateScreen> {
   PersistentBottomSheetController controller;
   File _image;
   TextStyle style_state = TextStyle(
+    fontFamily: 'Segoeu',
     fontStyle: FontStyle.italic,
   );
   bool donotpick = true;
@@ -73,6 +74,7 @@ class _DonateScreen extends State<DonateScreen> {
               "describe": body,
               "imageurl": url,
               'exp': exp,
+              'address': _address,
               'owner': currentUserId,
               "geo": geoPoint
             }).then((onValue) {
@@ -267,6 +269,7 @@ class _DonateScreen extends State<DonateScreen> {
           child: Text(
             "${re["detectedClass"]} ${(re["confidenceInClass"] * 100).toStringAsFixed(0)}%",
             style: TextStyle(
+              fontFamily: 'Segoeu',
               background: Paint()..color = blue,
               color: Colors.white,
               fontSize: 12.0,
@@ -308,7 +311,11 @@ class _DonateScreen extends State<DonateScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Donate"),
+          title: const Text("Donate",
+              style: const TextStyle(
+                fontSize: 22,
+                fontFamily: 'Manjari',
+              )),
           backgroundColor: Colors.blue,
         ),
         bottomNavigationBar: null,
@@ -375,7 +382,7 @@ class _DonateScreen extends State<DonateScreen> {
                                           child: Text("Information",
                                               style: TextStyle(
                                                 fontSize: 16,
-                                                fontFamily: "Poppins-Medium",
+                                                fontFamily: 'Segoeu',
                                               ))),
                                       SizedBox(
                                         height: 15,
@@ -383,9 +390,10 @@ class _DonateScreen extends State<DonateScreen> {
                                       Text("Title",
                                           style: TextStyle(
                                             fontSize: 15,
-                                            fontFamily: "Poppins-Medium",
+                                            fontFamily: 'Segoeu',
                                           )),
                                       TextField(
+                                        maxLength: 70,
                                         keyboardType: TextInputType.multiline,
                                         maxLines: null,
                                         onChanged: (value) {
@@ -396,6 +404,7 @@ class _DonateScreen extends State<DonateScreen> {
                                         decoration: InputDecoration(
                                             hintText: "Title here...",
                                             hintStyle: TextStyle(
+                                                fontFamily: 'Segoeu',
                                                 color: Colors.grey,
                                                 fontSize: 12.0)),
                                       ),
@@ -405,9 +414,10 @@ class _DonateScreen extends State<DonateScreen> {
                                       Text("Describe",
                                           style: TextStyle(
                                             fontSize: 15,
-                                            fontFamily: "Poppins-Medium",
+                                            fontFamily: 'Segoeu',
                                           )),
                                       TextField(
+                                        maxLength: 200,
                                         keyboardType: TextInputType.multiline,
                                         maxLines: null,
                                         onChanged: (value) {
@@ -418,6 +428,7 @@ class _DonateScreen extends State<DonateScreen> {
                                         decoration: InputDecoration(
                                             hintText: "Describe this ...",
                                             hintStyle: TextStyle(
+                                                fontFamily: 'Segoeu',
                                                 color: Colors.grey,
                                                 fontSize: 12.0)),
                                       ),
@@ -443,47 +454,36 @@ class _DonateScreen extends State<DonateScreen> {
                                             MainAxisAlignment.start,
                                         children: <Widget>[
                                           RaisedButton(
-                                              textColor: Colors.white,
-                                              onPressed: () {
-                                                setState(() {
-                                                  donotpick = true;
-                                                  exp = 0;
-                                                });
-                                              },
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                    color: Colors.blue),
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                child: const Text(
-                                                    'Non-expiring',
-                                                    style: TextStyle(
-                                                        fontSize: 13)),
-                                              )),
+                                            color: Colors.blue,
+                                            textColor: Colors.white,
+                                            onPressed: () {
+                                              setState(() {
+                                                donotpick = true;
+                                                exp = 0;
+                                              });
+                                            },
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: const Text('Non-expiring',
+                                                style: TextStyle(
+                                                    fontFamily: 'Segoeu',
+                                                    fontSize: 13)),
+                                          ),
                                           const Text("  Or  "),
                                           RaisedButton(
-                                              textColor: Colors.white,
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                              onPressed: () {
-                                                donotpick = false;
-                                                _selectDate(context);
-                                                exp = selectedDate
-                                                    .millisecondsSinceEpoch;
-                                              },
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.blue,
-                                                ),
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                child: const Text(
-                                                    'Select a date',
-                                                    style: TextStyle(
-                                                        fontSize: 13)),
-                                              ))
+                                            textColor: Colors.white,
+                                            color: Colors.blue,
+                                            padding: const EdgeInsets.all(10.0),
+                                            onPressed: () {
+                                              donotpick = false;
+                                              _selectDate(context);
+                                              exp = selectedDate
+                                                  .millisecondsSinceEpoch;
+                                            },
+                                            child: const Text('Select a date',
+                                                style: TextStyle(
+                                                    fontFamily: 'Segoeu',
+                                                    fontSize: 13)),
+                                          )
                                         ],
                                       ),
                                       SizedBox(
@@ -491,8 +491,8 @@ class _DonateScreen extends State<DonateScreen> {
                                       ),
                                       Text("Address",
                                           style: TextStyle(
+                                            fontFamily: 'Segoeu',
                                             fontSize: 15,
-                                            fontFamily: "Poppins-Medium",
                                           )),
                                       Visibility(
                                         visible: _pickaplacevisibility,
@@ -512,6 +512,7 @@ class _DonateScreen extends State<DonateScreen> {
                                               setState(() {
                                                 _address = value;
                                                 style_state = TextStyle(
+                                                  fontFamily: 'Segoeu',
                                                   fontStyle: FontStyle.normal,
                                                 );
                                               });
@@ -519,6 +520,7 @@ class _DonateScreen extends State<DonateScreen> {
                                             decoration: InputDecoration(
                                                 hintText: "Enter your address",
                                                 hintStyle: TextStyle(
+                                                    fontFamily: 'Segoeu',
                                                     color: Colors.grey,
                                                     fontSize: 12.0)),
                                           )),
@@ -527,38 +529,28 @@ class _DonateScreen extends State<DonateScreen> {
                                             MainAxisAlignment.start,
                                         children: <Widget>[
                                           RaisedButton(
-                                              textColor: Colors.white,
-                                              onPressed: onSeachBarButtonClick,
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                    color: Colors.blue),
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                child: const Text(
-                                                    'Pick a place',
-                                                    style: TextStyle(
-                                                        fontSize: 13)),
-                                              )),
+                                            textColor: Colors.white,
+                                            onPressed: onSeachBarButtonClick,
+                                            color: Colors.blue,
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: const Text('Pick a place',
+                                                style: TextStyle(
+                                                    fontFamily: 'Segoeu',
+                                                    fontSize: 13)),
+                                          ),
                                           const Text("  Or  "),
                                           RaisedButton(
-                                              textColor: Colors.white,
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                              onPressed:
-                                                  onGetCurrentLocationClick,
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.blue,
-                                                ),
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                child: const Text(
-                                                    'Get your location',
-                                                    style: TextStyle(
-                                                        fontSize: 13)),
-                                              ))
+                                            textColor: Colors.white,
+                                            color: Colors.blue,
+                                            padding: const EdgeInsets.all(10.0),
+                                            onPressed:
+                                                onGetCurrentLocationClick,
+                                            child: const Text(
+                                                'Get your location',
+                                                style: TextStyle(
+                                                    fontFamily: 'Segoeu',
+                                                    fontSize: 13)),
+                                          )
                                         ],
                                       ),
                                       SizedBox(
@@ -567,7 +559,7 @@ class _DonateScreen extends State<DonateScreen> {
                                       Text("Item types:",
                                           style: TextStyle(
                                             fontSize: 15,
-                                            fontFamily: "Poppins-Medium",
+                                            fontFamily: 'Segoeu',
                                           )),
                                       SizedBox(
                                         height: 15,
@@ -579,17 +571,13 @@ class _DonateScreen extends State<DonateScreen> {
                   height: 10,
                 ),
                 RaisedButton(
-                    textColor: Colors.white,
-                    padding: const EdgeInsets.all(0.0),
-                    onPressed: submit,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                      ),
-                      padding: const EdgeInsets.all(10.0),
-                      child: const Text('   Submit   ',
-                          style: TextStyle(fontSize: 17)),
-                    ))
+                  textColor: Colors.white,
+                  padding: const EdgeInsets.all(10.0),
+                  onPressed: submit,
+                  color: Colors.blue,
+                  child: const Text('Submit',
+                      style: TextStyle(fontFamily: 'Segoeu', fontSize: 17)),
+                )
               ],
             ),
           ),

@@ -12,10 +12,10 @@ class CommentTop extends StatelessWidget {
   String GetDuration() {
     Duration temp = DateTime.now().difference(time);
     if (temp > Duration(days: 365)) {
-      return DateFormat('dd-MMMM-yyyy').format(time);
+      return DateFormat('dd MMMM yyyy').format(time);
     }
     if (temp > Duration(days: 7)) {
-      return DateFormat('dd-').format(time);
+      return DateFormat('dd MMMM').format(time);
     }
     if (temp >= Duration(days: 1)) {
       return (temp.inDays == 1)
@@ -44,7 +44,10 @@ class CommentTop extends StatelessWidget {
         Post_Owner(name, uid),
         Text(
           GetDuration(),
-          style: TextStyle(color: greyColor),
+          style: TextStyle(
+            color: greyColor,
+            fontFamily: 'Segoeu',
+          ),
         )
       ],
     );

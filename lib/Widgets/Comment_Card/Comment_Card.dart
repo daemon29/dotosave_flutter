@@ -18,7 +18,7 @@ class _CommentCard extends State<CommentCard> {
   final Map<String, dynamic> comment;
   final String currentUserId;
   bool liked = false;
-  
+
   _CommentCard(this.comment, this.currentUserId);
   Future getPostOwner() async {
     DocumentSnapshot ds = await Firestore.instance
@@ -41,7 +41,7 @@ class _CommentCard extends State<CommentCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               MyCircleAvatar(comment['owner'], snapshot.data['imageurl'], 40.0,
-                  currentUserId, true,false),
+                  currentUserId, true, false),
               SizedBox(
                 width: 10,
               ),
@@ -67,7 +67,12 @@ class _CommentCard extends State<CommentCard> {
                               ? Icon(Icons.favorite)
                               : Icon(Icons.favorite_border),
                         ),
-                        Text(comment['like'].length.toString()),
+                        Text(
+                          comment['like'].length.toString(),
+                          style: const TextStyle(
+                            fontFamily: 'Segoeu',
+                          ),
+                        ),
                       ])
                 ],
               ))

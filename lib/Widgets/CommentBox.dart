@@ -6,18 +6,21 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:uuid/uuid.dart';
 
 class CommentBox extends StatefulWidget {
   final String uid, postId;
-  CommentBox(this.uid, this.postId);
+  final bool campaign;
+  CommentBox(this.uid, this.postId, this.campaign);
   @override
-  _CommentBox createState() => _CommentBox(this.uid, this.postId);
+  _CommentBox createState() =>
+      _CommentBox(this.uid, this.postId, this.campaign);
 }
 
 class _CommentBox extends State<CommentBox> {
   final String uid, postId;
+  final bool campaign;
+
   File _file = null;
   bool _visible = false;
   bool _send_clickable = false;
@@ -34,7 +37,7 @@ class _CommentBox extends State<CommentBox> {
     }
   }
 
-  _CommentBox(this.uid, this.postId);
+  _CommentBox(this.uid, this.postId, this.campaign);
   Future<File> writeToFile(ByteData data, String path) {
     final buffer = data.buffer;
     return new File(path).writeAsBytes(
@@ -80,11 +83,55 @@ class _CommentBox extends State<CommentBox> {
     }
     Navigator.pop(context);
   }
+
+  void UpLoadPost2() async {
+    if (_visible) {
+      var uuid = new Uuid();
+
+      ///File image = await testCompressAndGetFile(_file, "tempimg");
+      String filename = uid + uuid.v1();
+      final StorageReference storageRef =
+          FirebaseStorage.instance.ref().child('Images').child(filename);
+      StorageUploadTask uploadTask = storageRef.putFile(_file);
+      StorageTaskSnapshot storageTaskSnapshot;
+      uploadTask.onComplete.then((value) {
+        if (value.error == null) {
+          storageTaskSnapshot = value;
+          storageTaskSnapshot.ref.getDownloadURL().then((url) {
+            Firestore.instance.collection('Comment').document().setData({
+              'content': content,
+              'image': url,
+              'like': [],
+              'owner': uid,
+              'campaignId': postId,
+              'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
+            });
+          });
+        }
+      });
+      // image.delete();
+    } else {
+      Firestore.instance.collection('Comment').document().setData({
+        'content': content,
+        'image': "",
+        'like': [],
+        'owner': uid,
+        'campaignId': postId,
+        'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
+      });
+    }
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Write a comment"),
+          title: const Text("Write a comment",
+              style: const TextStyle(
+                fontSize: 22,
+                fontFamily: 'Manjari',
+              )),
         ),
         body: ListView(children: [
           Padding(
@@ -182,7 +229,9 @@ class _CommentBox extends State<CommentBox> {
                                         ),
                                         FlatButton(
                                           onPressed: _send_clickable
-                                              ? UpLoadPost
+                                              ? ((campaign)
+                                                  ? UpLoadPost2
+                                                  : UpLoadPost)
                                               : null,
                                           padding: EdgeInsets.all(0.0),
                                           color: Colors.blue,
@@ -190,8 +239,9 @@ class _CommentBox extends State<CommentBox> {
                                           splashColor: Colors.blueAccent,
                                           child: Text(
                                             "Send",
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                            style: TextStyle(
+                                                fontFamily: 'Segoeu',
+                                                color: Colors.white),
                                           ),
                                         )
                                       ],

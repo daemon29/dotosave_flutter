@@ -2,6 +2,7 @@ import 'package:LadyBug/Screens/Profile_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ItemInformationScreen extends StatefulWidget {
   final String itemId;
@@ -22,7 +23,6 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
   Future<DocumentSnapshot> getItem() async {
     DocumentSnapshot ds =
         await Firestore.instance.collection("Item").document(itemId).get();
-    //.document('OsNbsAILhdnhAKRNOziE');
     return ds;
   }
 
@@ -45,7 +45,26 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
           if (snapshot.connectionState == ConnectionState.done) {
             // print(snapshot);
             return Scaffold(
-                appBar: AppBar(title: Text("Item")),
+                appBar: AppBar(
+                    actions: <Widget>[
+                      RaisedButton(
+                          color: Colors.blue[400],
+                          textColor: Colors.white,
+                          onPressed: () {},
+                          child:
+                              Column(mainAxisSize: MainAxisSize.min, children: [
+                            Icon(Icons.contact_mail),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text("Contact")
+                          ])),
+                    ],
+                    title: Text("Item",
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontFamily: 'Manjari',
+                        ))),
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -56,9 +75,16 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
                       fit: BoxFit.contain,
                     ),
                     Flexible(
-                      child: Text(
-                        snapshot.data["title"],
-                        overflow: TextOverflow.clip,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.blue,
+                        child: Text(snapshot.data["title"],
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white)),
                       ),
                     ),
                     Flexible(
@@ -69,52 +95,96 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
                                 ConnectionState.waiting) return Container();
                             if (_snapshot.connectionState ==
                                 ConnectionState.done)
-                              return Row(children: [
-                                Text("Owner: "),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return ProfileScreen(currentUserId,
-                                              snapshot.data['owner']);
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  child: Text(_snapshot.data[0].data['name']),
-                                )
-                              ]);
+                              return Padding(
+                                  padding: EdgeInsets.only(left: 10, right: 10),
+                                  child: Row(children: [
+                                    Text("Owner: ",
+                                        style: TextStyle(color: Colors.black)),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return ProfileScreen(
+                                                  currentUserId,
+                                                  snapshot.data['owner']);
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                          _snapshot.data[0].data['name'],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.blue)),
+                                    )
+                                  ]));
                           }),
                     ),
-                    Flexible(child: Text("Description")),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Flexible(
-                        child: Text(
-                      snapshot.data["describe"],
-                      overflow: TextOverflow.clip,
-                    )),
-                    Flexible(child: Text("Tags")),
+                        child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Text(
+                              'Exp: ' +
+                                  DateFormat('dd MMMM yyyy').format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          snapshot.data["exp"])),
+                              overflow: TextOverflow.clip,
+                            ))),
                     Flexible(
-                        child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: snapshot.data["tag"].length,
-                      itemBuilder: (context, index) {
-                        return Chip(
-                          label: Text(snapshot.data["tag"][index]),
-                        );
-                      },
-                    )),
+                        child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Row(children: [
+                              Icon(
+                                Icons.location_on,
+                                size: 14,
+                              ),
+                              Flexible(
+                                  child: Text(
+                                snapshot.data["address"],
+                                overflow: TextOverflow.clip,
+                              ))
+                            ]))),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Divider(
+                      color: Colors.blue,
+                    ),
                     Flexible(
-                        child: RaisedButton(
-                      onPressed: () {},
-                      child: Row(mainAxisSize: MainAxisSize.min, children: [
-                        Icon(Icons.contact_mail),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text("Contact")
-                      ]),
-                    ))
+                        child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Text(
+                              snapshot.data["describe"],
+                              overflow: TextOverflow.clip,
+                            ))),
+                    Divider(
+                      color: Colors.blue,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Flexible(
+                        child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Text(
+                              "Tags",
+                            ))),
+                    Flexible(
+                        child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data["tag"].length,
+                              itemBuilder: (context, index) {
+                                return Chip(
+                                  label: Text(snapshot.data["tag"][index]),
+                                );
+                              },
+                            ))),
                   ],
                 ));
           }
