@@ -74,25 +74,6 @@ class _DonationMapState extends State<DonationMap> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: mapScaffold,
-        /* persistentFooterButtons: <Widget>[
-          IconButton(
-            icon: Icon(Icons.visibility, color: Colors.green),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Dialog(
-                        child:
-                            Column(mainAxisSize: MainAxisSize.min, children: [
-                      Row(),
-                      Row(),
-                      Row(),
-                    ]));
-                  });
-            },
-          ),
-          
-        ],*/
         endDrawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -109,7 +90,7 @@ class _DonationMapState extends State<DonationMap> {
                   onTap: null),
               ListTile(
                 leading: eventMarkerVisible
-                    ? Icon(Icons.check_box, color: Colors.green)
+                    ? Icon(Icons.check_box, color: Colors.blue)
                     : Icon(
                         Icons.check_box,
                         color: Colors.grey[700],
@@ -125,7 +106,7 @@ class _DonationMapState extends State<DonationMap> {
               ),
               ListTile(
                   leading: campaignMarkerVisible
-                      ? Icon(Icons.check_box, color: Colors.green)
+                      ? Icon(Icons.check_box, color: Colors.blue)
                       : Icon(
                           Icons.check_box,
                           color: Colors.grey[700],
@@ -140,7 +121,7 @@ class _DonationMapState extends State<DonationMap> {
                   }),
               ListTile(
                 leading: itemMarkerVisible
-                    ? Icon(Icons.check_box, color: Colors.green)
+                    ? Icon(Icons.check_box, color: Colors.blue)
                     : Icon(
                         Icons.check_box,
                         color: Colors.grey[700],
@@ -171,7 +152,7 @@ class _DonationMapState extends State<DonationMap> {
                 },
               ),
             ],
-            backgroundColor: Colors.green[300],
+            backgroundColor: Colors.blue,
             title: const Text('Donation map'),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -286,89 +267,62 @@ class _DonationMapState extends State<DonationMap> {
         setState(() {
           markerId = doc.documentID;
           title_txt = doc["title"];
-          body_txt = doc["body"];
+          body_txt = doc["introduction"];
           address_txt = doc["address"];
         });
-        mapScaffold.currentState.showBottomSheet((context) => Container(
-            width: MediaQuery.of(context).size.width,
-            height: 275,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [
-                  0.6,
-                  1
-                ],
-                    colors: <Color>[
-                  // Colors.cyan[100],
-                  Colors.yellow[50],
-                  Colors.green[300]
-                  //Color(0xfff5af19),
-                ])),
-            child: Stack(overflow: Overflow.clip, children: <Widget>[
-              Positioned(
-                  bottom: 0, child: Image.asset("assets/images/image_02.png")),
-              Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 10,
-                        width: MediaQuery.of(context).size.width,
+        mapScaffold.currentState.showBottomSheet((context) => InkWell(
+            onTap: () {},
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 200,
+                child: Column(children: <Widget>[
+                  Flexible(
+                      child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.blue,
+                          padding: EdgeInsets.all(5),
+                          child: Text(
+                            title_txt,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.clip,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 21),
+                          ) //)
+                          )),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    Icon(
+                      Icons.location_on,
+                      size: 27,
+                      color: Colors.blue,
+                    ),
+                    Flexible(
+                        child: Text(
+                      address_txt,
+                      //markerInformation[markerId]?.getTitle()??"",
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.normal,
                       ),
-                      /*Expanded(
-                      child:*/
-                      Text(
-                        title_txt,
-                        //markerInformation[markerId]?.getTitle()??"",
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.clip,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 21),
-                      ) //)
-                      ,
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              size: 27,
-                            ),
-                            Expanded(
-                                child: Text(
-                              address_txt,
-                              //markerInformation[markerId]?.getTitle()??"",
-                              textAlign: TextAlign.start,
-                              overflow: TextOverflow.clip,
-                              style: TextStyle(
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ))
-                          ]),
-                      Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            /*Icon(
-                                  Icons.details,
-                                  size: 30,
-                                ),*/
-
-                            Text(
-                              "  " + body_txt,
-                              overflow: TextOverflow.clip,
-                              //softWrap: true,
-                              //markerInformation[markerId]?.getBody()??"",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.normal, fontSize: 17),
-                            )
-                          ]),
-                    ],
-                  ))
-            ])));
+                    ))
+                  ]),
+                  Divider(
+                    color: Colors.blue,
+                  ),
+                  Text(
+                    "  " + body_txt,
+                    overflow: TextOverflow.clip,
+                    textAlign: TextAlign.start,
+                    style:
+                        TextStyle(fontWeight: FontWeight.normal, fontSize: 17),
+                  )
+                ]))));
       },
       infoWindow:
           InfoWindow(title: typeOfMarker_(doc["type"]), snippet: doc["title"]),
@@ -410,10 +364,10 @@ class _DonationMapState extends State<DonationMap> {
       onTap: () {
         setState(() {
           markerId = doc.documentID;
-          body_txt = doc["body"];
+          body_txt = doc["describe"];
         });
       },
-      infoWindow: InfoWindow(title: "Item", snippet: doc["body"]),
+      infoWindow: InfoWindow(title: "Item", snippet: doc["title"]),
       position: LatLng(geo.latitude, geo.longitude),
     );
     setState(() {

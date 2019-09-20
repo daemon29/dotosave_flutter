@@ -28,7 +28,7 @@ class CardBottomBarState extends State<CardBottomBar> {
           color: commented ? Colors.blue : Colors.black,
           icon: Icon(Icons.comment),
         ),
-        Text(post['comment'].length.toString()),
+        //Text(post['comment'].length.toString()),
         IconButton(
             onPressed: () {},
             splashColor: Colors.green,
@@ -36,13 +36,13 @@ class CardBottomBarState extends State<CardBottomBar> {
             icon: Icon(
               Icons.share,
             )),
-        Text(post['share'].length.toString()),
+        //Text(post['share'].length.toString()),
         IconButton(
             onPressed: () {},
             splashColor: Colors.pink,
             color: liked ? Colors.pink : Colors.black,
             icon: liked ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
-        Text(post['like'].length.toString()),
+        //Text(post['like'].length.toString()),
       ],
     );
   }

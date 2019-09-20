@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:tflite/tflite.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -31,6 +33,7 @@ class _DonateScreen extends State<DonateScreen> {
   TextStyle style_state = TextStyle(
     fontStyle: FontStyle.italic,
   );
+  bool donotpick = true;
   bool _pickaplacevisibility = true;
   Set<String> items = new Set();
   String _model = ssd;
@@ -38,6 +41,8 @@ class _DonateScreen extends State<DonateScreen> {
   List _recognitions;
   double _imageHeight;
   GeoPoint geoPoint;
+  String title;
+  int exp;
   double _imageWidth;
   bool _busy = false;
   String body;
@@ -63,15 +68,12 @@ class _DonateScreen extends State<DonateScreen> {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
             GeoPoint geoPoint = GeoPoint(90, -90);
-            Firestore.instance
-                .collection("User")
-                .document(currentUserId)
-                .collection("Item")
-                .document()
-                .setData({
-              "body": body,
-              "url": url,
-              "items": null,
+            Firestore.instance.collection("Item").document().setData({
+              'title': title,
+              "describe": body,
+              "imageurl": url,
+              'exp': exp,
+              'owner': currentUserId,
               "geo": geoPoint
             }).then((onValue) {
               this.setState(() {
@@ -157,6 +159,19 @@ class _DonateScreen extends State<DonateScreen> {
       _busy = true;
     });
     predictImage(image);
+  }
+
+  DateTime selectedDate = DateTime.now();
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
   }
 
   Future predictImage(File image) async {
@@ -268,23 +283,6 @@ class _DonateScreen extends State<DonateScreen> {
     List<Widget> stackChildren = [];
     List<Chip> listChip = [];
 
-    // _recognitions.map((res) {
-    //   items.add(res["detectedClass"]);
-    // });
-    // renderChip() {
-    //   return ListView.builder(
-    //     itemCount: items.length,
-    //     itemBuilder: (context, index) {
-    //       return Chip(
-    //         label: Text(items.elementAt(index)),
-    //         onDeleted: () {
-    //           setState(() {});
-    //         },
-    //       );
-    //     },
-    //   );
-    // }
-
     stackChildren.add(Positioned(
       top: 0.0,
       left: 0.0,
@@ -311,16 +309,7 @@ class _DonateScreen extends State<DonateScreen> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Donate"),
-          backgroundColor: Color(0xfff5af19),
-          /*leading: IconButton(
-            icon: Icon(
-              Icons.menu,
-              semanticLabel: 'menu',
-            ),
-            onPressed: () {
-              print("Menu button");
-            },
-          ),*/
+          backgroundColor: Colors.blue,
         ),
         bottomNavigationBar: null,
         body: new GestureDetector(
@@ -331,61 +320,6 @@ class _DonateScreen extends State<DonateScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                /*
-                SizedBox.fromSize(
-                  size: Size.fromHeight(200),
-                  child: Stack(
-                    children: <Widget>[
-                      _image == null
-                          ? Image.asset("assets/images/EmptyImage.png")
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(16.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black12,
-                                          offset: Offset(3.0, 6.0),
-                                          blurRadius: 10.0)
-                                    ]),
-                                child: AspectRatio(
-                                  aspectRatio: 12.0 / 16.0,
-                                  child: Stack(
-                                    fit: StackFit.expand,
-                                    children: <Widget>[
-                                      Image.file(_image, fit: BoxFit.cover),
-                                      Align(
-                                        alignment: Alignment.topRight,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 8.0,
-                                                    vertical: 8.0),
-                                                child: IconButton(
-                                                  icon: Icon(Icons.close),
-                                                  iconSize: 50,
-                                                  tooltip: "Remove this photo",
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _image = null;
-                                                    });
-                                                  },
-                                                )),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                    ],
-                    */
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: 220,
@@ -414,13 +348,6 @@ class _DonateScreen extends State<DonateScreen> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              /*Text(
-                          "Submit",
-                          style: TextStyle(
-                              fontFamily: "Poppins-Bold",
-                              fontSize: 45,
-                              letterSpacing: .6),
-                        ),*/
                               Padding(
                                   padding: EdgeInsets.only(left: 5, right: 5),
                                   child: Row(
@@ -429,7 +356,7 @@ class _DonateScreen extends State<DonateScreen> {
                                         onPressed: () {
                                           predictImagePicker();
                                         },
-                                        color: Color(0xfff5af19),
+                                        color: Colors.blue,
                                         child: Icon(
                                           Icons.add_a_photo,
                                           color: Colors.white,
@@ -450,6 +377,28 @@ class _DonateScreen extends State<DonateScreen> {
                                                 fontSize: 16,
                                                 fontFamily: "Poppins-Medium",
                                               ))),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text("Title",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: "Poppins-Medium",
+                                          )),
+                                      TextField(
+                                        keyboardType: TextInputType.multiline,
+                                        maxLines: null,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            title = value;
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                            hintText: "Title here...",
+                                            hintStyle: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12.0)),
+                                      ),
                                       SizedBox(
                                         height: 15,
                                       ),
@@ -475,32 +424,41 @@ class _DonateScreen extends State<DonateScreen> {
                                       SizedBox(
                                         height: 15,
                                       ),
-                                      Text("Address",
+                                      Text("Expiry date",
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontFamily: "Poppins-Medium",
                                           )),
+                                      Text(
+                                        (donotpick)
+                                            ? "Non-expiring"
+                                            : "Exp: " +
+                                                DateFormat('dd-MMMM-yyyy')
+                                                    .format(selectedDate),
+                                        overflow: TextOverflow.clip,
+                                        style: style_state,
+                                      ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: <Widget>[
                                           RaisedButton(
                                               textColor: Colors.white,
-                                              onPressed: onSeachBarButtonClick,
+                                              onPressed: () {
+                                                setState(() {
+                                                  donotpick = true;
+                                                  exp = 0;
+                                                });
+                                              },
                                               padding:
                                                   const EdgeInsets.all(0.0),
                                               child: Container(
                                                 decoration: const BoxDecoration(
-                                                    color: Color(0xfff5af19)
-                                                    /* gradient: LinearGradient(colors: <Color>[
-                                    Color(0xfff12711),
-                                    Color(0xfff5af19)
-                                  ])*/
-                                                    ),
+                                                    color: Colors.blue),
                                                 padding:
                                                     const EdgeInsets.all(10.0),
                                                 child: const Text(
-                                                    'Pick a place',
+                                                    'Non-expiring',
                                                     style: TextStyle(
                                                         fontSize: 13)),
                                               )),
@@ -509,25 +467,33 @@ class _DonateScreen extends State<DonateScreen> {
                                               textColor: Colors.white,
                                               padding:
                                                   const EdgeInsets.all(0.0),
-                                              onPressed:
-                                                  onGetCurrentLocationClick,
+                                              onPressed: () {
+                                                donotpick = false;
+                                                _selectDate(context);
+                                                exp = selectedDate
+                                                    .millisecondsSinceEpoch;
+                                              },
                                               child: Container(
                                                 decoration: const BoxDecoration(
-                                                  color: Color(0xfff5af19),
-                                                  /*gradient: LinearGradient(colors: <Color>[
-                                        Color(0xfff12711),
-                                        Color(0xfff5af19)
-                                      ])*/
+                                                  color: Colors.blue,
                                                 ),
                                                 padding:
                                                     const EdgeInsets.all(10.0),
                                                 child: const Text(
-                                                    'Get your location',
+                                                    'Select a date',
                                                     style: TextStyle(
                                                         fontSize: 13)),
                                               ))
                                         ],
                                       ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text("Address",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: "Poppins-Medium",
+                                          )),
                                       Visibility(
                                         visible: _pickaplacevisibility,
                                         child: Text(
@@ -556,6 +522,45 @@ class _DonateScreen extends State<DonateScreen> {
                                                     color: Colors.grey,
                                                     fontSize: 12.0)),
                                           )),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          RaisedButton(
+                                              textColor: Colors.white,
+                                              onPressed: onSeachBarButtonClick,
+                                              padding:
+                                                  const EdgeInsets.all(0.0),
+                                              child: Container(
+                                                decoration: const BoxDecoration(
+                                                    color: Colors.blue),
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: const Text(
+                                                    'Pick a place',
+                                                    style: TextStyle(
+                                                        fontSize: 13)),
+                                              )),
+                                          const Text("  Or  "),
+                                          RaisedButton(
+                                              textColor: Colors.white,
+                                              padding:
+                                                  const EdgeInsets.all(0.0),
+                                              onPressed:
+                                                  onGetCurrentLocationClick,
+                                              child: Container(
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.blue,
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: const Text(
+                                                    'Get your location',
+                                                    style: TextStyle(
+                                                        fontSize: 13)),
+                                              ))
+                                        ],
+                                      ),
                                       SizedBox(
                                         height: 15,
                                       ),
@@ -564,22 +569,6 @@ class _DonateScreen extends State<DonateScreen> {
                                             fontSize: 15,
                                             fontFamily: "Poppins-Medium",
                                           )),
-                                      TextField(
-                                        controller: _controller,
-                                        onSubmitted: (value) {
-                                          setState(() {
-                                            items.add(value);
-                                          });
-                                          _controller.clear();
-                                        },
-                                        keyboardType:
-                                            TextInputType.emailAddress,
-                                        decoration: InputDecoration(
-                                            hintText: "Enter a missing item",
-                                            hintStyle: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 12.0)),
-                                      ),
                                       SizedBox(
                                         height: 15,
                                       ),
@@ -595,12 +584,7 @@ class _DonateScreen extends State<DonateScreen> {
                     onPressed: submit,
                     child: Container(
                       decoration: const BoxDecoration(
-                        color: Color(
-                            0xfff5af19), /*
-                                  gradient: LinearGradient(colors: <Color>[
-                                Color(0xfff12711),
-                                Color(0xfff5af19)
-                              ])*/
+                        color: Colors.blue,
                       ),
                       padding: const EdgeInsets.all(10.0),
                       child: const Text('   Submit   ',

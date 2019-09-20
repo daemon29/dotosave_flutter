@@ -21,8 +21,6 @@ class LoadingState extends State<Loading> {
     if (currentUser == null) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
     } else {
-      
-
       Navigator.push(
           context,
           MaterialPageRoute(

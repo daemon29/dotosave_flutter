@@ -8,15 +8,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
-class AddPost extends StatefulWidget {
-  final String uid;
-  AddPost(this.uid);
+class AddPostOrganization extends StatefulWidget {
+  final String uid,oid;
+  AddPostOrganization(this.uid,this.oid);
   @override
-  AddPostState createState() => AddPostState(uid);
+  AddPostState createState() => AddPostState(uid,oid);
 }
 
-class AddPostState extends State<AddPost> {
-  final String uid;
+class AddPostState extends State<AddPostOrganization> {
+  final String uid, oid;
   File _file = null;
   bool _visible = false;
   bool _send_clickable = false;
@@ -33,7 +33,7 @@ class AddPostState extends State<AddPost> {
     }
   }
 
-  AddPostState(this.uid);
+  AddPostState(this.uid,this.oid);
   Future<File> writeToFile(ByteData data, String path) {
     final buffer = data.buffer;
     return new File(path).writeAsBytes(
@@ -56,11 +56,11 @@ class AddPostState extends State<AddPost> {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
             Firestore.instance.collection('Post').document().setData({
-              'type': 'status',
+              'type': 'post',
               'content': content,
               'image': url,
+              'owner(oid)': oid,
               'owner': uid,
-              'owner(oid)': "",
               'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
             });
           });
@@ -69,11 +69,11 @@ class AddPostState extends State<AddPost> {
       // image.delete();
     } else {
       Firestore.instance.collection('Post').document().setData({
-        'type': 'status',
+        'type': 'post',
         'content': content,
         'image': "",
+        'owner(oid)': oid,
         'owner': uid,
-        'owner(oid)': "",
         'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
       });
     }

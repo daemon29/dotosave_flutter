@@ -11,7 +11,7 @@ class PostTop extends StatelessWidget {
   PostTop(this.postId, this.currentUserId, this.time, this.post);
   @override
   Widget build(BuildContext context) {
-    return (post['owner(oid)'] == null)
+    return (post['owner(oid)'] == "")
         ? Card(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

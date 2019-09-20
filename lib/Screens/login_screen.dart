@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -35,10 +36,6 @@ class _MyAppState extends State<MyApp> {
     ]);
   }
 
-  Future signOutGoogleAcount() async {
-    await googleSignIn.signOut();
-  }
-
   void isSignIn() async {
     this.setState(() {
       isLoading = true;
@@ -46,6 +43,7 @@ class _MyAppState extends State<MyApp> {
     prefs = await SharedPreferences.getInstance();
     isLoogedIn = await googleSignIn.isSignedIn();
     if (isLoogedIn) {
+      prefix0.Navigator.pop(context);
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -82,10 +80,12 @@ class _MyAppState extends State<MyApp> {
       this.setState(() {
         isLoading = false;
       });
+      prefix0.Navigator.pop(context);
+
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => DonateScreen(
+              builder: (context) => Main_Screen(
                     currentUserId: firebaseUser.uid,
                   )));
     } else {
@@ -136,6 +136,10 @@ class _MyAppState extends State<MyApp> {
           'backgroundurl': "",
           'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
         });
+        Firestore.instance
+            .collection("UserOrganization")
+            .document(firebaseUser.uid)
+            .setData({'member': [], 'follower': []});
         currentUser = firebaseUser;
         await prefs.setString('uid', currentUser.uid);
         await prefs.setString('name', currentUser.displayName);
@@ -149,6 +153,8 @@ class _MyAppState extends State<MyApp> {
       this.setState(() {
         isLoading = false;
       });
+      prefix0.Navigator.pop(context);
+
       Navigator.push(
           context,
           MaterialPageRoute(

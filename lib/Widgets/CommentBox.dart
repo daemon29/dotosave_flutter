@@ -80,7 +80,6 @@ class _CommentBox extends State<CommentBox> {
     }
     Navigator.pop(context);
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

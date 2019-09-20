@@ -16,7 +16,7 @@ class CardTopBar extends StatelessWidget {
       return DateFormat('dd-MMMM-yyyy').format(time);
     }
     if (temp > Duration(days: 7)) {
-      return DateFormat('dd-').format(time);
+      return DateFormat('dd-MMMM').format(time);
     }
     if (temp >= Duration(days: 1)) {
       return (temp.inDays == 1)

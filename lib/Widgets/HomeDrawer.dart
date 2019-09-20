@@ -1,10 +1,16 @@
+import 'package:LadyBug/Screens/AddCampaign_screen.dart';
+import 'package:LadyBug/Screens/EditProfile_screen.dart';
+import 'package:LadyBug/Screens/Item_infomation_screen.dart';
+import 'package:LadyBug/Screens/OrganizationList.dart';
 import 'package:LadyBug/Screens/Profile_screen.dart';
 import 'package:LadyBug/Screens/donationmap_screen.dart';
 import 'package:LadyBug/Screens/friend_screen.dart';
 import 'package:LadyBug/Screens/loading_screen.dart';
 import 'package:LadyBug/Screens/login_screen.dart';
+import 'package:LadyBug/Widgets/Main_Screen/Campaign_screen/Campaign_screen_top.dart';
 import 'package:LadyBug/Widgets/Main_Screen/CircleAvatar.dart';
 import 'package:LadyBug/Screens/donate_screen.dart';
+import 'package:LadyBug/Widgets/SlideRightRoute.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -44,14 +50,17 @@ class HomeDrawer extends StatelessWidget {
                       SizedBox(
                         width: 5,
                       ),
-                      Text(
-                        snapshot.data['name'],
-                        maxLines: 2,
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
+                      Flexible(
+                        child: Text(
+                          snapshot.data['name'],
+                          overflow: TextOverflow.clip,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      )
                     ]),
                     decoration: BoxDecoration(
                       color: Colors.blue,
@@ -63,10 +72,7 @@ class HomeDrawer extends StatelessWidget {
                       color: Colors.black,
                     ),
                     title: Text('Notifications'),
-                    onTap: () {
-                      // Update the state of the app.
-                      // ...
-                    },
+                    onTap: () {},
                   ),
                   ListTile(
                     leading: Icon(
@@ -75,13 +81,8 @@ class HomeDrawer extends StatelessWidget {
                     ),
                     title: Text('Donation map'),
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return DonationMap(currentUserId);
-                          },
-                        ),
-                      );
+                      Navigator.push(context,
+                          SlideRightRoute(page: DonationMap(currentUserId)));
                     },
                   ),
                   ListTile(
@@ -91,35 +92,28 @@ class HomeDrawer extends StatelessWidget {
                     ),
                     title: Text('Donate goods'),
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return DonateScreen(
-                              currentUserId: currentUserId,
-                            );
-                          },
-                        ),
-                      );
+                      Navigator.push(
+                          context,
+                          SlideRightRoute(
+                              page: DonateScreen(
+                            currentUserId: currentUserId,
+                          )));
                     },
                   ),
                   ListTile(
-                    leading: Icon(
-                      Icons.message,
-                      color: Colors.black,
-                    ),
-                    title: Text('Messages'),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return FriendScreen(
+                      leading: Icon(
+                        Icons.message,
+                        color: Colors.black,
+                      ),
+                      title: Text('Messages'),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            SlideRightRoute(
+                                page: FriendScreen(
                               currentUserId: currentUserId,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
+                            )));
+                      }),
                   ListTile(
                     leading: Icon(
                       Icons.group,
@@ -127,8 +121,13 @@ class HomeDrawer extends StatelessWidget {
                     ),
                     title: Text('Friends'),
                     onTap: () {
-                      // Update the state of the app.
-                      // ...
+                      /*
+                         Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder:(context) =>
+                          AddCampaign()
+                        ),
+                      );*/
                     },
                   ),
                   ListTile(
@@ -136,12 +135,17 @@ class HomeDrawer extends StatelessWidget {
                       Icons.group_work,
                       color: Colors.black,
                     ),
-                    title: Text('Oganizations'),
+                    title: Text('Organizations'),
                     onTap: () {
                       // Update the state of the app.
                       // ...
+                      Navigator.push(
+                          context,
+                          SlideRightRoute(
+                              page: OrganizationList(currentUserId)));
                     },
                   ),
+                  /*
                   ListTile(
                     leading: Icon(
                       Icons.account_circle,
@@ -149,15 +153,14 @@ class HomeDrawer extends StatelessWidget {
                     ),
                     title: Text('Profile'),
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ProfileScreen(currentUserId, currentUserId);
-                          },
-                        ),
-                      );
+                      Navigator.push(
+                          context,
+                          SlideRightRoute(
+                              page:
+                                  ProfileScreen(currentUserId, currentUserId)));
                     },
                   ),
+                  */
                   ListTile(
                       leading: Icon(
                         Icons.keyboard_return,
