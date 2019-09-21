@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:LadyBug/Widgets/SlideRightRoute.dart';
+import 'package:LadyBug/Widgets/TagsList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,7 @@ class AddCampaign extends StatefulWidget {
 class AddCampaignState extends State<AddCampaign> {
   final String oid;
   AddCampaignState(this.oid);
+  List<bool> indexList = List.filled(tagsList.length, false);
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: place_api);
   GeoPoint geoPoint;
   bool _visible = false;
@@ -311,55 +314,68 @@ class AddCampaignState extends State<AddCampaign> {
             Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Row(children: [
-                  RaisedButton(
-                    textColor: Colors.white,
-                    padding: const EdgeInsets.all(10.0),
-                    color: Colors.blue,
-                    onPressed: () {
+                  Text("From: ",
+                      style: TextStyle(
+                          fontFamily: 'Segoeu',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700)),
+                  InkWell(
+                    onTap: () {
                       _selectDate(context);
                       setState(() {
-                        notpicked1 = false;
                         startDate = selectedDate.millisecondsSinceEpoch;
+                        notpicked1 = false;
                       });
                     },
-                    child: const Text('Start date',
-                        style: TextStyle(fontSize: 13)),
+                    child: notpicked1
+                        ? Text("Select a day")
+                        : Text(DateFormat("dd MMMM yyyy").format(
+                            DateTime.fromMillisecondsSinceEpoch(startDate))),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Flexible(
-                      child: notpicked1
-                          ? Text("")
-                          : Text(DateFormat("dd MMMM yyyy").format(
-                              DateTime.fromMillisecondsSinceEpoch(startDate))))
+                  (!notpicked1)
+                      ? InkWell(
+                          onTap: () {
+                            notpicked1 = true;
+                            startDate = null;
+                          },
+                          child: Icon(Icons.clear))
+                      : Container()
                 ])),
             Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Row(children: [
-                  RaisedButton(
-                    textColor: Colors.white,
-                    padding: const EdgeInsets.all(10.0),
-                    color: Colors.blue,
-                    onPressed: () {
+                  Text("To: ",
+                      style: TextStyle(
+                          fontFamily: 'Segoeu',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700)),
+                  InkWell(
+                    onTap: () {
                       _selectDate(context);
+
                       setState(() {
-                        notpicked2 = false;
                         endDate = selectedDate.millisecondsSinceEpoch;
+                        notpicked2 = false;
                       });
                     },
-                    child:
-                        const Text('End date', style: TextStyle(fontSize: 13)),
+                    child: notpicked2
+                        ? Text("Select a day")
+                        : Text(DateFormat("dd MMMM yyyy").format(
+                            DateTime.fromMillisecondsSinceEpoch(endDate))),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Flexible(
-                      child: notpicked2
-                          ? Text("")
-                          : Text(DateFormat("dd MMMM yyyy").format(
-                              DateTime.fromMillisecondsSinceEpoch(endDate))))
+                  (!notpicked2)
+                      ? InkWell(
+                          onTap: () {
+                            notpicked2 = true;
+                            endDate = null;
+                          },
+                          child: Icon(Icons.clear))
+                      : Container()
                 ])),
+            SizedBox(
+              width: 10,
+            ),
+
             Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Row(
@@ -495,6 +511,33 @@ class AddCampaignState extends State<AddCampaign> {
                         fontSize: 16,
                       )),
                 )),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Row(children: [
+                Text("Tags: ",
+                    style: TextStyle(
+                        fontFamily: 'Segoeu',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700)),
+                InkWell(
+                  onTap: () async {
+                    final result = await Navigator.push(
+                        context, SlideRightRoute(page: TagsList(indexList)));
+
+                    setState(() {
+                      tags = result[0];
+                      indexList = result[1];
+                    });
+                  },
+                  splashColor: Colors.blue,
+                  child: Text(
+                      (tags.toString() != "[]") ? tags.toString() : 'Pick tags',
+                      maxLines: null,
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(fontFamily: 'Segoeu', fontSize: 13)),
+                ),
+              ]),
+            ),
             RaisedButton(
               color: Colors.blue,
               onPressed: () {

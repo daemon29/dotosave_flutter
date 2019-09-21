@@ -152,6 +152,8 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
                       height: 10,
                     ),
                     Divider(
+                      indent: 10,
+                      endIndent: 10,
                       color: Colors.blue,
                     ),
                     Flexible(
@@ -162,6 +164,8 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
                               overflow: TextOverflow.clip,
                             ))),
                     Divider(
+                      indent: 10,
+                      endIndent: 10,
                       color: Colors.blue,
                     ),
                     SizedBox(

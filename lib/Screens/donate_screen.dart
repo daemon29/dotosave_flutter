@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:LadyBug/Widgets/ItemtypeList.dart';
+import 'package:LadyBug/Widgets/SlideRightRoute.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +31,9 @@ class _DonateScreen extends State<DonateScreen> {
   final String currentUserId;
   final TextEditingController _controller = new TextEditingController();
   PersistentBottomSheetController controller;
+  List<bool> indexList = List.filled(itemTypeList.length, false);
+  List<String> tags = [];
+
   File _image;
   TextStyle style_state = TextStyle(
     fontFamily: 'Segoeu',
@@ -76,7 +81,8 @@ class _DonateScreen extends State<DonateScreen> {
               'exp': exp,
               'address': _address,
               'owner': currentUserId,
-              "geo": geoPoint
+              "geo": geoPoint,
+              'tags':tags
             }).then((onValue) {
               this.setState(() {
                 _busy = false;
@@ -320,61 +326,61 @@ class _DonateScreen extends State<DonateScreen> {
         ),
         bottomNavigationBar: null,
         body: new GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 220,
-                  child: Stack(
-                    children: stackChildren,
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: SingleChildScrollView(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 220,
+                    child: Stack(
+                      children: stackChildren,
+                    ),
                   ),
-                ),
-                Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(0.0, 15.0),
-                              blurRadius: 15.0),
-                          BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(0.0, -10.0),
-                              blurRadius: 15.0)
-                        ]),
-                    child: Padding(
+                  Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0.0, 15.0),
+                                blurRadius: 15.0),
+                            BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0.0, -10.0),
+                                blurRadius: 15.0)
+                          ]),
+                      child: Padding(
                         padding:
                             EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
                         child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                  padding: EdgeInsets.only(left: 5, right: 5),
-                                  child: Row(
-                                    children: <Widget>[
-                                      RaisedButton(
-                                        onPressed: () {
-                                          predictImagePicker();
-                                        },
-                                        color: Colors.blue,
-                                        child: Icon(
-                                          Icons.add_a_photo,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    ],
-                                  )),
-                              Divider(),
-                              Padding(
-                                  padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                                  child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.only(left: 5, right: 5),
+                                child: Row(
+                                  children: <Widget>[
+                                    RaisedButton(
+                                      onPressed: () {
+                                        predictImagePicker();
+                                      },
+                                      color: Colors.blue,
+                                      child: Icon(
+                                        Icons.add_a_photo,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  ],
+                                )),
+                            Divider(),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                                child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
@@ -435,55 +441,39 @@ class _DonateScreen extends State<DonateScreen> {
                                       SizedBox(
                                         height: 15,
                                       ),
-                                      Text("Expiry date",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontFamily: "Poppins-Medium",
-                                          )),
-                                      Text(
-                                        (donotpick)
-                                            ? "Non-expiring"
-                                            : "Exp: " +
-                                                DateFormat('dd-MMMM-yyyy')
-                                                    .format(selectedDate),
-                                        overflow: TextOverflow.clip,
-                                        style: style_state,
-                                      ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: <Widget>[
-                                          RaisedButton(
-                                            color: Colors.blue,
-                                            textColor: Colors.white,
-                                            onPressed: () {
+                                          const Text(
+                                            "Exp: ",
+                                          ),
+                                          InkWell(
+                                            onTap: () {
                                               setState(() {
-                                                donotpick = true;
-                                                exp = 0;
+                                                donotpick = false;
+                                                _selectDate(context);
+                                                exp = selectedDate
+                                                    .millisecondsSinceEpoch;
                                               });
                                             },
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: const Text('Non-expiring',
-                                                style: TextStyle(
-                                                    fontFamily: 'Segoeu',
-                                                    fontSize: 13)),
+                                            child: Text(
+                                              (donotpick)
+                                                  ? "Non-expiring(tap to select a day)"
+                                                  : DateFormat('dd-MMMM-yyyy ')
+                                                      .format(selectedDate),
+                                              overflow: TextOverflow.clip,
+                                              style: style_state,
+                                            ),
                                           ),
-                                          const Text("  Or  "),
-                                          RaisedButton(
-                                            textColor: Colors.white,
-                                            color: Colors.blue,
-                                            padding: const EdgeInsets.all(10.0),
-                                            onPressed: () {
-                                              donotpick = false;
-                                              _selectDate(context);
-                                              exp = selectedDate
-                                                  .millisecondsSinceEpoch;
-                                            },
-                                            child: const Text('Select a date',
-                                                style: TextStyle(
-                                                    fontFamily: 'Segoeu',
-                                                    fontSize: 13)),
-                                          )
+                                          (!donotpick)
+                                              ? InkWell(
+                                                  onTap: () {
+                                                    donotpick = true;
+                                                    exp = 0;
+                                                  },
+                                                  child: Icon(Icons.clear))
+                                              : Container()
                                         ],
                                       ),
                                       SizedBox(
@@ -550,37 +540,56 @@ class _DonateScreen extends State<DonateScreen> {
                                                 style: TextStyle(
                                                     fontFamily: 'Segoeu',
                                                     fontSize: 13)),
-                                          )
+                                          ),
                                         ],
                                       ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Text("Item types:",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontFamily: 'Segoeu',
-                                          )),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                    ],
-                                  )),
-                            ]))),
-                SizedBox(
-                  height: 10,
-                ),
-                RaisedButton(
-                  textColor: Colors.white,
-                  padding: const EdgeInsets.all(10.0),
-                  onPressed: submit,
-                  color: Colors.blue,
-                  child: const Text('Submit',
-                      style: TextStyle(fontFamily: 'Segoeu', fontSize: 17)),
-                )
-              ],
-            ),
-          ),
-        ));
+                                      Row(children: [
+                                        Text("Tags: ",
+                                            style: TextStyle(
+                                                fontFamily: 'Segoeu',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700)),
+                                        InkWell(
+                                          onTap: () async {
+                                            final result = await Navigator.push(
+                                                context,
+                                                SlideRightRoute(
+                                                    page: ItemTypeList(
+                                                        indexList)));
+
+                                            setState(() {
+                                              tags = result[0];
+                                              indexList = result[1];
+                                            });
+                                          },
+                                          splashColor: Colors.blue,
+                                          child: Text(
+                                              (tags.toString() != "[]")
+                                                  ? tags.toString()
+                                                  : 'Pick tags',
+                                              maxLines: null,
+                                              overflow: TextOverflow.clip,
+                                              style: TextStyle(
+                                                  fontFamily: 'Segoeu',
+                                                  fontSize: 13)),
+                                        ),
+                                      ]),
+                                    ])),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            RaisedButton(
+                              textColor: Colors.white,
+                              padding: const EdgeInsets.all(10.0),
+                              onPressed: submit,
+                              color: Colors.blue,
+                              child: const Text('Submit',
+                                  style: TextStyle(
+                                      fontFamily: 'Segoeu', fontSize: 17)),
+                            )
+                          ],
+                        ),
+                      ))
+                ]))));
   }
 }

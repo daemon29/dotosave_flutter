@@ -44,41 +44,62 @@ class CampainScreenTop extends StatelessWidget {
                 ),
               )),
         ]),
-        (campaign['startDate'] == null)
-            ? Container()
-            : SizedBox(
-                child: Text("From: " +
-                    DateFormat("dd MMMM yyyy").format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            campaign['startDate'])))),
-        (campaign['endDate'] == null)
-            ? Container()
-            : SizedBox(
-                child: Text("To: " +
-                    DateFormat("dd MMMM yyyy").format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            campaign['endDate'])))),
-        SizedBox(
-            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Icon(
-            Icons.location_on,
-            size: 17,
-            color: Colors.black,
-          ),
-          Flexible(child: Text(campaign["address"]))
-        ])),
+        Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Row(children: <Widget>[
+              (campaign['startDate'] != null && campaign['endDate'] != null)
+                  ? Icon(
+                      Icons.access_time,
+                      size: 17,
+                    )
+                  : Container(),
+              (campaign['startDate'] == null)
+                  ? Container()
+                  : SizedBox(
+                      child: Text(
+                      DateFormat(" dd/MMM/yyyy").format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              campaign['startDate'])),
+                    )),
+              (campaign['endDate'] == null)
+                  ? Container()
+                  : SizedBox(
+                      child: Text(
+                      (campaign['startDate'] == null)
+                          ? " Until"
+                          : " - " +
+                              DateFormat("dd/MMM/yyyy").format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      campaign['endDate'])),
+                    )),
+            ])),
+        Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: SizedBox(
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Icon(
+                Icons.location_on,
+                size: 17,
+                color: Colors.black,
+              ),
+              Flexible(child: Text(campaign["address"]))
+            ]))),
         Divider(
+          indent: 10,
+          endIndent: 10,
           color: Colors.blue,
         ),
         SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Container(
                 //color: Colors.blue[400],
-                padding: EdgeInsets.all(3),
+                padding: EdgeInsets.only(left: 10, bottom: 5),
                 child: Text(
                   "Introduction",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black),
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w700),
                 ))),
         SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -87,16 +108,19 @@ class CampainScreenTop extends StatelessWidget {
               child: Text(campaign["detail"])),
         ),
         Divider(
+          indent: 10,
+          endIndent: 10,
           color: Colors.blue,
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Container(
               //color: Colors.blue[400],
-              padding: EdgeInsets.all(3),
+              padding: EdgeInsets.only(left: 10, bottom: 5),
               child: Text("Organizers",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black))),
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w700))),
         ),
         SizedBox(
             child: Padding(
@@ -119,6 +143,8 @@ class CampainScreenTop extends StatelessWidget {
                           });
                     }))),
         Divider(
+          indent: 10,
+          endIndent: 10,
           color: Colors.blue,
         ),
       ],

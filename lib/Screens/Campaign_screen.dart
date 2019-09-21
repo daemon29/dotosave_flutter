@@ -31,70 +31,76 @@ class CampaignScreenState extends State<CampaignScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getComment(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return Container();
-        else if (snapshot.connectionState == ConnectionState.done)
-          return Scaffold(
-            appBar: AppBar(
-              actions: <Widget>[
-                (!campaign['needdonor'])
-                    ? Container()
-                    : RaisedButton(
-                        onPressed: () {},
-                        textColor: Colors.white,
-                        color: Colors.blue[400],
-                        child: Text(
-                          "Donate!", //style: TextStyle(fontSize: 11)
-                        )),
-                (!campaign['needvol'])
-                    ? Container()
-                    : RaisedButton(
-                        textColor: Colors.white,
-                        onPressed: () {},
-                        color: Colors.blue[400],
-                        child: Text(
-                          "Join us!",
-                          //style: TextStyle(fontSize: 11),
-                        ))
-              ],
-              title: Text("",
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontFamily: 'Manjari',
-                  )),
-            ),
-            body: ListView.builder(
-              itemCount: snapshot?.data?.length + 1 ?? 1,
-              itemBuilder: (context, index) {
-                if (index == 0)
-                  return CampainScreenTop(campaign);
-                else {
-                  return CommentCard(
-                      snapshot.data[index - 1].data, currentUserId);
-                }
-              },
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return CommentBox(currentUserId, postID, true);
-                    },
-                  ),
-                );
-              },
-              child: Icon(
-                Icons.add_comment,
-                color: Colors.white,
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: TabBar(tabs: [
+              Tab(icon: Icon(Icons.flag)),
+              Tab(
+                icon: Icon(Icons.comment),
               ),
-              backgroundColor: Colors.blue,
+            ]),
+            actions: <Widget>[
+              (!campaign['needdonor'])
+                  ? Container()
+                  : RaisedButton(
+                      onPressed: () {},
+                      textColor: Colors.white,
+                      color: Colors.blue[400],
+                      child: Text(
+                        "Donate!", //style: TextStyle(fontSize: 11)
+                      )),
+              (!campaign['needvol'])
+                  ? Container()
+                  : RaisedButton(
+                      textColor: Colors.white,
+                      onPressed: () {},
+                      color: Colors.blue[400],
+                      child: Text(
+                        "Join us!",
+                        //style: TextStyle(fontSize: 11),
+                      ))
+            ],
+            title: Text("",
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontFamily: 'Manjari',
+                )),
+          ),
+          body: TabBarView(children: [
+            CampainScreenTop(campaign),
+            FutureBuilder(
+                future: getComment(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return Container();
+                  else if (snapshot.connectionState == ConnectionState.done)
+                    return ListView.builder(
+                      itemCount: snapshot?.data?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        return CommentCard(
+                            snapshot.data[index].data, currentUserId);
+                      },
+                    );
+                })
+          ]),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return CommentBox(currentUserId, postID, true);
+                  },
+                ),
+              );
+            },
+            child: Icon(
+              Icons.add_comment,
+              color: Colors.white,
             ),
-          );
-      },
-    );
+            backgroundColor: Colors.blue,
+          ),
+        ));
   }
 }

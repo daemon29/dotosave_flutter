@@ -53,27 +53,46 @@ class CampaignCard extends StatelessWidget {
                                       ))),
                             ))),
                   ])),
+              Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Row(children: <Widget>[
+                    (campaign['startDate'] != null &&
+                            campaign['endDate'] != null)
+                        ? Icon(
+                            Icons.access_time,
+                            size: 13,
+                          )
+                        : Container(),
+                    (campaign['startDate'] == null)
+                        ? Container()
+                        : SizedBox(
+                            child: Text(
+                            DateFormat(" dd/MMM/yyyy").format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    campaign['startDate'])),
+                            style: TextStyle(fontSize: 12),
+                          )),
+                    (campaign['endDate'] == null)
+                        ? Container()
+                        : SizedBox(
+                            child: Text(
+                                (campaign['startDate'] == null)
+                                    ? " Until"
+                                    : " - " +
+                                        DateFormat("dd/MMM/yyyy").format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                campaign['endDate'])),
+                                style: TextStyle(fontSize: 12))),
+                  ])),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Padding(
                     padding: EdgeInsets.only(left: 10, right: 10),
                     child: Text(campaign["introduction"])),
               ),
-              (campaign['startDate'] == null)
-                  ? Container()
-                  : SizedBox(
-                      child: Text("From: " +
-                          DateFormat("dd MMMM yyyy").format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  campaign['startDate'])))),
-              (campaign['endDate'] == null)
-                  ? Container()
-                  : SizedBox(
-                      child: Text("To: " +
-                          DateFormat("dd MMMM yyyy").format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  campaign['endDate'])))),
-            SizedBox(height: 10,)
+              SizedBox(
+                height: 10,
+              )
             ],
           ),
         ));

@@ -288,7 +288,8 @@ class _DonationMapState extends State<DonationMap> {
               Navigator.push(
                   context,
                   SlideRightRoute(
-                      page: CampaignScreen(doc.data,doc.documentID, currentUserId)));
+                      page: CampaignScreen(
+                          doc.data, doc.documentID, currentUserId)));
             },
             child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -309,14 +310,16 @@ class _DonationMapState extends State<DonationMap> {
                             fontSize: 14)),
                   ) //)
                       ),
-                  (exp_txt == "")?Container():Text(
-                    exp_txt,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.clip,
-                    style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
+                  (exp_txt == "")
+                      ? Container()
+                      : Text(
+                          exp_txt,
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.clip,
+                          style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
                   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                     Icon(
                       Icons.location_on,
@@ -337,6 +340,8 @@ class _DonationMapState extends State<DonationMap> {
                     ))
                   ]),
                   Divider(
+                    indent: 10,
+                    endIndent: 10,
                     color: Colors.blue,
                   ),
                   Flexible(
@@ -450,6 +455,8 @@ class _DonationMapState extends State<DonationMap> {
                     ))
                   ]),
                   Divider(
+                    indent: 10,
+                    endIndent: 10,
                     color: Colors.blue,
                   ),
                   Flexible(
