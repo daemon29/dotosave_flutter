@@ -58,7 +58,11 @@ class _Signup extends State<SignUp> {
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
     return new Scaffold(
         appBar: AppBar(
-          title: Text("SIGNUP"),
+          title: Text("Sign up",
+              style: const TextStyle(
+                fontSize: 22,
+                fontFamily: 'Manjari',
+              )),
           backgroundColor: Color(0xfff5af19),
         ),
         backgroundColor: Colors.white,
@@ -126,7 +130,7 @@ class _Signup extends State<SignUp> {
                             Text(
                               "Signup",
                               style: TextStyle(
-                                  fontFamily: "Poppins-Bold",
+                                  fontFamily: 'Segoeu',
                                   fontSize: ScreenUtil.getInstance().setSp(45),
                                   letterSpacing: .6),
                             ),
@@ -136,7 +140,7 @@ class _Signup extends State<SignUp> {
                             Text(
                               "Email",
                               style: TextStyle(
-                                fontFamily: "Poppins-Medium",
+                                fontFamily: 'Segoeu',
                                 fontSize: ScreenUtil.getInstance().setSp(26),
                               ),
                             ),
@@ -150,7 +154,9 @@ class _Signup extends State<SignUp> {
                               decoration: InputDecoration(
                                   hintText: "Type your email here",
                                   hintStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 12.0)),
+                                      fontFamily: 'Segoeu',
+                                      color: Colors.grey,
+                                      fontSize: 12.0)),
                             ),
                             SizedBox(
                               height: ScreenUtil.getInstance().setHeight(30),
@@ -158,7 +164,7 @@ class _Signup extends State<SignUp> {
                             Text("Password",
                                 style: TextStyle(
                                   fontSize: ScreenUtil.getInstance().setSp(26),
-                                  fontFamily: "Poppins-Medium",
+                                  fontFamily: 'Segoeu',
                                 )),
                             TextField(
                               onSubmitted: (value) {
@@ -170,7 +176,9 @@ class _Signup extends State<SignUp> {
                               decoration: InputDecoration(
                                   hintText: "Password . . .",
                                   hintStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 12.0)),
+                                      fontFamily: 'Segoeu',
+                                      color: Colors.grey,
+                                      fontSize: 12.0)),
                             ),
                             SizedBox(
                               height: ScreenUtil.getInstance().setHeight(35),
@@ -210,7 +218,7 @@ class _Signup extends State<SignUp> {
                                     child: Text(
                                       "SIGNUP",
                                       style: TextStyle(
-                                          fontFamily: "Poppins-Bold",
+                                          fontFamily: 'Segoeu',
                                           color: Colors.white,
                                           fontSize: 18,
                                           letterSpacing: 1.0),

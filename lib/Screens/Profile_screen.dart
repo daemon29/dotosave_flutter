@@ -28,11 +28,12 @@ class _ProfileScreen extends State<ProfileScreen> {
   }
 
   Future getPosts() async {
-    print(uid + "fasjfkjawfkaewfke");
+    // print(uid + "fasjfkjawfkaewfke");
     QuerySnapshot qs = await Firestore.instance
         .collection('Post')
         .where("owner", isEqualTo: uid)
         .orderBy('timestamp', descending: true)
+        .where('type', isEqualTo: 'status')
         .getDocuments();
     return qs.documents;
   }
@@ -41,7 +42,11 @@ class _ProfileScreen extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Profile"),
+          title: Text("Profile",
+              style: const TextStyle(
+                fontSize: 22,
+                fontFamily: 'Manjari',
+              )),
         ),
         body: FutureBuilder(
           future: (getPosts()),
@@ -50,7 +55,7 @@ class _ProfileScreen extends State<ProfileScreen> {
               return Center(child: CircularProgressIndicator());
             else if (snapshot.connectionState == ConnectionState.done) {
               return ListView.builder(
-                  itemCount: snapshot?.data?.length + 1 ?? 1,
+                  itemCount: (snapshot?.data?.length ?? 0) + 1,
                   itemBuilder: (context, index) {
                     if (index == 0)
                       return FutureBuilder(

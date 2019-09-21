@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -35,10 +36,6 @@ class _MyAppState extends State<MyApp> {
     ]);
   }
 
-  Future signOutGoogleAcount() async {
-    await googleSignIn.signOut();
-  }
-
   void isSignIn() async {
     this.setState(() {
       isLoading = true;
@@ -46,6 +43,7 @@ class _MyAppState extends State<MyApp> {
     prefs = await SharedPreferences.getInstance();
     isLoogedIn = await googleSignIn.isSignedIn();
     if (isLoogedIn) {
+      prefix0.Navigator.pop(context);
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -82,10 +80,12 @@ class _MyAppState extends State<MyApp> {
       this.setState(() {
         isLoading = false;
       });
+      prefix0.Navigator.pop(context);
+
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => DonateScreen(
+              builder: (context) => Main_Screen(
                     currentUserId: firebaseUser.uid,
                   )));
     } else {
@@ -136,10 +136,15 @@ class _MyAppState extends State<MyApp> {
           'backgroundurl': "",
           'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
         });
+        Firestore.instance
+            .collection("UserOrganization")
+            .document(firebaseUser.uid)
+            .setData({'member': [], 'follower': []});
         currentUser = firebaseUser;
         await prefs.setString('uid', currentUser.uid);
         await prefs.setString('name', currentUser.displayName);
         await prefs.setString('imageurl', currentUser.photoUrl);
+        
       } else {
         await prefs.setString('uid', (result.documents[0]['uid']));
         await prefs.setString('name', (result.documents[0]['nickname']));
@@ -149,6 +154,8 @@ class _MyAppState extends State<MyApp> {
       this.setState(() {
         isLoading = false;
       });
+      prefix0.Navigator.pop(context);
+
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -215,6 +222,7 @@ class _MyAppState extends State<MyApp> {
                           ),
                           Text("LADYBUG",
                               style: TextStyle(
+                                  fontFamily: 'Segoeu',
                                   fontSize: ScreenUtil.getInstance().setSp(46),
                                   letterSpacing: .6,
                                   fontWeight: FontWeight.bold))
@@ -251,7 +259,7 @@ class _MyAppState extends State<MyApp> {
                             Text(
                               "Login",
                               style: TextStyle(
-                                  fontFamily: "Poppins-Bold",
+                                  fontFamily: 'Segoeu',
                                   fontSize: ScreenUtil.getInstance().setSp(40),
                                   letterSpacing: .6),
                             ),
@@ -275,7 +283,9 @@ class _MyAppState extends State<MyApp> {
                               decoration: InputDecoration(
                                   hintText: "Type your email here",
                                   hintStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 12.0)),
+                                      fontFamily: 'Segoeu',
+                                      color: Colors.grey,
+                                      fontSize: 12.0)),
                             ),
                             SizedBox(
                               height: ScreenUtil.getInstance().setHeight(30),
@@ -283,7 +293,7 @@ class _MyAppState extends State<MyApp> {
                             Text("Password",
                                 style: TextStyle(
                                   fontSize: ScreenUtil.getInstance().setSp(26),
-                                  fontFamily: "Poppins-Medium",
+                                  fontFamily: 'Segoeu',
                                 )),
                             TextField(
                               onSubmitted: (value) {
@@ -295,7 +305,9 @@ class _MyAppState extends State<MyApp> {
                               decoration: InputDecoration(
                                   hintText: "Password . . .",
                                   hintStyle: TextStyle(
-                                      color: Colors.grey, fontSize: 12.0)),
+                                      fontFamily: 'Segoeu',
+                                      color: Colors.grey,
+                                      fontSize: 12.0)),
                             ),
                             SizedBox(
                               height: ScreenUtil.getInstance().setHeight(35),
@@ -308,7 +320,7 @@ class _MyAppState extends State<MyApp> {
                                     Text(
                                       "Forgot Password?",
                                       style: TextStyle(
-                                          fontFamily: "Poppins-Medium",
+                                          fontFamily: 'Segoeu',
                                           color: Colors.orange,
                                           fontSize: ScreenUtil.getInstance()
                                               .setSp(28)),
@@ -350,7 +362,7 @@ class _MyAppState extends State<MyApp> {
                                         child: Text(
                                           "SIGN IN",
                                           style: TextStyle(
-                                              fontFamily: "Poppins-Bold",
+                                              fontFamily: 'Segoeu',
                                               color: Colors.white,
                                               fontSize: 15,
                                               letterSpacing: 1.0),
@@ -370,7 +382,9 @@ class _MyAppState extends State<MyApp> {
                           Text(
                             "Social Login",
                             style: TextStyle(
-                                fontSize: 16.0, fontFamily: "Poppins-Medium"),
+                              fontSize: 16.0,
+                              fontFamily: 'Segoeu',
+                            ),
                           ),
                           horizontalLine()
                         ],
@@ -403,7 +417,7 @@ class _MyAppState extends State<MyApp> {
                             children: <Widget>[
                               Text("New User?",
                                   style: TextStyle(
-                                      fontFamily: "Poppins-Medium",
+                                      fontFamily: 'Segoeu',
                                       fontSize:
                                           ScreenUtil.getInstance().setSp(26))),
                               InkWell(
@@ -415,8 +429,9 @@ class _MyAppState extends State<MyApp> {
                                 },
                                 child: Text("Sign Up",
                                     style: TextStyle(
-                                        color: Color(0xfff5af19),
-                                        fontFamily: "Poppins-Bold")),
+                                      color: Color(0xfff5af19),
+                                      fontFamily: 'Segoeu',
+                                    )),
                               )
                             ],
                           ),
@@ -426,7 +441,7 @@ class _MyAppState extends State<MyApp> {
                               Text(
                                 "You are organisation?",
                                 style: TextStyle(
-                                    fontFamily: "Poppins-Medium",
+                                    fontFamily: 'Segoeu',
                                     fontSize:
                                         ScreenUtil.getInstance().setSp(26)),
                               ),
@@ -434,8 +449,9 @@ class _MyAppState extends State<MyApp> {
                                 onTap: organisationSignup,
                                 child: Text("Click Here",
                                     style: TextStyle(
-                                        color: Color(0xfff5af19),
-                                        fontFamily: "Poppins-Bold")),
+                                      color: Color(0xfff5af19),
+                                      fontFamily: 'Segoeu',
+                                    )),
                               )
                             ],
                           )

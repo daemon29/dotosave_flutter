@@ -30,50 +30,55 @@ class PostSreenState extends State<PostSreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('View Post')),
-        body: FutureBuilder(
-          future: (getComments()),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(child: CircularProgressIndicator());
-            else if (snapshot.connectionState == ConnectionState.done) {
-              return ListView.builder(
-                itemCount: snapshot?.data?.length + 1 ?? 1,
-                itemBuilder: (context, index) {
-                  if (snapshot.connectionState == ConnectionState.waiting)
-                    return Center(child: CircularProgressIndicator());
-                  else if (index == 0) {
-                    return PostTop(
-                        postId,
-                        currentUserId,
-                        DateTime.fromMillisecondsSinceEpoch(post['timestamp']),
-                        post);
-                  } else {
-                    return CommentCard(
-                        snapshot.data[index - 1].data, currentUserId);
-                  }
-                },
-              );
-            }
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return CommentBox(currentUserId, postId);
-                },
-              ),
+      appBar: AppBar(
+          title: Text('View Post',
+              style: const TextStyle(
+                fontSize: 22,
+                fontFamily: 'Manjari',
+              ))),
+      body: FutureBuilder(
+        future: (getComments()),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Center(child: CircularProgressIndicator());
+          else if (snapshot.connectionState == ConnectionState.done) {
+            return ListView.builder(
+              itemCount: snapshot?.data?.length + 1 ?? 1,
+              itemBuilder: (context, index) {
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  return Center(child: CircularProgressIndicator());
+                else if (index == 0) {
+                  return PostTop(
+                      postId,
+                      currentUserId,
+                      DateTime.fromMillisecondsSinceEpoch(post['timestamp']),
+                      post);
+                } else {
+                  return CommentCard(
+                      snapshot.data[index - 1].data, currentUserId);
+                }
+              },
             );
-          },
-          child: Icon(
-            Icons.add_comment,
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.blue,
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return CommentBox(currentUserId, postId,false);
+              },
+            ),
+          );
+        },
+        child: Icon(
+          Icons.add_comment,
+          color: Colors.white,
         ),
-        //bottomNavigationBar: MyBottomNavigationBar(context, uid, 0)
-        );
+        backgroundColor: Colors.blue,
+      ),
+      //bottomNavigationBar: MyBottomNavigationBar(context, uid, 0)
+    );
   }
 }

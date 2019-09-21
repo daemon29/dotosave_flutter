@@ -11,7 +11,7 @@ class Card_View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      (post['owner(oid)'] == null)
+      (post['owner(oid)'] == "")
           ? new Card(
               child: Padding(
                   padding: EdgeInsets.all(5),

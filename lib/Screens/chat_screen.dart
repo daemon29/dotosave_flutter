@@ -19,11 +19,11 @@ class Chat extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(
-          'CHAT',
-          style:
-              TextStyle(color: Color(0xff203152), fontWeight: FontWeight.bold),
-        ),
+        title: new Text('Chat',
+            style: const TextStyle(
+              fontSize: 22,
+              fontFamily: 'Manjari',
+            )),
         centerTitle: true,
       ),
       body: new ChatScreen(
@@ -186,7 +186,7 @@ class ChatScreenState extends State<ChatScreen> {
               ? Container(
                   child: Text(
                     document['content'],
-                    style: TextStyle(color: primaryColor),
+                    style: TextStyle(fontFamily: 'Segoeu', color: primaryColor),
                   ),
                   padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                   width: 200.0,
@@ -301,7 +301,8 @@ class ChatScreenState extends State<ChatScreen> {
                     ? Container(
                         child: Text(
                           document['content'],
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                              fontFamily: 'Segoeu', color: Colors.white),
                         ),
                         padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                         width: 200.0,
@@ -385,6 +386,7 @@ class ChatScreenState extends State<ChatScreen> {
                           DateTime.fromMillisecondsSinceEpoch(
                               int.parse(document['timestamp']))),
                       style: TextStyle(
+                          fontFamily: 'Segoeu',
                           color: greyColor,
                           fontSize: 12.0,
                           fontStyle: FontStyle.italic),
@@ -751,11 +753,11 @@ class ChatScreenState extends State<ChatScreen> {
           Flexible(
             child: Container(
               child: TextField(
-                style: TextStyle(color: primaryColor, fontSize: 15.0),
+                style: TextStyle(fontFamily: 'Segoeu',color: primaryColor, fontSize: 15.0),
                 controller: textEditingController,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Type your message...',
-                  hintStyle: TextStyle(color: greyColor),
+                  hintStyle: TextStyle(fontFamily: 'Segoeu',color: greyColor),
                 ),
                 focusNode: focusNode,
               ),

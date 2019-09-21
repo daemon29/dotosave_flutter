@@ -2,6 +2,7 @@ import 'package:LadyBug/Screens/AddPost_screen.dart';
 import 'package:LadyBug/Screens/donationmap_screen.dart';
 import 'package:LadyBug/Screens/friend_screen.dart';
 import 'package:LadyBug/Widgets/HomeDrawer.dart';
+import 'package:LadyBug/Widgets/Main_Screen/CampaignCard/CampaignCard.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/Card_View.dart';
 import 'package:LadyBug/Screens/donate_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,112 +32,151 @@ class _Main_Screen extends State<Main_Screen> {
     return qs.documents;
   }
 
- 
+  Future getCampaigns() async {
+    QuerySnapshot qs = await _firestore
+        .collection('Campaign')
+        .orderBy('timestamp', descending: true)
+        .getDocuments();
+    return qs.documents;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async => false,
-        child: Scaffold(
-          key: _scaffoldKey,
-          drawer: HomeDrawer(currentUserId),
-          appBar: AppBar(
-            title: const Text("Home"),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(
-                  Icons.map,
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return DonationMap(currentUserId);
-                      },
+        child: DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              key: _scaffoldKey,
+              drawer: HomeDrawer(currentUserId),
+              appBar: AppBar(
+                bottom: TabBar(tabs: [
+                  Tab(icon: Icon(Icons.flag)),
+                  Tab(icon: Icon(Icons.forum)),
+                ]),
+                title: const Text("Home",
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontFamily: 'Manjari',
+                    )),
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.map,
                     ),
-                  );
-                },
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.send,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DonationMap(currentUserId);
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.send,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DonateScreen(
+                              currentUserId: currentUserId,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.message),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return FriendScreen(
+                                currentUserId: currentUserId,
+                              );
+                            },
+                          ),
+                        );
+                      })
+                ],
+                actionsIconTheme: IconThemeData(color: Colors.white),
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    _scaffoldKey.currentState.openDrawer();
+                  },
                 ),
+              ),
+              body:
+                  /*Column(children: [
+        Flexible(
+            child: ,*/
+                  TabBarView(children: [
+                FutureBuilder(
+                    future: (getCampaigns()),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting)
+                        return Center(child: CircularProgressIndicator());
+                      else {
+                        return ListView.builder(
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                  child: CampaignCard(
+                                      snapshot.data[index].data,
+                                      snapshot.data[index].documentID,
+                                      currentUserId));
+                            });
+                      }
+                    }),
+                FutureBuilder(
+                  future: (getPosts()),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting)
+                      return Center(child: CircularProgressIndicator());
+                    else {
+                      return ListView.builder(
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                child: Card_View(
+                                    snapshot.data[index].documentID,
+                                    snapshot.data[index].data,
+                                    currentUserId));
+                          });
+                    }
+                  },
+                )
+              ]),
+              floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
-                        return DonateScreen(
-                          currentUserId: currentUserId,
+                        return AddPost(
+                          currentUserId,
                         );
                       },
                     ),
                   );
                 },
-              ),
-              IconButton(
-                  icon: Icon(Icons.message),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return FriendScreen(
-                            currentUserId: currentUserId,
-                          );
-                        },
-                      ),
-                    );
-                  })
-            ],
-            actionsIconTheme: IconThemeData(color: Colors.white),
-            leading: IconButton(
-              icon: const Icon(
-                Icons.menu,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                _scaffoldKey.currentState.openDrawer();
-              },
-            ),
-          ),
-          body:
-              /*Column(children: [
-        Flexible(
-            child: ,*/
-              FutureBuilder(
-            future: (getPosts()),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return Center(child: CircularProgressIndicator());
-              else {
-                return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                          child: Card_View(snapshot.data[index].documentID,
-                              snapshot.data[index].data, currentUserId));
-                    });
-              }
-            },
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return AddPost(
-                      currentUserId,
-                    );
-                  },
+                child: Icon(
+                  Icons.create,
+                  color: Colors.white,
                 ),
-              );
-            },
-            child: Icon(
-              Icons.create,
-              color: Colors.white,
-            ),
-            backgroundColor: Colors.blue,
-          ),
-          // bottomNavigationBar: MyBottomNavigationBar(context, currentUserId, 0),
-        ));
+                backgroundColor: Colors.blue,
+              ),
+              // bottomNavigationBar: MyBottomNavigationBar(context, currentUserId, 0),
+            )));
   }
 }

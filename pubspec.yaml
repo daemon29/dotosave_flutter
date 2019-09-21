@@ -106,14 +106,22 @@ flutter:
     # list giving the asset and other descriptors for the font. For
     # example:
   fonts:
+    - family: Manjari
+      fonts: 
+        - asset: fonts/Manjari-Regular.ttf
+    - family: Segoeu
+      fonts:
+        - asset: fonts/segoeuil.ttf
+        - asset: fonts/seguili.ttf
+          style: italic
+        - asset: fonts/seguisb.ttf
+          weight: 700
     - family: CustomIcons
       fonts:
         - asset: assets/CustomIcons.ttf
-
-    - family: Poppins-Bold
+    - family: Poppins-Boldss
       fonts:
         - asset: assets/Poppins-Bold.ttf
-
     - family: Poppins-Medium
       fonts:
         - asset: assets/Poppins-Medium.ttf

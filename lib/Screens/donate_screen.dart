@@ -1,10 +1,14 @@
 import 'dart:io';
+import 'dart:math';
+import 'package:LadyBug/Widgets/ItemtypeList.dart';
+import 'package:LadyBug/Widgets/SlideRightRoute.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:tflite/tflite.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -27,10 +31,15 @@ class _DonateScreen extends State<DonateScreen> {
   final String currentUserId;
   final TextEditingController _controller = new TextEditingController();
   PersistentBottomSheetController controller;
+  List<bool> indexList = List.filled(itemTypeList.length, false);
+  List<String> tags = [];
+
   File _image;
   TextStyle style_state = TextStyle(
+    fontFamily: 'Segoeu',
     fontStyle: FontStyle.italic,
   );
+  bool donotpick = true;
   bool _pickaplacevisibility = true;
   Set<String> items = new Set();
   String _model = ssd;
@@ -38,6 +47,8 @@ class _DonateScreen extends State<DonateScreen> {
   List _recognitions;
   double _imageHeight;
   GeoPoint geoPoint;
+  String title;
+  int exp;
   double _imageWidth;
   bool _busy = false;
   String body;
@@ -63,16 +74,15 @@ class _DonateScreen extends State<DonateScreen> {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
             GeoPoint geoPoint = GeoPoint(90, -90);
-            Firestore.instance
-                .collection("User")
-                .document(currentUserId)
-                .collection("Item")
-                .document()
-                .setData({
-              "body": body,
-              "url": url,
-              "items": null,
-              "geo": geoPoint
+            Firestore.instance.collection("Item").document().setData({
+              'title': title,
+              "describe": body,
+              "imageurl": url,
+              'exp': exp,
+              'address': _address,
+              'owner': currentUserId,
+              "geo": geoPoint,
+              'tags':tags
             }).then((onValue) {
               this.setState(() {
                 _busy = false;
@@ -157,6 +167,19 @@ class _DonateScreen extends State<DonateScreen> {
       _busy = true;
     });
     predictImage(image);
+  }
+
+  DateTime selectedDate = DateTime.now();
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
   }
 
   Future predictImage(File image) async {
@@ -252,6 +275,7 @@ class _DonateScreen extends State<DonateScreen> {
           child: Text(
             "${re["detectedClass"]} ${(re["confidenceInClass"] * 100).toStringAsFixed(0)}%",
             style: TextStyle(
+              fontFamily: 'Segoeu',
               background: Paint()..color = blue,
               color: Colors.white,
               fontSize: 12.0,
@@ -267,23 +291,6 @@ class _DonateScreen extends State<DonateScreen> {
     Size size = MediaQuery.of(context).size;
     List<Widget> stackChildren = [];
     List<Chip> listChip = [];
-
-    // _recognitions.map((res) {
-    //   items.add(res["detectedClass"]);
-    // });
-    // renderChip() {
-    //   return ListView.builder(
-    //     itemCount: items.length,
-    //     itemBuilder: (context, index) {
-    //       return Chip(
-    //         label: Text(items.elementAt(index)),
-    //         onDeleted: () {
-    //           setState(() {});
-    //         },
-    //       );
-    //     },
-    //   );
-    // }
 
     stackChildren.add(Positioned(
       top: 0.0,
@@ -310,137 +317,70 @@ class _DonateScreen extends State<DonateScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Donate"),
-          backgroundColor: Color(0xfff5af19),
-          /*leading: IconButton(
-            icon: Icon(
-              Icons.menu,
-              semanticLabel: 'menu',
-            ),
-            onPressed: () {
-              print("Menu button");
-            },
-          ),*/
+          title: const Text("Donate",
+              style: const TextStyle(
+                fontSize: 22,
+                fontFamily: 'Manjari',
+              )),
+          backgroundColor: Colors.blue,
         ),
         bottomNavigationBar: null,
         body: new GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                /*
-                SizedBox.fromSize(
-                  size: Size.fromHeight(200),
-                  child: Stack(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: SingleChildScrollView(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      _image == null
-                          ? Image.asset("assets/images/EmptyImage.png")
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(16.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black12,
-                                          offset: Offset(3.0, 6.0),
-                                          blurRadius: 10.0)
-                                    ]),
-                                child: AspectRatio(
-                                  aspectRatio: 12.0 / 16.0,
-                                  child: Stack(
-                                    fit: StackFit.expand,
-                                    children: <Widget>[
-                                      Image.file(_image, fit: BoxFit.cover),
-                                      Align(
-                                        alignment: Alignment.topRight,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 8.0,
-                                                    vertical: 8.0),
-                                                child: IconButton(
-                                                  icon: Icon(Icons.close),
-                                                  iconSize: 50,
-                                                  tooltip: "Remove this photo",
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _image = null;
-                                                    });
-                                                  },
-                                                )),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                    ],
-                    */
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 220,
-                  child: Stack(
-                    children: stackChildren,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 220,
+                    child: Stack(
+                      children: stackChildren,
+                    ),
                   ),
-                ),
-                Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(0.0, 15.0),
-                              blurRadius: 15.0),
-                          BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(0.0, -10.0),
-                              blurRadius: 15.0)
-                        ]),
-                    child: Padding(
+                  Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0.0, 15.0),
+                                blurRadius: 15.0),
+                            BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0.0, -10.0),
+                                blurRadius: 15.0)
+                          ]),
+                      child: Padding(
                         padding:
                             EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
                         child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              /*Text(
-                          "Submit",
-                          style: TextStyle(
-                              fontFamily: "Poppins-Bold",
-                              fontSize: 45,
-                              letterSpacing: .6),
-                        ),*/
-                              Padding(
-                                  padding: EdgeInsets.only(left: 5, right: 5),
-                                  child: Row(
-                                    children: <Widget>[
-                                      RaisedButton(
-                                        onPressed: () {
-                                          predictImagePicker();
-                                        },
-                                        color: Color(0xfff5af19),
-                                        child: Icon(
-                                          Icons.add_a_photo,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    ],
-                                  )),
-                              Divider(),
-                              Padding(
-                                  padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                                  child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.only(left: 5, right: 5),
+                                child: Row(
+                                  children: <Widget>[
+                                    RaisedButton(
+                                      onPressed: () {
+                                        predictImagePicker();
+                                      },
+                                      color: Colors.blue,
+                                      child: Icon(
+                                        Icons.add_a_photo,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  ],
+                                )),
+                            Divider(),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                                child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
@@ -448,17 +388,42 @@ class _DonateScreen extends State<DonateScreen> {
                                           child: Text("Information",
                                               style: TextStyle(
                                                 fontSize: 16,
-                                                fontFamily: "Poppins-Medium",
+                                                fontFamily: 'Segoeu',
                                               ))),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text("Title",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: 'Segoeu',
+                                          )),
+                                      TextField(
+                                        maxLength: 70,
+                                        keyboardType: TextInputType.multiline,
+                                        maxLines: null,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            title = value;
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                            hintText: "Title here...",
+                                            hintStyle: TextStyle(
+                                                fontFamily: 'Segoeu',
+                                                color: Colors.grey,
+                                                fontSize: 12.0)),
+                                      ),
                                       SizedBox(
                                         height: 15,
                                       ),
                                       Text("Describe",
                                           style: TextStyle(
                                             fontSize: 15,
-                                            fontFamily: "Poppins-Medium",
+                                            fontFamily: 'Segoeu',
                                           )),
                                       TextField(
+                                        maxLength: 200,
                                         keyboardType: TextInputType.multiline,
                                         maxLines: null,
                                         onChanged: (value) {
@@ -469,65 +434,56 @@ class _DonateScreen extends State<DonateScreen> {
                                         decoration: InputDecoration(
                                             hintText: "Describe this ...",
                                             hintStyle: TextStyle(
+                                                fontFamily: 'Segoeu',
                                                 color: Colors.grey,
                                                 fontSize: 12.0)),
                                       ),
                                       SizedBox(
                                         height: 15,
                                       ),
-                                      Text("Address",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontFamily: "Poppins-Medium",
-                                          )),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: <Widget>[
-                                          RaisedButton(
-                                              textColor: Colors.white,
-                                              onPressed: onSeachBarButtonClick,
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                    color: Color(0xfff5af19)
-                                                    /* gradient: LinearGradient(colors: <Color>[
-                                    Color(0xfff12711),
-                                    Color(0xfff5af19)
-                                  ])*/
-                                                    ),
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                child: const Text(
-                                                    'Pick a place',
-                                                    style: TextStyle(
-                                                        fontSize: 13)),
-                                              )),
-                                          const Text("  Or  "),
-                                          RaisedButton(
-                                              textColor: Colors.white,
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                              onPressed:
-                                                  onGetCurrentLocationClick,
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color: Color(0xfff5af19),
-                                                  /*gradient: LinearGradient(colors: <Color>[
-                                        Color(0xfff12711),
-                                        Color(0xfff5af19)
-                                      ])*/
-                                                ),
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                child: const Text(
-                                                    'Get your location',
-                                                    style: TextStyle(
-                                                        fontSize: 13)),
-                                              ))
+                                          const Text(
+                                            "Exp: ",
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                donotpick = false;
+                                                _selectDate(context);
+                                                exp = selectedDate
+                                                    .millisecondsSinceEpoch;
+                                              });
+                                            },
+                                            child: Text(
+                                              (donotpick)
+                                                  ? "Non-expiring(tap to select a day)"
+                                                  : DateFormat('dd-MMMM-yyyy ')
+                                                      .format(selectedDate),
+                                              overflow: TextOverflow.clip,
+                                              style: style_state,
+                                            ),
+                                          ),
+                                          (!donotpick)
+                                              ? InkWell(
+                                                  onTap: () {
+                                                    donotpick = true;
+                                                    exp = 0;
+                                                  },
+                                                  child: Icon(Icons.clear))
+                                              : Container()
                                         ],
                                       ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text("Address",
+                                          style: TextStyle(
+                                            fontFamily: 'Segoeu',
+                                            fontSize: 15,
+                                          )),
                                       Visibility(
                                         visible: _pickaplacevisibility,
                                         child: Text(
@@ -546,6 +502,7 @@ class _DonateScreen extends State<DonateScreen> {
                                               setState(() {
                                                 _address = value;
                                                 style_state = TextStyle(
+                                                  fontFamily: 'Segoeu',
                                                   fontStyle: FontStyle.normal,
                                                 );
                                               });
@@ -553,62 +510,86 @@ class _DonateScreen extends State<DonateScreen> {
                                             decoration: InputDecoration(
                                                 hintText: "Enter your address",
                                                 hintStyle: TextStyle(
+                                                    fontFamily: 'Segoeu',
                                                     color: Colors.grey,
                                                     fontSize: 12.0)),
                                           )),
-                                      SizedBox(
-                                        height: 15,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          RaisedButton(
+                                            textColor: Colors.white,
+                                            onPressed: onSeachBarButtonClick,
+                                            color: Colors.blue,
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: const Text('Pick a place',
+                                                style: TextStyle(
+                                                    fontFamily: 'Segoeu',
+                                                    fontSize: 13)),
+                                          ),
+                                          const Text("  Or  "),
+                                          RaisedButton(
+                                            textColor: Colors.white,
+                                            color: Colors.blue,
+                                            padding: const EdgeInsets.all(10.0),
+                                            onPressed:
+                                                onGetCurrentLocationClick,
+                                            child: const Text(
+                                                'Get your location',
+                                                style: TextStyle(
+                                                    fontFamily: 'Segoeu',
+                                                    fontSize: 13)),
+                                          ),
+                                        ],
                                       ),
-                                      Text("Item types:",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontFamily: "Poppins-Medium",
-                                          )),
-                                      TextField(
-                                        controller: _controller,
-                                        onSubmitted: (value) {
-                                          setState(() {
-                                            items.add(value);
-                                          });
-                                          _controller.clear();
-                                        },
-                                        keyboardType:
-                                            TextInputType.emailAddress,
-                                        decoration: InputDecoration(
-                                            hintText: "Enter a missing item",
-                                            hintStyle: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 12.0)),
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                    ],
-                                  )),
-                            ]))),
-                SizedBox(
-                  height: 10,
-                ),
-                RaisedButton(
-                    textColor: Colors.white,
-                    padding: const EdgeInsets.all(0.0),
-                    onPressed: submit,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Color(
-                            0xfff5af19), /*
-                                  gradient: LinearGradient(colors: <Color>[
-                                Color(0xfff12711),
-                                Color(0xfff5af19)
-                              ])*/
-                      ),
-                      padding: const EdgeInsets.all(10.0),
-                      child: const Text('   Submit   ',
-                          style: TextStyle(fontSize: 17)),
-                    ))
-              ],
-            ),
-          ),
-        ));
+                                      Row(children: [
+                                        Text("Tags: ",
+                                            style: TextStyle(
+                                                fontFamily: 'Segoeu',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700)),
+                                        InkWell(
+                                          onTap: () async {
+                                            final result = await Navigator.push(
+                                                context,
+                                                SlideRightRoute(
+                                                    page: ItemTypeList(
+                                                        indexList)));
+
+                                            setState(() {
+                                              tags = result[0];
+                                              indexList = result[1];
+                                            });
+                                          },
+                                          splashColor: Colors.blue,
+                                          child: Text(
+                                              (tags.toString() != "[]")
+                                                  ? tags.toString()
+                                                  : 'Pick tags',
+                                              maxLines: null,
+                                              overflow: TextOverflow.clip,
+                                              style: TextStyle(
+                                                  fontFamily: 'Segoeu',
+                                                  fontSize: 13)),
+                                        ),
+                                      ]),
+                                    ])),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            RaisedButton(
+                              textColor: Colors.white,
+                              padding: const EdgeInsets.all(10.0),
+                              onPressed: submit,
+                              color: Colors.blue,
+                              child: const Text('Submit',
+                                  style: TextStyle(
+                                      fontFamily: 'Segoeu', fontSize: 17)),
+                            )
+                          ],
+                        ),
+                      ))
+                ]))));
   }
 }
