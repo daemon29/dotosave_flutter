@@ -14,7 +14,7 @@ class Post_Owner extends StatelessWidget {
           name,
           style: TextStyle(
               fontFamily: 'Segoeu',
-              color: Colors.black,
+              color: Colors.deepOrange[900],
               fontWeight: FontWeight.bold),
         ));
   }

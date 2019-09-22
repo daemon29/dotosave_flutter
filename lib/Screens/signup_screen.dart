@@ -58,11 +58,9 @@ class _Signup extends State<SignUp> {
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
     return new Scaffold(
         appBar: AppBar(
-          title: Text("Sign up",
-              style: const TextStyle(
-                fontSize: 22,
-                fontFamily: 'Manjari',
-              )),
+          title: Text(
+            "Sign up",
+          ),
           backgroundColor: Color(0xfff5af19),
         ),
         backgroundColor: Colors.white,
@@ -95,8 +93,9 @@ class _Signup extends State<SignUp> {
                           width: ScreenUtil.getInstance().setWidth(110),
                           height: ScreenUtil.getInstance().setHeight(110),
                         ),
-                        Text("LADYBUG",
+                        Text("dotosave",
                             style: TextStyle(
+                                fontFamily: 'Manjari',
                                 fontSize: ScreenUtil.getInstance().setSp(46),
                                 letterSpacing: .6,
                                 fontWeight: FontWeight.bold))

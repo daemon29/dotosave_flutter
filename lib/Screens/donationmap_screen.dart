@@ -85,7 +85,7 @@ class _DonationMapState extends State<DonationMap> {
                   onTap: null),
               ListTile(
                 leading: eventMarkerVisible
-                    ? Icon(Icons.check_box, color: Colors.blue)
+                    ? Icon(Icons.check_box)
                     : Icon(
                         Icons.check_box,
                         color: Colors.grey[700],
@@ -102,14 +102,13 @@ class _DonationMapState extends State<DonationMap> {
               ),
               ListTile(
                   leading: campaignMarkerVisible
-                      ? Icon(Icons.check_box, color: Colors.blue)
+                      ? Icon(Icons.check_box)
                       : Icon(
                           Icons.check_box,
                           color: Colors.grey[700],
                         ),
-                  title: Text('Campain',
-                      style: TextStyle(
-                          fontFamily: 'Segoeu', color: Colors.grey[700])),
+                  title:
+                      Text('Campain', style: TextStyle(fontFamily: 'Segoeu')),
                   onTap: () {
                     setState(() {
                       campaignMarkerVisible = !campaignMarkerVisible;
@@ -118,7 +117,7 @@ class _DonationMapState extends State<DonationMap> {
                   }),
               ListTile(
                 leading: itemMarkerVisible
-                    ? Icon(Icons.check_box, color: Colors.blue)
+                    ? Icon(Icons.check_box)
                     : Icon(
                         Icons.check_box,
                         color: Colors.grey[700],
@@ -139,24 +138,21 @@ class _DonationMapState extends State<DonationMap> {
         appBar: AppBar(
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.search, color: Colors.white),
+                icon: Icon(Icons.search),
                 onPressed: () {
                   onSeachBarButtonClick();
                 },
               ),
               IconButton(
-                icon: Icon(Icons.my_location, color: Colors.white),
+                icon: Icon(Icons.my_location),
                 onPressed: () {
                   onGetCurrentLocationClick();
                 },
               ),
             ],
-            backgroundColor: Colors.blue,
-            title: const Text('Map',
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontFamily: 'Manjari',
-                )),
+            title: const Text(
+              'Map',
+            ),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context, false),
@@ -235,11 +231,7 @@ class _DonationMapState extends State<DonationMap> {
     _firestore
         .collection('Campaign')
         .where("geo", isGreaterThan: GeoPoint(lowerLat, lowerLon))
-        //.where("geo/Latitude", isGreaterThan: lowerLat)
-        //.where("geo/Longitude", isGreaterThan: lowerLon)
         .where("geo", isLessThan: GeoPoint(greaterLat, greaterLon))
-        //.where("geo/Latitude", isLessThan: greaterLat)
-        //.where("geo/Longitude", isLessThan: greaterLon)
         .snapshots()
         .listen((data) =>
             data.documents.forEach((doc) => createCampaignMarker(doc)));
@@ -273,12 +265,12 @@ class _DonationMapState extends State<DonationMap> {
           body_txt = doc["introduction"];
           address_txt = doc["address"];
           exp_txt = (doc['startDate'] != null)
-              ? ('From' +
+              ? ('' +
                   DateFormat("dd MMMM yyyy").format(
                       DateTime.fromMillisecondsSinceEpoch(doc['startDate'])))
               : "";
           exp_txt += (doc['endDate'] != null)
-              ? ('to' +
+              ? (((doc['startDate'] != null) ? 'to ' : "Until") +
                   DateFormat("dd MMMM yyyy").format(
                       DateTime.fromMillisecondsSinceEpoch(doc['endDate'])))
               : "";
@@ -297,15 +289,15 @@ class _DonationMapState extends State<DonationMap> {
                 child: Column(children: <Widget>[
                   Flexible(
                       child: Container(
+                    color: Colors.deepOrange[700],
                     width: MediaQuery.of(context).size.width,
-                    color: Colors.blue,
                     padding: EdgeInsets.all(5),
                     child: Text(title_txt,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.clip,
                         style: TextStyle(
-                            fontFamily: 'Segoeu',
                             color: Colors.white,
+                            fontFamily: 'Segoeu',
                             fontWeight: FontWeight.bold,
                             fontSize: 14)),
                   ) //)
@@ -324,7 +316,6 @@ class _DonationMapState extends State<DonationMap> {
                     Icon(
                       Icons.location_on,
                       size: 27,
-                      color: Colors.blue,
                     ),
                     Flexible(
                         child: Text(
@@ -342,7 +333,6 @@ class _DonationMapState extends State<DonationMap> {
                   Divider(
                     indent: 10,
                     endIndent: 10,
-                    color: Colors.blue,
                   ),
                   Flexible(
                       child: Text(
@@ -399,16 +389,17 @@ class _DonationMapState extends State<DonationMap> {
           title_txt = doc["title"];
           address_txt = doc['address'];
           body_txt = doc["describe"];
-          exp_txt = DateFormat("dd MMMM yyyy")
-              .format(DateTime.fromMillisecondsSinceEpoch(doc['exp']));
+          exp_txt = (doc['exp'] == null)
+              ? ""
+              : DateFormat("dd MMMM yyyy")
+                  .format(DateTime.fromMillisecondsSinceEpoch(doc['exp']));
         });
         mapScaffold.currentState.showBottomSheet((context) => InkWell(
             onTap: () {
               Navigator.push(
                   context,
                   SlideRightRoute(
-                      page: ItemInformationScreen(
-                          doc.documentID, currentUserId)));
+                      page: ItemInformationScreen(doc.data, currentUserId)));
             },
             child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -416,8 +407,8 @@ class _DonationMapState extends State<DonationMap> {
                 child: Column(children: <Widget>[
                   Flexible(
                       child: Container(
+                          color: Colors.deepOrange[700],
                           width: MediaQuery.of(context).size.width,
-                          color: Colors.blue,
                           padding: EdgeInsets.all(5),
                           child: Text(
                             title_txt,
@@ -441,7 +432,6 @@ class _DonationMapState extends State<DonationMap> {
                     Icon(
                       Icons.location_on,
                       size: 27,
-                      color: Colors.blue,
                     ),
                     Flexible(
                         child: Text(
@@ -457,7 +447,6 @@ class _DonationMapState extends State<DonationMap> {
                   Divider(
                     indent: 10,
                     endIndent: 10,
-                    color: Colors.blue,
                   ),
                   Flexible(
                       child: Text(

@@ -24,8 +24,7 @@ class CardBottomBarState extends State<CardBottomBar> {
       children: <Widget>[
         IconButton(
           onPressed: () {},
-          splashColor: Colors.blue,
-          color: commented ? Colors.blue : Colors.black,
+          color: commented ? Colors.deepOrange[700] : Colors.black,
           icon: Icon(Icons.comment),
         ),
         //Text(post['comment'].length.toString()),

@@ -56,29 +56,32 @@ class HomeDrawer extends StatelessWidget {
                           overflow: TextOverflow.clip,
                           maxLines: 2,
                           style: TextStyle(
-                              fontFamily: 'Segoeu',
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                            fontFamily: 'Segoeu',
+                            color: Colors.deepOrange[700],
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       )
                     ]),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                    ),
+                    decoration: BoxDecoration(color: Colors.deepOrange[50]),
                   ),
+                  /*
                   ListTile(
                     leading: Icon(
                       Icons.notifications,
-                      color: Colors.black,
+                                            color: Colors.deepOrange[700]
+
                     ),
                     title: Text('Notifications'),
                     onTap: () {},
                   ),
+                  
+                  */
                   ListTile(
                     leading: Icon(
                       Icons.group_work,
-                      color: Colors.black,
+                      color: Colors.deepOrange[700],
                     ),
                     title: Text('Organizations'),
                     onTap: () {
@@ -91,10 +94,7 @@ class HomeDrawer extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                    leading: Icon(
-                      Icons.map,
-                      color: Colors.black,
-                    ),
+                    leading: Icon(Icons.map, color: Colors.deepOrange[700]),
                     title: Text('Donation map'),
                     onTap: () {
                       Navigator.push(context,
@@ -102,11 +102,9 @@ class HomeDrawer extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                    leading: Icon(
-                      Icons.assistant,
-                      color: Colors.black,
-                    ),
-                    title: Text('Donate goods'),
+                    leading:
+                        Icon(Icons.card_giftcard, color: Colors.deepOrange[700]),
+                    title: Text('Donate'),
                     onTap: () {
                       Navigator.push(
                           context,
@@ -117,10 +115,8 @@ class HomeDrawer extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                      leading: Icon(
-                        Icons.message,
-                        color: Colors.black,
-                      ),
+                      leading:
+                          Icon(Icons.message, color: Colors.deepOrange[700]),
                       title: Text('Messages'),
                       onTap: () {
                         Navigator.push(
@@ -134,7 +130,7 @@ class HomeDrawer extends StatelessWidget {
                   ListTile(
                     leading: Icon(
                       Icons.group,
-                      color: Colors.black,
+                      color: Colors.deepOrange[700]
                     ),
                     title: Text('Friends'),
                     onTap: () {
@@ -152,7 +148,7 @@ class HomeDrawer extends StatelessWidget {
                   ListTile(
                     leading: Icon(
                       Icons.account_circle,
-                      color: Colors.black,
+                      color: Colors.deepOrange[700]
                     ),
                     title: Text('Profile'),
                     onTap: () {
@@ -165,10 +161,8 @@ class HomeDrawer extends StatelessWidget {
                   ),
                   */
                   ListTile(
-                      leading: Icon(
-                        Icons.keyboard_return,
-                        color: Colors.black,
-                      ),
+                      leading: Icon(Icons.keyboard_return,
+                          color: Colors.deepOrange[700]),
                       title: Text('Log out'),
                       onTap: () async {
                         await FirebaseAuth.instance.signOut().then((value) {

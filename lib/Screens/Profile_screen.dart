@@ -43,16 +43,13 @@ class _ProfileScreen extends State<ProfileScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Profile",
-              style: const TextStyle(
-                fontSize: 22,
-                fontFamily: 'Manjari',
-              )),
+              ),
         ),
         body: FutureBuilder(
           future: (getPosts()),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LinearProgressIndicator());
             else if (snapshot.connectionState == ConnectionState.done) {
               return ListView.builder(
                   itemCount: (snapshot?.data?.length ?? 0) + 1,
@@ -63,7 +60,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
+                              return Center(child: LinearProgressIndicator());
                             } else {
                               return Container(
                                 child: Proflie_Top(
@@ -95,7 +92,6 @@ class _ProfileScreen extends State<ProfileScreen> {
                 },
                 child: Icon(
                   Icons.create,
-                  color: Colors.white,
                 ))
             : null);
   }

@@ -2,6 +2,7 @@ import 'package:LadyBug/Widgets/Main_Screen/Card_View/Owner.dart';
 import 'package:LadyBug/Widgets/Main_Screen/CircleAvatar.dart';
 import 'package:LadyBug/const.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -57,7 +58,7 @@ class CardTopBar extends StatelessWidget {
                       Post_Owner(snapshot.data['name'], id),
                       Text(
                         GetDuration(),
-                        style: TextStyle( fontFamily: 'Segoeu',color: greyColor),
+                        style: TextStyle( fontFamily: 'Segoeu',color: Colors.grey),
                       )
                     ])
               ],

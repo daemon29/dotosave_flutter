@@ -32,21 +32,18 @@ class PostSreenState extends State<PostSreen> {
     return Scaffold(
       appBar: AppBar(
           title: Text('View Post',
-              style: const TextStyle(
-                fontSize: 22,
-                fontFamily: 'Manjari',
-              ))),
+             )),
       body: FutureBuilder(
         future: (getComments()),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LinearProgressIndicator());
           else if (snapshot.connectionState == ConnectionState.done) {
             return ListView.builder(
               itemCount: snapshot?.data?.length + 1 ?? 1,
               itemBuilder: (context, index) {
                 if (snapshot.connectionState == ConnectionState.waiting)
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LinearProgressIndicator());
                 else if (index == 0) {
                   return PostTop(
                       postId,
@@ -74,9 +71,7 @@ class PostSreenState extends State<PostSreen> {
         },
         child: Icon(
           Icons.add_comment,
-          color: Colors.white,
         ),
-        backgroundColor: Colors.blue,
       ),
       //bottomNavigationBar: MyBottomNavigationBar(context, uid, 0)
     );

@@ -135,6 +135,7 @@ class _MyAppState extends State<MyApp> {
           'bio': "",
           'backgroundurl': "",
           'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+          'tag': []
         });
         Firestore.instance
             .collection("UserOrganization")
@@ -144,7 +145,6 @@ class _MyAppState extends State<MyApp> {
         await prefs.setString('uid', currentUser.uid);
         await prefs.setString('name', currentUser.displayName);
         await prefs.setString('imageurl', currentUser.photoUrl);
-        
       } else {
         await prefs.setString('uid', (result.documents[0]['uid']));
         await prefs.setString('name', (result.documents[0]['nickname']));
@@ -191,7 +191,6 @@ class _MyAppState extends State<MyApp> {
     ScreenUtil.instance =
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
     return new Scaffold(
-        backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: false,
         body: Stack(
           fit: StackFit.expand,
@@ -220,9 +219,9 @@ class _MyAppState extends State<MyApp> {
                             width: ScreenUtil.getInstance().setWidth(110),
                             height: ScreenUtil.getInstance().setHeight(110),
                           ),
-                          Text("LADYBUG",
+                          Text("dotosave",
                               style: TextStyle(
-                                  fontFamily: 'Segoeu',
+                                  fontFamily: 'Manjari',
                                   fontSize: ScreenUtil.getInstance().setSp(46),
                                   letterSpacing: .6,
                                   fontWeight: FontWeight.bold))
@@ -238,7 +237,7 @@ class _MyAppState extends State<MyApp> {
                       //height: MainAxisSize.max,
                       //height: ScreenUtil.getInstance().setHeight(500),
                       decoration: BoxDecoration(
-                          color: Colors.white,
+                        color: Colors.white,
                           borderRadius: BorderRadius.circular(8.0),
                           boxShadow: [
                             BoxShadow(
@@ -284,7 +283,6 @@ class _MyAppState extends State<MyApp> {
                                   hintText: "Type your email here",
                                   hintStyle: TextStyle(
                                       fontFamily: 'Segoeu',
-                                      color: Colors.grey,
                                       fontSize: 12.0)),
                             ),
                             SizedBox(
@@ -306,7 +304,6 @@ class _MyAppState extends State<MyApp> {
                                   hintText: "Password . . .",
                                   hintStyle: TextStyle(
                                       fontFamily: 'Segoeu',
-                                      color: Colors.grey,
                                       fontSize: 12.0)),
                             ),
                             SizedBox(
@@ -363,7 +360,6 @@ class _MyAppState extends State<MyApp> {
                                           "SIGN IN",
                                           style: TextStyle(
                                               fontFamily: 'Segoeu',
-                                              color: Colors.white,
                                               fontSize: 15,
                                               letterSpacing: 1.0),
                                         ),

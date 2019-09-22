@@ -2,26 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 final List<String> itemTypeList = [
-  'Orphanage',
-  'Children',
-  'Shelter',
-  'Senior citizen',
-  'Rural area',
-  'Food',
-  'Toys',
-  'Textbook',
-  'Stationary',
+  'Books',
   'Clothes',
-  'Spring',
-  'Winter',
-  'Mid-autumn',
-  'Children’s day',
-  'Environment',
-  'Pollution',
-  'Community',
-  'Donation',
-  'Disablers',
-  'Jobs'
+  'Household goods',
+  'Toys',
+  'Food',
+  'Money',
+  'School supplies',
+  'Stationary'
 ];
 
 class ItemTypeList extends StatefulWidget {
@@ -43,15 +31,13 @@ class ItemTypeListState extends State<ItemTypeList> {
         appBar: AppBar(
           actions: <Widget>[
             RaisedButton(
-                textColor: Colors.white,
                 onPressed: () {
                   List<String> resultList = List();
-                  for(int i = 0; i<indexList.length;++i){
-                     if(indexList[i]) resultList.add(itemTypeList[i]);
+                  for (int i = 0; i < indexList.length; ++i) {
+                    if (indexList[i]) resultList.add(itemTypeList[i]);
                   }
-                  Navigator.pop(context, [resultList,indexList]);
+                  Navigator.pop(context, [resultList, indexList]);
                 },
-                color: Colors.blue[400],
                 child: Text(
                   "Done",
                   //style: TextStyle(fontSize: 11),
@@ -68,7 +54,7 @@ class ItemTypeListState extends State<ItemTypeList> {
             itemBuilder: (context, index) {
               return InkWell(
                   splashColor:
-                      (indexList[index]) ? Colors.white : Colors.blue[400],
+                      (indexList[index]) ? Colors.white : Colors.deepOrange[600],
                   onTap: () {
                     setState(() {
                       indexList[index] = !indexList[index];
@@ -76,7 +62,7 @@ class ItemTypeListState extends State<ItemTypeList> {
                   },
                   child: Container(
                     padding: EdgeInsets.all(5),
-                    color: (indexList[index]) ? Colors.blue[400] : Colors.white,
+                    color: (indexList[index]) ? Colors.deepOrange[600]: Colors.white,
                     child: Text(
                       itemTypeList[index],
                       style: TextStyle(

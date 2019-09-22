@@ -21,10 +21,7 @@ class FriendScreenState extends State<FriendScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Message',
-            style: const TextStyle(
-              fontSize: 22,
-              fontFamily: 'Manjari',
-            )),
+            ),
       ),
       body: WillPopScope(
         child: Stack(
@@ -112,7 +109,7 @@ class FriendScreenState extends State<FriendScreen> {
                         child: Text(
                           '${document['name']}',
                           style: TextStyle(
-                              fontFamily: 'Segoeu', color: Color(0xff203152)),
+                              fontFamily: 'Segoeu', color: Colors.deepOrange[900]),
                         ),
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
@@ -133,7 +130,7 @@ class FriendScreenState extends State<FriendScreen> {
                           peerAvatar: document['imageurl'],
                         )));
           },
-          color: Color(0xffE8E8E8),
+          color: Colors.deepOrange[50],
           padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),

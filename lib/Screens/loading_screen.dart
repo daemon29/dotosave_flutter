@@ -32,7 +32,6 @@ class LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
       body: Stack(
         children: <Widget>[
@@ -45,7 +44,7 @@ class LoadingState extends State<Loading> {
             child: Image.asset("assets/images/image_02.png"),
           ),
           Center(
-            child: CircularProgressIndicator(
+            child: LinearProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Color(0xfff5a623)),
             ),
           )

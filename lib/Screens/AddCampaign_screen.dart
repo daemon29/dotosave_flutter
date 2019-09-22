@@ -62,22 +62,34 @@ class AddCampaignState extends State<AddCampaign> {
     super.dispose();
   }
 
-  DateTime selectedDate = DateTime.now();
+  DateTime startDate = DateTime.now(), endDate = DateTime.now();
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
+        initialDate: startDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != startDate)
       setState(() {
-        selectedDate = picked;
+        startDate = picked;
+      });
+  }
+
+  Future<Null> __selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: endDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != endDate)
+      setState(() {
+        endDate = picked;
       });
   }
 
   bool notpicked1 = true, notpicked2 = true;
   String imageurl;
-  int startDate, endDate;
+
   Future submit() async {
     this.setState(() {
       _busy = true;
@@ -98,18 +110,17 @@ class AddCampaignState extends State<AddCampaign> {
         if (value.error == null) {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
-            GeoPoint geoPoint = GeoPoint(90, -90);
             Firestore.instance.collection("Campaign").document().setData({
               'title': title.text,
               "introduction": introduction.text,
               'detail': detail.text,
               "imageurl": url,
               'address': _address,
-              'startDate': startDate,
-              'endDate': endDate,
+              'startDate': (notpicked1)?null:startDate.millisecondsSinceEpoch,
+              'endDate': (notpicked2)?null:endDate.millisecondsSinceEpoch,
               'organizer': organizer,
               "geo": geoPoint,
-              'tags': tags,
+              'tag': tags,
               'needvol': _vol,
               'needdonor': _do,
               'type': _selectedType,
@@ -119,6 +130,7 @@ class AddCampaignState extends State<AddCampaign> {
                 _busy = false;
               });
               Fluttertoast.showToast(msg: "Upload success");
+              Navigator.pop(context);
             }).catchError((error) {
               this.setState(() {
                 _busy = false;
@@ -208,11 +220,9 @@ class AddCampaignState extends State<AddCampaign> {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: Text("Create Campaign",
-              style: const TextStyle(
-                fontSize: 22,
-                fontFamily: 'Manjari',
-              )),
+          title: Text(
+            "Create Campaign",
+          ),
         ),
         body: ListView(
           // crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,7 +245,6 @@ class AddCampaignState extends State<AddCampaign> {
                           });
                         },
                         iconSize: 32,
-                        color: Colors.blue,
                       ),
                     ),
                   ],
@@ -243,16 +252,13 @@ class AddCampaignState extends State<AddCampaign> {
             Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: RaisedButton(
-                  color: Colors.blue,
                   child: Row(children: [
                     Icon(
                       Icons.image,
-                      color: Colors.white,
                       size: 32,
                     ),
                     Text(
                       " Add a banner!",
-                      style: TextStyle(color: Colors.white),
                     )
                   ]),
                   onPressed: () async {
@@ -323,20 +329,19 @@ class AddCampaignState extends State<AddCampaign> {
                     onTap: () {
                       _selectDate(context);
                       setState(() {
-                        startDate = selectedDate.millisecondsSinceEpoch;
                         notpicked1 = false;
                       });
                     },
                     child: notpicked1
                         ? Text("Select a day")
-                        : Text(DateFormat("dd MMMM yyyy").format(
-                            DateTime.fromMillisecondsSinceEpoch(startDate))),
+                        : Text(DateFormat("dd MMMM yyyy").format(startDate)),
                   ),
                   (!notpicked1)
                       ? InkWell(
                           onTap: () {
-                            notpicked1 = true;
-                            startDate = null;
+                            setState(() {
+                              notpicked1 = true;
+                            });
                           },
                           child: Icon(Icons.clear))
                       : Container()
@@ -351,23 +356,21 @@ class AddCampaignState extends State<AddCampaign> {
                           fontWeight: FontWeight.w700)),
                   InkWell(
                     onTap: () {
-                      _selectDate(context);
-
+                      __selectDate(context);
                       setState(() {
-                        endDate = selectedDate.millisecondsSinceEpoch;
                         notpicked2 = false;
                       });
                     },
                     child: notpicked2
                         ? Text("Select a day")
-                        : Text(DateFormat("dd MMMM yyyy").format(
-                            DateTime.fromMillisecondsSinceEpoch(endDate))),
+                        : Text(DateFormat("dd MMMM yyyy").format(endDate)),
                   ),
                   (!notpicked2)
                       ? InkWell(
                           onTap: () {
-                            notpicked2 = true;
-                            endDate = null;
+                            setState(() {
+                              notpicked2 = true;
+                            });
                           },
                           child: Icon(Icons.clear))
                       : Container()
@@ -383,11 +386,9 @@ class AddCampaignState extends State<AddCampaign> {
                   children: <Widget>[
                     Flexible(
                         child: RaisedButton(
-                            textColor: Colors.white,
                             onPressed: onSeachBarButtonClick,
                             padding: const EdgeInsets.all(0.0),
                             child: Container(
-                              color: Colors.blue,
                               padding: const EdgeInsets.all(10.0),
                               child: const Text('Pick a place',
                                   style: TextStyle(
@@ -396,11 +397,9 @@ class AddCampaignState extends State<AddCampaign> {
                     const Text("  Or  "),
                     Flexible(
                         child: RaisedButton(
-                            textColor: Colors.white,
                             padding: const EdgeInsets.all(0.0),
                             onPressed: onGetCurrentLocationClick,
                             child: Container(
-                              color: Colors.blue,
                               padding: const EdgeInsets.all(10.0),
                               child: const Text('Get your location',
                                   style: TextStyle(
@@ -436,10 +435,8 @@ class AddCampaignState extends State<AddCampaign> {
                       },
                       decoration: InputDecoration(
                           hintText: "Enter your address",
-                          hintStyle: TextStyle(
-                              fontFamily: 'Segoeu',
-                              color: Colors.grey,
-                              fontSize: 12.0)),
+                          hintStyle:
+                              TextStyle(fontFamily: 'Segoeu', fontSize: 12.0)),
                     ))),
             Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -511,40 +508,38 @@ class AddCampaignState extends State<AddCampaign> {
                         fontSize: 16,
                       )),
                 )),
+
             Padding(
-              padding: EdgeInsets.all(10),
-              child: Row(children: [
-                Text("Tags: ",
+                padding: EdgeInsets.all(10),
+                child: Text("Tags: ",
                     style: TextStyle(
                         fontFamily: 'Segoeu',
                         fontSize: 16,
-                        fontWeight: FontWeight.w700)),
-                InkWell(
-                  onTap: () async {
-                    final result = await Navigator.push(
-                        context, SlideRightRoute(page: TagsList(indexList)));
+                        fontWeight: FontWeight.w700))),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: InkWell(
+                onTap: () async {
+                  final result = await Navigator.push(
+                      context, SlideRightRoute(page: TagsList(indexList)));
 
-                    setState(() {
-                      tags = result[0];
-                      indexList = result[1];
-                    });
-                  },
-                  splashColor: Colors.blue,
-                  child: Text(
-                      (tags.toString() != "[]") ? tags.toString() : 'Pick tags',
-                      maxLines: null,
-                      overflow: TextOverflow.clip,
-                      style: TextStyle(fontFamily: 'Segoeu', fontSize: 13)),
-                ),
-              ]),
+                  setState(() {
+                    tags = result[0];
+                    indexList = result[1];
+                  });
+                },
+                child: Text(
+                    (tags.toString() != "[]") ? tags.toString() : 'Pick tags',
+                    maxLines: null,
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(fontFamily: 'Segoeu', fontSize: 13)),
+              ),
             ),
             RaisedButton(
-              color: Colors.blue,
               onPressed: () {
                 submit();
               },
-              child: Text("Create!",
-                  style: TextStyle(fontSize: 16, color: Colors.white)),
+              child: Text("Create!", style: TextStyle(fontSize: 16)),
             ),
           ],
         ));

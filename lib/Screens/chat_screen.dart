@@ -19,11 +19,9 @@ class Chat extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Chat',
-            style: const TextStyle(
-              fontSize: 22,
-              fontFamily: 'Manjari',
-            )),
+        title: new Text(
+          'Chat',
+        ),
         centerTitle: true,
       ),
       body: new ChatScreen(
@@ -699,9 +697,8 @@ class ChatScreenState extends State<ChatScreen> {
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       ),
       decoration: new BoxDecoration(
-          border:
-              new Border(top: new BorderSide(color: greyColor2, width: 0.5)),
-          color: Colors.white),
+        border: new Border(top: new BorderSide(color: greyColor2, width: 0.5)),
+      ),
       padding: EdgeInsets.all(5.0),
       height: 180.0,
     );
@@ -753,11 +750,12 @@ class ChatScreenState extends State<ChatScreen> {
           Flexible(
             child: Container(
               child: TextField(
-                style: TextStyle(fontFamily: 'Segoeu',color: primaryColor, fontSize: 15.0),
+                style: TextStyle(
+                    fontFamily: 'Segoeu', color: primaryColor, fontSize: 15.0),
                 controller: textEditingController,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Type your message...',
-                  hintStyle: TextStyle(fontFamily: 'Segoeu',color: greyColor),
+                  hintStyle: TextStyle(fontFamily: 'Segoeu', color: greyColor),
                 ),
                 focusNode: focusNode,
               ),

@@ -19,6 +19,7 @@ class CampaignCard extends StatelessWidget {
                   page: CampaignScreen(campaign, postId, currentUserId)));
         },
         child: Card(
+          color: Colors.deepOrange[50],
           //padding: EdgeInsets.all(10),
           child: Column(
             children: <Widget>[
@@ -42,7 +43,7 @@ class CampaignCard extends StatelessWidget {
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: Container(
-                              color: Colors.blue.withOpacity(0.7),
+                              color: Colors.deepOrange[700].withOpacity(0.7),
                               child: Padding(
                                   padding: EdgeInsets.all(5),
                                   child: Text(campaign['title'],

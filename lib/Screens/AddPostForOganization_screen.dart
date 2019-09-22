@@ -85,10 +85,7 @@ class AddPostState extends State<AddPostOrganization> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Create Post",
-              style: const TextStyle(
-                fontSize: 22,
-                fontFamily: 'Manjari',
-              )),
+             ),
         ),
         body: ListView(children: [
           Padding(
@@ -142,7 +139,6 @@ class AddPostState extends State<AddPostOrganization> {
                                                   });
                                                 },
                                                 iconSize: 32,
-                                                color: Colors.blue,
                                               ),
                                             ),
                                           ],
@@ -156,7 +152,6 @@ class AddPostState extends State<AddPostOrganization> {
                                               Size(36, 36)),
                                           child: Icon(
                                             Icons.image,
-                                            color: Colors.blue,
                                             size: 32,
                                           ),
                                           onPressed: () async {
@@ -176,7 +171,6 @@ class AddPostState extends State<AddPostOrganization> {
                                               Size(36, 36)),
                                           child: Icon(
                                             Icons.insert_emoticon,
-                                            color: Colors.blue,
                                             size: 32,
                                           ),
                                           onPressed: () {},
@@ -189,13 +183,10 @@ class AddPostState extends State<AddPostOrganization> {
                                               ? UpLoadPost
                                               : null,
                                           padding: EdgeInsets.all(0.0),
-                                          color: Colors.blue,
-                                          disabledColor: Colors.blue[100],
-                                          splashColor: Colors.blueAccent,
                                           child: Text(
                                             "Send",
                                             style:
-                                                TextStyle(fontFamily: 'Segoeu',color: Colors.white),
+                                                TextStyle(fontFamily: 'Segoeu'),
                                           ),
                                         )
                                       ],

@@ -27,7 +27,9 @@ class PostTop extends StatelessWidget {
                 Divider(
                   height: 0,
                 ),
-                CardBottomBar(postId, post, false, false, false),
+                Text("Comment")
+
+                //CardBottomBar(postId, post, false, false, false),
               ]))
         : Card(
             child: Column(
@@ -37,14 +39,16 @@ class PostTop extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                CardContent(postId, post, true, post['owner(oid)'], currentUserId),
+                CardContent(
+                    postId, post, true, post['owner(oid)'], currentUserId),
                 SizedBox(
                   height: 10,
                 ),
                 Divider(
                   height: 0,
                 ),
-                CardBottomBar(postId, post, false, false, false),
+                Text("Comment")
+                //  CardBottomBar(postId, post, false, false, false),
               ]));
   }
 }

@@ -1,3 +1,5 @@
+import 'package:LadyBug/Screens/Oraganization_screen.dart';
+import 'package:LadyBug/Widgets/SlideRightRoute.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,8 +8,10 @@ import 'package:intl/intl.dart';
 
 //import 'package:intl/date_symbols.dart';
 class CampainScreenTop extends StatelessWidget {
+  final uid;
   final Map<String, dynamic> campaign;
-  CampainScreenTop(this.campaign);
+
+  CampainScreenTop(this.campaign, this.uid);
 
   Future<DocumentSnapshot> getOrgName(String oid) async {
     DocumentSnapshot ds =
@@ -15,14 +19,22 @@ class CampainScreenTop extends StatelessWidget {
     return ds;
   }
 
+  List<Widget> _getChip(List<dynamic> tags) {
+    List listings = new List<Widget>();
+    for (int i = 0; i < tags.length; ++i) {
+      listings.add(new Chip(label: Text(tags[i])));
+    }
+    return listings;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Column(
+        child: ListView(
       children: <Widget>[
         Stack(children: [
           CachedNetworkImage(
-            placeholder: (context, url) => CircularProgressIndicator(),
+            placeholder: (context, url) => LinearProgressIndicator(),
             imageUrl: campaign['imageurl'],
             fit: BoxFit.contain,
           ),
@@ -33,14 +45,15 @@ class CampainScreenTop extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(5),
                   width: MediaQuery.of(context).size.width,
-                  color: Colors.blue.withOpacity(0.8),
+                  color: Colors.deepOrange[700].withOpacity(0.8),
                   child: Text(campaign["title"],
                       overflow: TextOverflow.clip,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white)),
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                      )),
                 ),
               )),
         ]),
@@ -88,12 +101,10 @@ class CampainScreenTop extends StatelessWidget {
         Divider(
           indent: 10,
           endIndent: 10,
-          color: Colors.blue,
         ),
         SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Container(
-                //color: Colors.blue[400],
                 padding: EdgeInsets.only(left: 10, bottom: 5),
                 child: Text(
                   "Introduction",
@@ -110,12 +121,10 @@ class CampainScreenTop extends StatelessWidget {
         Divider(
           indent: 10,
           endIndent: 10,
-          color: Colors.blue,
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Container(
-              //color: Colors.blue[400],
               padding: EdgeInsets.only(left: 10, bottom: 5),
               child: Text("Organizers",
                   textAlign: TextAlign.left,
@@ -137,7 +146,19 @@ class CampainScreenTop extends StatelessWidget {
                               return Container();
                             else if (_snapshot.connectionState ==
                                 ConnectionState.done)
-                              return Text(_snapshot.data['name']);
+                              return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        SlideRightRoute(
+                                            page: OrganizationScreen(uid,
+                                                campaign["organizer"][index])));
+                                  },
+                                  child: Text(
+                                    _snapshot.data['name'],
+                                    maxLines: null,
+                                    overflow: TextOverflow.clip,
+                                  ));
                             else
                               return Container();
                           });
@@ -145,8 +166,19 @@ class CampainScreenTop extends StatelessWidget {
         Divider(
           indent: 10,
           endIndent: 10,
-          color: Colors.blue,
         ),
+        (campaign['tag'] != null)
+            ? Padding(
+                padding: EdgeInsets.all(10),
+                child: Wrap(
+                  children: _getChip(campaign['tag']),
+                ) /*Text(
+            'Tags ' + campaign['tag'].toString(),
+            maxLines: null,
+            overflow: TextOverflow.clip,
+          ),*/
+                )
+            : Container()
       ],
     ));
   }

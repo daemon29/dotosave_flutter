@@ -185,7 +185,6 @@ class _CommentBox extends State<CommentBox> {
                                                   });
                                                 },
                                                 iconSize: 32,
-                                                color: Colors.blue,
                                               ),
                                             ),
                                           ],
@@ -199,7 +198,6 @@ class _CommentBox extends State<CommentBox> {
                                               Size(36, 36)),
                                           child: Icon(
                                             Icons.image,
-                                            color: Colors.blue,
                                             size: 32,
                                           ),
                                           onPressed: () async {
@@ -219,7 +217,6 @@ class _CommentBox extends State<CommentBox> {
                                               Size(36, 36)),
                                           child: Icon(
                                             Icons.insert_emoticon,
-                                            color: Colors.blue,
                                             size: 32,
                                           ),
                                           onPressed: () {},
@@ -234,14 +231,11 @@ class _CommentBox extends State<CommentBox> {
                                                   : UpLoadPost)
                                               : null,
                                           padding: EdgeInsets.all(0.0),
-                                          color: Colors.blue,
-                                          disabledColor: Colors.blue[100],
-                                          splashColor: Colors.blueAccent,
                                           child: Text(
                                             "Send",
                                             style: TextStyle(
-                                                fontFamily: 'Segoeu',
-                                                color: Colors.white),
+                                              fontFamily: 'Segoeu',
+                                            ),
                                           ),
                                         )
                                       ],

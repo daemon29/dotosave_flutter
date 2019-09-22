@@ -43,7 +43,6 @@ class TagsListState extends State<TagsList> {
         appBar: AppBar(
           actions: <Widget>[
             RaisedButton(
-                textColor: Colors.white,
                 onPressed: () {
                   List<String> resultList = List();
                   for(int i = 0; i<indexList.length;++i){
@@ -51,7 +50,6 @@ class TagsListState extends State<TagsList> {
                   }
                   Navigator.pop(context, [resultList,indexList]);
                 },
-                color: Colors.blue[400],
                 child: Text(
                   "Done",
                   //style: TextStyle(fontSize: 11),
@@ -68,7 +66,7 @@ class TagsListState extends State<TagsList> {
             itemBuilder: (context, index) {
               return InkWell(
                   splashColor:
-                      (indexList[index]) ? Colors.white : Colors.blue[400],
+                      (indexList[index]) ? Colors.white : Colors.deepOrange[600],
                   onTap: () {
                     setState(() {
                       indexList[index] = !indexList[index];
@@ -76,7 +74,7 @@ class TagsListState extends State<TagsList> {
                   },
                   child: Container(
                     padding: EdgeInsets.all(5),
-                    color: (indexList[index]) ? Colors.blue[400] : Colors.white,
+                    color: (indexList[index]) ? Colors.deepOrange[600]: Colors.white,
                     child: Text(
                       tagsList[index],
                       style: TextStyle(

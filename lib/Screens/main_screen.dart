@@ -54,11 +54,7 @@ class _Main_Screen extends State<Main_Screen> {
                   Tab(icon: Icon(Icons.flag)),
                   Tab(icon: Icon(Icons.forum)),
                 ]),
-                title: const Text("Home",
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontFamily: 'Manjari',
-                    )),
+                title: Text("Home"),
                 actions: <Widget>[
                   IconButton(
                     icon: Icon(
@@ -104,11 +100,9 @@ class _Main_Screen extends State<Main_Screen> {
                         );
                       })
                 ],
-                actionsIconTheme: IconThemeData(color: Colors.white),
                 leading: IconButton(
                   icon: const Icon(
                     Icons.menu,
-                    color: Colors.white,
                   ),
                   onPressed: () {
                     _scaffoldKey.currentState.openDrawer();
@@ -124,10 +118,10 @@ class _Main_Screen extends State<Main_Screen> {
                     future: (getCampaigns()),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting)
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: LinearProgressIndicator());
                       else {
                         return ListView.builder(
-                            itemCount: snapshot.data.length,
+                            itemCount: snapshot?.data?.length ?? 0,
                             itemBuilder: (context, index) {
                               return Padding(
                                   padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -142,7 +136,7 @@ class _Main_Screen extends State<Main_Screen> {
                   future: (getPosts()),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting)
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: LinearProgressIndicator());
                     else {
                       return ListView.builder(
                           itemCount: snapshot.data.length,
@@ -172,9 +166,7 @@ class _Main_Screen extends State<Main_Screen> {
                 },
                 child: Icon(
                   Icons.create,
-                  color: Colors.white,
                 ),
-                backgroundColor: Colors.blue,
               ),
               // bottomNavigationBar: MyBottomNavigationBar(context, currentUserId, 0),
             )));

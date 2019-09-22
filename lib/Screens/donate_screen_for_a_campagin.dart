@@ -18,17 +18,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 const String ssd = "SSD MobileNet";
 const place_api = 'AIzaSyApNZMEtoLsnu0ANWqepMBZUbCHbMMkP38';
 
-class DonateScreen extends StatefulWidget {
+class DonateCampaignScreen extends StatefulWidget {
   final String currentUserId;
-  DonateScreen({Key key, @required this.currentUserId}) : super(key: key);
+  final String cid;
+  DonateCampaignScreen({Key key, @required this.currentUserId, this.cid})
+      : super(key: key);
   @override
-  _DonateScreen createState() =>
-      new _DonateScreen(currentUserId: currentUserId);
+  DonateCampaignScreenState createState() =>
+      new DonateCampaignScreenState(currentUserId: currentUserId, cid: cid);
 }
 
-class _DonateScreen extends State<DonateScreen> {
-  _DonateScreen({Key key, @required this.currentUserId});
+class DonateCampaignScreenState extends State<DonateCampaignScreen> {
+  DonateCampaignScreenState({Key key, @required this.currentUserId, this.cid});
   final String currentUserId;
+  final String cid;
   final TextEditingController _controller = new TextEditingController();
   PersistentBottomSheetController controller;
   List<bool> indexList = List.filled(itemTypeList.length, false);
@@ -73,7 +76,8 @@ class _DonateScreen extends State<DonateScreen> {
         if (value.error == null) {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
-            Firestore.instance.collection("Item").document().setData({
+            Firestore.instance.collection("Donation").document().setData({
+              'cid': cid,
               'title': title,
               "describe": body,
               "imageurl": url,

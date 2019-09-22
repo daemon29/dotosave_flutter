@@ -10,22 +10,23 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  final String uid;
-  EditProfileScreen(this.uid);
+class EditProfileOrganizaationScreen extends StatefulWidget {
+  final String oid;
+  EditProfileOrganizaationScreen(this.oid);
   @override
-  EditProfileScreenState createState() {
+  EditProfileOrganizaationScreenState createState() {
     // TODO: implement createState
-    return EditProfileScreenState(uid);
+    return EditProfileOrganizaationScreenState(oid);
   }
 }
 
-class EditProfileScreenState extends State<EditProfileScreen> {
-  final String uid;
-  EditProfileScreenState(this.uid);
+class EditProfileOrganizaationScreenState
+    extends State<EditProfileOrganizaationScreen> {
+  final String oid;
+  EditProfileOrganizaationScreenState(this.oid);
   Future getUserInformation() async {
     DocumentSnapshot docs =
-        await Firestore.instance.collection('User').document(uid).get();
+        await Firestore.instance.collection('Organization').document(oid).get();
     return docs.data;
   }
 
@@ -43,34 +44,34 @@ class EditProfileScreenState extends State<EditProfileScreen> {
               if (snapshot.connectionState == ConnectionState.waiting)
                 return Container();
               if (snapshot.connectionState == ConnectionState.done)
-                return Edit_Profile_Top(snapshot.data, uid);
+                return Edit_Profile_Top(snapshot.data, oid);
             }));
   }
 }
 
 class Edit_Profile_Top extends StatefulWidget {
-  final String currentuid;
-  final Map<String, dynamic> user;
-  Edit_Profile_Top(this.user, this.currentuid);
+  final String oid;
+  final Map<String, dynamic> organization;
+  Edit_Profile_Top(this.organization, this.oid);
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return Edit_Profile_Top_State(this.user, this.currentuid);
+    return Edit_Profile_Top_State(this.organization, this.oid);
   }
 }
 
 class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
-  final String currentuid;
-  final Map<String, dynamic> user;
+  final String oid;
+  final Map<String, dynamic> org;
   File backgroundimage, avatar;
-  Edit_Profile_Top_State(this.user, this.currentuid);
+  Edit_Profile_Top_State(this.org, this.oid);
   bool _busy = false;
-  var name, bio, nickname;
+  var name, describe, address;
   @override
   void initState() {
-    name = new TextEditingController(text: user['name']);
-    bio = new TextEditingController(text: user['bio']);
-    nickname = new TextEditingController(text: user['nickname']);
+    name = new TextEditingController(text: org['name']);
+    describe = new TextEditingController(text: org['describe']);
+    address = new TextEditingController(text: org['address']);
     super.initState();
   }
 
@@ -80,7 +81,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
     });
     var uuid = new Uuid();
     if (backgroundimage != null) {
-      String filename = currentuid + uuid.v1();
+      String filename = oid + uuid.v1();
       StorageReference reference =
           FirebaseStorage.instance.ref().child('Images/$filename');
       StorageUploadTask uploadTask = reference.putFile(backgroundimage);
@@ -90,8 +91,8 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
             Firestore.instance
-                .collection("User")
-                .document(currentuid)
+                .collection("Organization")
+                .document(oid)
                 .updateData({'backgroundurl': url}).then((onValue) {
               this.setState(() {
                 _busy = false;
@@ -122,7 +123,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
       });
     }
     if (avatar != null) {
-      String filename = currentuid + uuid.v1();
+      String filename = oid + uuid.v1();
       StorageReference reference =
           FirebaseStorage.instance.ref().child('Images/$filename');
       StorageUploadTask uploadTask = reference.putFile(avatar);
@@ -132,8 +133,8 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
             Firestore.instance
-                .collection("User")
-                .document(currentuid)
+                .collection("Organization")
+                .document(oid)
                 .updateData({'imageurl': url}).then((onValue) {
               this.setState(() {
                 _busy = false;
@@ -163,10 +164,10 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
         Fluttertoast.showToast(msg: err.toString());
       });
     }
-    Firestore.instance.collection("User").document(currentuid).updateData({
-      'name': (name.text != "") ? name.text : user['name'],
-      'nickname': (nickname.text != "") ? nickname.text : user['nickname'],
-      'bio': (bio.text != "") ? bio.text : user['bio']
+    Firestore.instance.collection("Organization").document(oid).updateData({
+      'name': (name.text != "") ? name.text : org['name'],
+      'describe': (describe.text != "") ? describe.text : org['describe'],
+      'address': (address.text != "") ? address.text : org['address']
     });
   }
 
@@ -199,7 +200,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                             width: MediaQuery.of(context).size.width,
                             child: Stack(children: [
                               (backgroundimage == null)
-                                  ? (user['backgroundurl'] == "")
+                                  ? (org['backgroundurl'] == "")
                                       ? Container()
                                       : Positioned(
                                           top: 0,
@@ -208,8 +209,8 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                           child: CachedNetworkImage(
                                               placeholder: (context, url) => Center(
                                                   child:
-                                                       CircularProgressIndicator()),
-                                              imageUrl: user['backgroundurl'],
+                                                      CircularProgressIndicator()),
+                                              imageUrl: org['backgroundurl'],
                                               fit: BoxFit.cover))
                                   : Positioned(
                                       top: 0,
@@ -225,8 +226,10 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                       right: 5,
                                       child: Container(
                                           padding: EdgeInsets.all(5),
+                                          color: Colors.deepOrange[50],
                                           child: Icon(
                                             Icons.edit,
+                                            color: Colors.deepOrange[700],
                                           )),
                                     )
                                   : Positioned(
@@ -240,8 +243,10 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                           },
                                           child: Container(
                                               padding: EdgeInsets.all(5),
+                                              color: Colors.deepOrange[50],
                                               child: Icon(
                                                 Icons.clear,
+                                                color: Colors.deepOrange[700],
                                               ))),
                                     )
                             ])),
@@ -265,20 +270,20 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                   height: 120,
                                   decoration: BoxDecoration(
                                       border: Border.all(
-                                          width: 120 * 0.03,
-                                          color: Colors.white),
+                                          color: Colors.white,
+                                          width: 120 * 0.03),
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
                                           image: CachedNetworkImageProvider(
-                                              user['imageurl']))))
+                                              org['imageurl']))))
                               : Container(
                                   width: 120,
                                   height: 120,
                                   decoration: BoxDecoration(
                                       border: Border.all(
-                                          width: 120 * 0.03,
-                                          color: Colors.white),
+                                          color: Colors.deepOrange[300],
+                                          width: 120 * 0.03),
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
@@ -294,6 +299,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                         border: Border.all(color: Colors.white),
                                         shape: BoxShape.circle,
                                       ),
+                                      //color: Colors.grey[400],
                                       child: Icon(
                                         Icons.edit,
                                         color: Colors.deepOrange[700],
@@ -316,6 +322,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                               Border.all(color: Colors.white),
                                           shape: BoxShape.circle,
                                         ),
+                                        //color: Colors.grey[400],
                                         child: Icon(
                                           Icons.clear,
                                           color: Colors.deepOrange[700],
@@ -353,7 +360,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                   Icon(
                     Icons.edit,
                   ),
-                  Text("Nickname",
+                  Text("Address",
                       style: TextStyle(
                           fontFamily: 'Segoeu',
                           color: Colors.black,
@@ -363,74 +370,43 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
           Padding(
               padding: EdgeInsets.only(left: 10),
               child: TextFormField(
-                  controller: nickname,
-                  maxLength: 20,
-                  maxLines: 1,
+                  controller: address,
+                  maxLength: 120,
                   enableInteractiveSelection: false,
-                  //initialValue: user["nickname"],
+                  maxLines: null,
+                  //initialValue: user["bio"],
+                  decoration: InputDecoration(
+                      border: InputBorder.none, hintText: "Add your bio."))),
+          Divider(
+            indent: 10,
+            endIndent: 10,
+          ),
+          Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.edit,
+                  ),
+                  Text("Introduction",
+                      style: TextStyle(
+                          fontFamily: 'Segoeu',
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold))
+                ],
+              )),
+          Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: TextFormField(
+                  controller: describe,
+                  maxLength: 460,
+                  enableInteractiveSelection: false,
+                  maxLines: null,
+                  //initialValue: user["bio"],
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Add your nickname."))),
-          Divider(
-            indent: 10,
-            endIndent: 10,
-          ),
-          Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.edit,
-                  ),
-                  Text("Bio",
-                      style: TextStyle(
-                          fontFamily: 'Segoeu',
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold))
-                ],
-              )),
-          Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: TextFormField(
-                  controller: bio,
-                  maxLength: 160,
-                  enableInteractiveSelection: false,
-                  maxLines: null,
-                  //initialValue: user["bio"],
-                  decoration: InputDecoration(
-                      border: InputBorder.none, hintText: "Add your bio."))),
-          Divider(
-            indent: 10,
-            endIndent: 10,
-          ),
-          Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.edit,
-                  ),
-                  Text("Bio",
-                      style: TextStyle(
-                          fontFamily: 'Segoeu',
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold))
-                ],
-              )),
-          Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: TextFormField(
-                  controller: bio,
-                  maxLength: 160,
-                  enableInteractiveSelection: false,
-                  maxLines: null,
-                  //initialValue: user["bio"],
-                  decoration: InputDecoration(
-                      border: InputBorder.none, hintText: "Add your bio."))),
-          Divider(
-            indent: 10,
-            endIndent: 10,
-          ),
+                      hintText: "Tell everyone about your organization."))),
+          Divider(),
           RaisedButton(
             onPressed: () {
               submit();

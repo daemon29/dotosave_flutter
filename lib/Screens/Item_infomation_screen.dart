@@ -1,31 +1,39 @@
 import 'package:LadyBug/Screens/Profile_screen.dart';
+import 'package:LadyBug/Screens/chat_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ItemInformationScreen extends StatefulWidget {
-  final String itemId;
+  final Map<String, dynamic> item;
   final String currentUserId;
-  ItemInformationScreen(this.itemId, this.currentUserId);
+  ItemInformationScreen(this.item, this.currentUserId);
   @override
   ItemInformationSCreenState createState() {
     // TODO: implement createState
-    return ItemInformationSCreenState(itemId, this.currentUserId);
+    return ItemInformationSCreenState(item, this.currentUserId);
   }
 }
 
 class ItemInformationSCreenState extends State<ItemInformationScreen> {
-  final String itemId;
+  final Map<String, dynamic> item;
   final String currentUserId;
-  ItemInformationSCreenState(this.itemId, this.currentUserId);
-
+  ItemInformationSCreenState(this.item, this.currentUserId);
+  String owner;
+  Map<String, dynamic> ownerProfile;
+  /*
   Future<DocumentSnapshot> getItem() async {
     DocumentSnapshot ds =
         await Firestore.instance.collection("Item").document(itemId).get();
     return ds;
   }
-
+ Future<DocumentSnapshot> getIDonatedtem() async {
+    DocumentSnapshot ds =
+        await Firestore.instance.collection("Donate").document(itemId).get();
+    return ds;
+  }
+  */
   Future getOwner(String owner) async {
     QuerySnapshot qs = await Firestore.instance
         .collection("User")
@@ -34,150 +42,153 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
     return qs.documents;
   }
 
+  List<Widget> _getChip(List<dynamic> tags) {
+    List listings = new List<Widget>();
+    for (int i = 0; i < tags.length; ++i) {
+      listings.add(new Chip(label: Text(tags[i])));
+    }
+    return listings;
+  }
+
+  @override
+  void setState(fn) {
+    _getChip;
+    super.setState(fn);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: getItem(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container();
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            // print(snapshot);
-            return Scaffold(
-                appBar: AppBar(
-                    actions: <Widget>[
-                      RaisedButton(
-                          color: Colors.blue[400],
-                          textColor: Colors.white,
-                          onPressed: () {},
-                          child:
-                              Column(mainAxisSize: MainAxisSize.min, children: [
-                            Icon(Icons.contact_mail),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text("Contact")
-                          ])),
-                    ],
-                    title: Text("Item",
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontFamily: 'Manjari',
-                        ))),
-                body: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    CachedNetworkImage(
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      imageUrl: snapshot.data['imageurl'],
-                      fit: BoxFit.contain,
-                    ),
-                    Flexible(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        color: Colors.blue,
-                        child: Text(snapshot.data["title"],
-                            overflow: TextOverflow.clip,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white)),
-                      ),
-                    ),
-                    Flexible(
-                      child: FutureBuilder(
-                          future: getOwner(snapshot.data['owner']),
-                          builder: (context, _snapshot) {
-                            if (_snapshot.connectionState ==
-                                ConnectionState.waiting) return Container();
-                            if (_snapshot.connectionState ==
-                                ConnectionState.done)
-                              return Padding(
-                                  padding: EdgeInsets.only(left: 10, right: 10),
-                                  child: Row(children: [
-                                    Text("Owner: ",
-                                        style: TextStyle(color: Colors.black)),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return ProfileScreen(
-                                                  currentUserId,
-                                                  snapshot.data['owner']);
-                                            },
-                                          ),
-                                        );
-                                      },
-                                      child: Text(
-                                          _snapshot.data[0].data['name'],
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.blue)),
-                                    )
-                                  ]));
-                          }),
-                    ),
+    return Scaffold(
+        appBar: AppBar(
+            actions: <Widget>[
+              RaisedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Chat(
+                                  peerId: owner,
+                                  peerAvatar: ownerProfile['imageurl'],
+                                )));
+                  },
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    Icon(Icons.contact_mail),
                     SizedBox(
-                      height: 10,
+                      width: 5,
                     ),
-                    Flexible(
-                        child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            child: Text(
-                              'Exp: ' +
-                                  DateFormat('dd MMMM yyyy').format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          snapshot.data["exp"])),
-                              overflow: TextOverflow.clip,
-                            ))),
-                    Flexible(
-                        child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            child: Row(children: [
-                              Icon(
-                                Icons.location_on,
-                                size: 14,
-                              ),
-                              Flexible(
-                                  child: Text(
-                                snapshot.data["address"],
-                                overflow: TextOverflow.clip,
-                              ))
-                            ]))),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(
-                      indent: 10,
-                      endIndent: 10,
-                      color: Colors.blue,
-                    ),
-                    Flexible(
-                        child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            child: Text(
-                              snapshot.data["describe"],
-                              overflow: TextOverflow.clip,
-                            ))),
-                    Divider(
-                      indent: 10,
-                      endIndent: 10,
-                      color: Colors.blue,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Flexible(
-                        child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            child: Text(
-                              "Tags",
-                            ))),
-                    Flexible(
+                    Text("Contact")
+                  ])),
+            ],
+            title: Text(
+              "Item",
+            )),
+        body: ListView(
+          //crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            CachedNetworkImage(
+              placeholder: (context, url) =>
+                  Center(child: CircularProgressIndicator()),
+              imageUrl: item['imageurl'],
+              fit: BoxFit.contain,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: Text(item["title"],
+                  overflow: TextOverflow.clip,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                  )),
+            ),
+            FutureBuilder(
+                future: getOwner(item['owner']),
+                builder: (context, _snapshot) {
+                  if (_snapshot.connectionState == ConnectionState.waiting)
+                    return Container();
+                  if (_snapshot.connectionState == ConnectionState.done) {
+                    owner = item['owner'];
+                    ownerProfile = Map.from(_snapshot.data[0].data);
+                    return Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: Row(children: [
+                          Text("Owner: ",
+                              style: TextStyle(color: Colors.black)),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return ProfileScreen(
+                                        currentUserId, item['owner']);
+                                  },
+                                ),
+                              );
+                            },
+                            child: Text(_snapshot.data[0].data['name'],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                )),
+                          )
+                        ]));
+                  }
+                }),
+            SizedBox(
+              height: 10,
+            ),
+            (item["exp"] == null)
+                ? Container()
+                : Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: Text(
+                      'Exp: ' +
+                          DateFormat('dd MMMM yyyy').format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  item["exp"])),
+                      overflow: TextOverflow.clip,
+                    )),
+            Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Row(children: [
+                  Icon(
+                    Icons.location_on,
+                    size: 14,
+                  ),
+                  Text(
+                    item["address"],
+                    overflow: TextOverflow.clip,
+                  )
+                ])),
+            SizedBox(
+              height: 10,
+            ),
+            Divider(
+              indent: 10,
+              endIndent: 10,
+            ),
+            Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Text(
+                 item["describe"],
+                  overflow: TextOverflow.clip,
+                )),
+            Divider(
+              indent: 10,
+              endIndent: 10,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Text(
+                  "Tags",
+                )),
+            Wrap(
+              children: _getChip(item["tag"]),
+            )
+
+            /*   Flexible(
                         child: Padding(
                             padding: EdgeInsets.only(left: 10, right: 10),
                             child: ListView.builder(
@@ -188,10 +199,8 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
                                   label: Text(snapshot.data["tag"][index]),
                                 );
                               },
-                            ))),
-                  ],
-                ));
-          }
-        });
+                            ))),*/
+          ],
+        ));
   }
 }
