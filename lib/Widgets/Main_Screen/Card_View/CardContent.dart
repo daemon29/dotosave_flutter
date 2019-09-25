@@ -60,7 +60,7 @@ class CardContent extends StatelessWidget {
                   child: Center(
                     child: CachedNetworkImage(
                       placeholder: (context, url) =>
-                          LinearProgressIndicator(),
+                          Container(),
                       imageUrl: post['image'],
                     ),
                   )))

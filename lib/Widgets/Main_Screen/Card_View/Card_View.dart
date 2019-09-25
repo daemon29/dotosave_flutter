@@ -3,7 +3,6 @@ import 'package:LadyBug/Widgets/CommentBox.dart';
 import 'package:LadyBug/Widgets/Comment_Card/Comment_Card.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardContent.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardTopBar.dart';
-import 'package:LadyBug/Widgets/SlideRightRoute.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +26,7 @@ class Card_View_State extends State<Card_View> {
   Future getComments() async {
     QuerySnapshot qs = await Firestore.instance
         .collection('Comment')
-        .where('postId', isEqualTo: postId)
+        .where('postId', isEqualTo: postId).orderBy('timestamp',descending: true)
         .getDocuments();
     return qs.documents;
   }
@@ -59,26 +58,27 @@ class Card_View_State extends State<Card_View> {
                       RaisedButton(
                         color: Colors.white,
                         onPressed: () {
-                          showDialog(
+                          showBottomSheet(
                               context: context,
-                              builder: (context) => FutureBuilder(
+                              builder: (context) => Container(
+                                      child: FutureBuilder(
                                     future: (getComments()),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting)
-                                        return Center(
-                                            child: LinearProgressIndicator());
+                                        return Container();
                                       else if (snapshot.connectionState ==
                                           ConnectionState.done) {
                                         return Card(
                                             color: Colors.grey[100],
                                             child: Column(children: [
                                               ListTile(
-                                                  trailing: IconButton(
+                                                  leading: IconButton(
                                                       onPressed: () {
                                                         Navigator.pop(context);
                                                       },
-                                                      icon: Icon(Icons.clear)),
+                                                      icon: Icon(
+                                                          Icons.expand_more)),
                                                   title: Text(
                                                     captions[setLanguage]
                                                         ["comment"],
@@ -97,8 +97,7 @@ class Card_View_State extends State<Card_View> {
                                                           .connectionState ==
                                                       ConnectionState.waiting)
                                                     return Center(
-                                                        child:
-                                                            LinearProgressIndicator());
+                                                        child: Container());
                                                   else
                                                     return CommentCard(
                                                         snapshot
@@ -106,7 +105,7 @@ class Card_View_State extends State<Card_View> {
                                                         currentUserId);
                                                 },
                                               )),
-                                              RaisedButton(
+                                              /*RaisedButton(
                                                   padding: EdgeInsets.only(
                                                       left: 10, right: 10),
                                                   onPressed: () {
@@ -130,11 +129,13 @@ class Card_View_State extends State<Card_View> {
                                                               .width,
                                                           child: Text(captions[
                                                                   setLanguage][
-                                                              "writeacomment"]))))
+                                                              "writeacomment"]))))*/
+                                              GetCommentBox(
+                                                  currentUserId, postId, false,true)
                                             ]));
                                       }
                                     },
-                                  ));
+                                  )));
                           /*
                           Navigator.push(
                               context,
@@ -172,26 +173,27 @@ class Card_View_State extends State<Card_View> {
                       RaisedButton(
                         color: Colors.white,
                         onPressed: () {
-                          showDialog(
+                          showBottomSheet(
                               context: context,
-                              builder: (context) => FutureBuilder(
+                              builder: (context) => Container(
+                                      child: FutureBuilder(
                                     future: (getComments()),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting)
-                                        return Center(
-                                            child: LinearProgressIndicator());
+                                        return Center(child: Container());
                                       else if (snapshot.connectionState ==
                                           ConnectionState.done) {
                                         return Card(
                                             color: Colors.grey[100],
                                             child: Column(children: [
                                               ListTile(
-                                                  trailing: IconButton(
+                                                  leading: IconButton(
                                                       onPressed: () {
                                                         Navigator.pop(context);
                                                       },
-                                                      icon: Icon(Icons.clear)),
+                                                      icon: Icon(
+                                                          Icons.expand_more)),
                                                   title: Text(
                                                     captions[setLanguage]
                                                         ["comment"],
@@ -210,8 +212,7 @@ class Card_View_State extends State<Card_View> {
                                                           .connectionState ==
                                                       ConnectionState.waiting)
                                                     return Center(
-                                                        child:
-                                                            LinearProgressIndicator());
+                                                        child: Container());
                                                   else
                                                     return CommentCard(
                                                         snapshot
@@ -219,6 +220,10 @@ class Card_View_State extends State<Card_View> {
                                                         currentUserId);
                                                 },
                                               )),
+                                              GetCommentBox(
+                                                  currentUserId, postId, false,true)
+
+                                              /*
                                               RaisedButton(
                                                   padding: EdgeInsets.only(
                                                       left: 10, right: 10),
@@ -243,11 +248,11 @@ class Card_View_State extends State<Card_View> {
                                                               .width,
                                                           child: Text(captions[
                                                                   setLanguage][
-                                                              "writeacomment"]))))
+                                                              "writeacomment"]))))*/
                                             ]));
                                       }
                                     },
-                                  ));
+                                  )));
                           /*
                           Navigator.push(
                               context,

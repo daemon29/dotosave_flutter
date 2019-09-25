@@ -54,7 +54,7 @@ class _OrganizationTop extends State<OrganizationTop> {
                             ? Container()
                             : CachedNetworkImage(
                                 placeholder: (context, url) =>
-                                    Center(child: LinearProgressIndicator()),
+                                    Center(child: CircularProgressIndicator()),
                                 imageUrl: organization['backgroundurl'],
                                 fit: BoxFit.cover)),
                   )),

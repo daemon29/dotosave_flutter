@@ -36,6 +36,7 @@ class CampaignScreenState extends State<CampaignScreen> {
     QuerySnapshot qs = await Firestore.instance
         .collection("Comment")
         .where('campaignId', isEqualTo: postID)
+        .orderBy("timestamp", descending: true)
         .getDocuments();
     return qs.documents;
   }
@@ -303,7 +304,7 @@ class CampaignScreenState extends State<CampaignScreen> {
         future: getComment(),
         builder: (context, _snapshot) {
           if (_snapshot.connectionState == ConnectionState.waiting)
-            return LinearProgressIndicator();
+            return Container();
           else if (_snapshot.connectionState == ConnectionState.done)
             return ListView.builder(
               itemCount: _snapshot?.data?.length ?? 0,
@@ -372,7 +373,7 @@ class CampaignScreenState extends State<CampaignScreen> {
       future: getUser(),
       builder: (context, _snapshot) {
         if (_snapshot.connectionState == ConnectionState.waiting)
-          return LinearProgressIndicator();
+          return Container();
         else if (_snapshot.connectionState == ConnectionState.done)
           return Padding(
               padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
@@ -386,7 +387,7 @@ class CampaignScreenState extends State<CampaignScreen> {
                           .get(),
                       builder: (context, user) {
                         if (user.connectionState == ConnectionState.waiting)
-                          return LinearProgressIndicator();
+                          return Container();
                         else if (user.connectionState == ConnectionState.done)
                           return Card(
                               child: Padding(
@@ -416,7 +417,7 @@ class CampaignScreenState extends State<CampaignScreen> {
       future: getRequest(),
       builder: (context, _snapshot) {
         if (_snapshot.connectionState == ConnectionState.waiting)
-          return LinearProgressIndicator();
+          return Container();
         else if (_snapshot.connectionState == ConnectionState.done)
           return Padding(
               padding: EdgeInsets.fromLTRB(5, 5, 5, 0),

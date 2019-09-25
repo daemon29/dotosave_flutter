@@ -146,7 +146,7 @@ class _OrganizationScreen extends State<OrganizationScreen> {
                 future: (getPosts()),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting)
-                    return Center(child: LinearProgressIndicator());
+                    return Container();
                   else if (snapshot.connectionState == ConnectionState.done) {
                     return ListView.builder(
                         itemCount: (snapshot?.data?.length ?? 0) + 1,
@@ -158,7 +158,7 @@ class _OrganizationScreen extends State<OrganizationScreen> {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
                                     return Center(
-                                        child: LinearProgressIndicator());
+                                        child: CircularProgressIndicator());
                                   } else {
                                     return Container(
                                       child: OrganizationTop(
@@ -181,7 +181,7 @@ class _OrganizationScreen extends State<OrganizationScreen> {
                   future: (getCampaigns()),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting)
-                      return Center(child: LinearProgressIndicator());
+                      return Container();
                     else {
                       return ListView.builder(
                           itemCount: snapshot?.data?.length ?? 0,

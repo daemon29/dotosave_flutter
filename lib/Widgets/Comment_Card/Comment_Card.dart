@@ -36,7 +36,7 @@ class _CommentCard extends State<CommentCard> {
           future: getPostOwner(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(child: LinearProgressIndicator());
+              return Container();
             else if (snapshot.connectionState == ConnectionState.done) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

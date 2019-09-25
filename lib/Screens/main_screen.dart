@@ -119,7 +119,7 @@ class _Main_Screen extends State<Main_Screen> {
                     future: (getCampaigns()),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting)
-                        return Center(child: LinearProgressIndicator());
+                        return SizedBox();
                       else {
                         return ListView.builder(
                             itemCount: snapshot?.data?.length ?? 0,
@@ -137,7 +137,7 @@ class _Main_Screen extends State<Main_Screen> {
                   future: (getPosts()),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting)
-                      return Center(child: LinearProgressIndicator());
+                      return SizedBox();
                     else {
                       return ListView.builder(
                           itemCount: snapshot.data.length,

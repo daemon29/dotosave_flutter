@@ -23,7 +23,7 @@ class PostSreenState extends State<PostSreen> {
   Future getComments() async {
     QuerySnapshot qs = await Firestore.instance
         .collection('Comment')
-        .where('postId', isEqualTo: postId)
+        .where('postId', isEqualTo: postId).orderBy('timestamp',descending: true)
         .getDocuments();
     return qs.documents;
   }
@@ -51,7 +51,7 @@ class PostSreenState extends State<PostSreen> {
               future: (getComments()),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
-                  return Center(child: LinearProgressIndicator());
+                  return Center(child: CircularProgressIndicator());
                 else if (snapshot.connectionState == ConnectionState.done) {
                   return ListView.builder(
                     itemCount: (snapshot?.data?.length ?? 0),

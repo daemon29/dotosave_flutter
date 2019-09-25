@@ -53,7 +53,7 @@ class _ProfileScreen extends State<ProfileScreen> {
               future: (getPosts()),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
-                  return Center(child: LinearProgressIndicator());
+                  return Center(child: CircularProgressIndicator());
                 else if (snapshot.connectionState == ConnectionState.done) {
                   return ListView.builder(
                       itemCount: (snapshot?.data?.length ?? 0) + 1,
@@ -64,8 +64,8 @@ class _ProfileScreen extends State<ProfileScreen> {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return Center(
-                                      child: LinearProgressIndicator());
+                                  return 
+                                      Container();
                                 } else {
                                   return Container(
                                     child: Proflie_Top(
