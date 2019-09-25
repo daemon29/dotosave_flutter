@@ -1,3 +1,4 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/AddPost_screen.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/Card_View.dart';
 import 'package:LadyBug/Widgets/Profile_Screen/Profile_Top.dart';
@@ -42,43 +43,49 @@ class _ProfileScreen extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Profile",
-              ),
+          title: Text(
+            captions[setLanguage]["profile"],
+          ),
         ),
-        body: FutureBuilder(
-          future: (getPosts()),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(child: LinearProgressIndicator());
-            else if (snapshot.connectionState == ConnectionState.done) {
-              return ListView.builder(
-                  itemCount: (snapshot?.data?.length ?? 0) + 1,
-                  itemBuilder: (context, index) {
-                    if (index == 0)
-                      return FutureBuilder(
-                          future: getUserInformation(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(child: LinearProgressIndicator());
-                            } else {
-                              return Container(
-                                child: Proflie_Top(
-                                  snapshot.data,
-                                  currentUserID,
-                                ),
-                              );
-                            }
-                          });
-                    else
-                      return Padding(
-                          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                          child: Card_View(snapshot.data[index - 1].documentID,
-                              snapshot.data[index - 1].data, currentUserID));
-                  });
-            }
-          },
-        ),
+        body: Container(
+            color: Colors.white,
+            child: FutureBuilder(
+              future: (getPosts()),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  return Center(child: LinearProgressIndicator());
+                else if (snapshot.connectionState == ConnectionState.done) {
+                  return ListView.builder(
+                      itemCount: (snapshot?.data?.length ?? 0) + 1,
+                      itemBuilder: (context, index) {
+                        if (index == 0)
+                          return FutureBuilder(
+                              future: getUserInformation(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                      child: LinearProgressIndicator());
+                                } else {
+                                  return Container(
+                                    child: Proflie_Top(
+                                      snapshot.data,
+                                      currentUserID,uid
+                                    ),
+                                  );
+                                }
+                              });
+                        else
+                          return Padding(
+                              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                              child: Card_View(
+                                  snapshot.data[index - 1].documentID,
+                                  snapshot.data[index - 1].data,
+                                  currentUserID));
+                      });
+                }
+              },
+            )),
         floatingActionButton: (uid == currentUserID)
             ? FloatingActionButton(
                 onPressed: () {

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -84,8 +85,9 @@ class AddPostState extends State<AddPost> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Create Post",
-             ),
+          title: Text(
+            captions[setLanguage]["createpost"],
+          ),
         ),
         body: ListView(children: [
           Padding(
@@ -104,7 +106,8 @@ class AddPostState extends State<AddPost> {
                                     TextField(
                                       decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          hintText: 'What\'s on your mind?'),
+                                          hintText: captions[setLanguage]
+                                              ['whatsonyourmind']),
                                       keyboardType: TextInputType.multiline,
                                       onChanged: (str) {
                                         if (str.length > 0) {
@@ -132,7 +135,8 @@ class AddPostState extends State<AddPost> {
                                               top: 2,
                                               child: IconButton(
                                                 icon: Icon(Icons.close),
-                                                tooltip: 'Remove image',
+                                                tooltip: captions[setLanguage]
+                                                    ['removeimage'],
                                                 onPressed: () {
                                                   setState(() {
                                                     _visible = false;
@@ -166,6 +170,7 @@ class AddPostState extends State<AddPost> {
                                             });
                                           },
                                         ),
+                                        /*
                                         RawMaterialButton(
                                           constraints: BoxConstraints.tight(
                                               Size(36, 36)),
@@ -175,6 +180,7 @@ class AddPostState extends State<AddPost> {
                                           ),
                                           onPressed: () {},
                                         ),
+                                       */
                                         Expanded(
                                           child: Container(),
                                         ),
@@ -184,9 +190,7 @@ class AddPostState extends State<AddPost> {
                                               : null,
                                           padding: EdgeInsets.all(0.0),
                                           child: Text(
-                                            "Send",
-                                            style:
-                                                TextStyle(fontFamily: 'Segoeu'),
+                                            captions[setLanguage]["send"],
                                           ),
                                         )
                                       ],

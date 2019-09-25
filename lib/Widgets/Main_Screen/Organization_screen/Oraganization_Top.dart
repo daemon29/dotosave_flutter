@@ -1,3 +1,4 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/EditProfileOrganization%20_screen.dart';
 import 'package:LadyBug/Widgets/Main_Screen/CircleAvatar.dart';
 import 'package:LadyBug/Widgets/SlideRightRoute.dart';
@@ -34,7 +35,7 @@ class _OrganizationTop extends State<OrganizationTop> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Card(
         child: Column(children: <Widget>[
       SizedBox(
           height: 220,
@@ -82,7 +83,7 @@ class _OrganizationTop extends State<OrganizationTop> {
                                               oid)));
                                 },
                                 child: Text(
-                                  "Edit profile",
+                                  captions[setLanguage]["editprofile"],
                                   style: TextStyle(
                                       fontFamily: 'Segoeu', fontSize: 13),
                                 ),
@@ -104,26 +105,16 @@ class _OrganizationTop extends State<OrganizationTop> {
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
               ))),
-      Divider(
-        indent: 10,
-        endIndent: 10,
-        color: Colors.black,
-      ),
       SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Padding(
               padding: EdgeInsets.only(left: 10),
-              child: Row(children: [
-                Icon(
-                  Icons.location_on,
-                  size: 17,
-                ),
-                Text(
-                  organization["address"],
-                  style: TextStyle(fontFamily: 'Segoeu'),
-                  overflow: TextOverflow.clip,
-                )
-              ]))),
+              child: Text(
+                captions[setLanguage]['address'] + ": " + organization["address"],
+                style: TextStyle(fontFamily: 'Segoeu'),
+                maxLines: null,
+                overflow: TextOverflow.clip,
+              ))),
       SizedBox(
         height: 10,
       ),
@@ -140,11 +131,6 @@ class _OrganizationTop extends State<OrganizationTop> {
       SizedBox(
         height: 10,
       ),
-      Divider(
-        indent: 10,
-        endIndent: 10,
-        color: Colors.black,
-      )
     ]));
   }
 }

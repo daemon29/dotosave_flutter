@@ -1,3 +1,4 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,10 +21,11 @@ class FriendScreenState extends State<FriendScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Message',
+        title: Text(captions[setLanguage]['message'],
             ),
       ),
       body: WillPopScope(
+        onWillPop: null,
         child: Stack(
           children: <Widget>[
             Container(
@@ -71,7 +73,7 @@ class FriendScreenState extends State<FriendScreen> {
     if (document['uid'] == currentUserId) {
       return Container();
     } else {
-      return Container(
+      return Card(
         child: FlatButton(
           child: Row(
             children: <Widget>[
@@ -130,7 +132,6 @@ class FriendScreenState extends State<FriendScreen> {
                           peerAvatar: document['imageurl'],
                         )));
           },
-          color: Colors.deepOrange[50],
           padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),

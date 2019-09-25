@@ -1,3 +1,4 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/AddPost_screen.dart';
 import 'package:LadyBug/Screens/donationmap_screen.dart';
 import 'package:LadyBug/Screens/friend_screen.dart';
@@ -50,11 +51,11 @@ class _Main_Screen extends State<Main_Screen> {
               key: _scaffoldKey,
               drawer: HomeDrawer(currentUserId),
               appBar: AppBar(
+                title: Text(captions[setLanguage]['home']),
                 bottom: TabBar(tabs: [
                   Tab(icon: Icon(Icons.flag)),
                   Tab(icon: Icon(Icons.forum)),
                 ]),
-                title: Text("Home"),
                 actions: <Widget>[
                   IconButton(
                     icon: Icon(
@@ -72,7 +73,7 @@ class _Main_Screen extends State<Main_Screen> {
                   ),
                   IconButton(
                     icon: Icon(
-                      Icons.send,
+                      Icons.card_giftcard,
                     ),
                     onPressed: () {
                       Navigator.of(context).push(
@@ -87,7 +88,7 @@ class _Main_Screen extends State<Main_Screen> {
                     },
                   ),
                   IconButton(
-                      icon: Icon(Icons.message),
+                      icon: Icon(Icons.send),
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(

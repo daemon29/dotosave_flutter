@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/Campaign_screen.dart';
 import 'package:LadyBug/Screens/Item_infomation_screen.dart';
 import 'package:LadyBug/Widgets/SlideRightRoute.dart';
@@ -51,25 +52,19 @@ class _DonationMapState extends State<DonationMap> {
     getLastKnownLocation();
   }
 
+/*
   Set<Marker> getMarkerSet() {
-    Set<Marker> set1 = Set();
-    Set<Marker> set2 = Set();
-    Set<Marker> set3 = Set();
-    return (itemMarkerVisible ? imarkers : set1).union(
-        (eventMarkerVisible ? emarkers : set2)
-            .union((campaignMarkerVisible ? cmarkers : set3)));
+    Set temp = imarkers;
+    temp.union(emarkers);
+    temp.union(cmarkers);
+    return temp;
   }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: mapScaffold,
-        endDrawer: Drawer(
+        /*endDrawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
@@ -84,57 +79,54 @@ class _DonationMapState extends State<DonationMap> {
                   ),
                   onTap: null),
               ListTile(
-                leading: eventMarkerVisible
-                    ? Icon(Icons.check_box)
-                    : Icon(
+                leading: (eventMarkerVisible == true)
+                    ? Icon(
                         Icons.check_box,
-                        color: Colors.grey[700],
+                      )
+                    : Icon(
+                        Icons.check_box_outline_blank,
                       ),
                 title: Text('Events',
                     style: TextStyle(
                         fontFamily: 'Segoeu', color: Colors.grey[700])),
                 onTap: () {
                   setState(() {
+                    //  markers = getMarkerSet();
                     eventMarkerVisible = !eventMarkerVisible;
-                    markers = getMarkerSet();
                   });
                 },
               ),
               ListTile(
-                  leading: campaignMarkerVisible
+                  leading: campaignMarkerVisible == true
                       ? Icon(Icons.check_box)
                       : Icon(
-                          Icons.check_box,
-                          color: Colors.grey[700],
+                          Icons.check_box_outline_blank,
                         ),
                   title:
                       Text('Campain', style: TextStyle(fontFamily: 'Segoeu')),
                   onTap: () {
                     setState(() {
+                      //   markers = getMarkerSet();
                       campaignMarkerVisible = !campaignMarkerVisible;
-                      markers = getMarkerSet();
                     });
                   }),
               ListTile(
-                leading: itemMarkerVisible
+                leading: (itemMarkerVisible == true)
                     ? Icon(Icons.check_box)
-                    : Icon(
-                        Icons.check_box,
-                        color: Colors.grey[700],
-                      ),
+                    : Icon(Icons.check_box_outline_blank),
                 title: Text('Items',
                     style: TextStyle(
                         fontFamily: 'Segoeu', color: Colors.grey[700])),
                 onTap: () {
                   setState(() {
+                    // markers = getMarkerSet();
                     itemMarkerVisible = !itemMarkerVisible;
-                    markers = getMarkerSet();
                   });
                 },
               )
             ],
           ),
-        ),
+        ),*/
         appBar: AppBar(
             actions: <Widget>[
               IconButton(
@@ -150,8 +142,8 @@ class _DonationMapState extends State<DonationMap> {
                 },
               ),
             ],
-            title: const Text(
-              'Map',
+            title: Text(
+              captions[setLanguage]['map'],
             ),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -190,7 +182,6 @@ class _DonationMapState extends State<DonationMap> {
 
   Future<void> getPrediction(Prediction p) async {
     if (p != null) {
-      // get detail (lat/lng)
       PlacesDetailsResponse detail =
           await _places.getDetailsByPlaceId(p.placeId);
       final lat = detail.result.geometry.location.lat;
@@ -247,7 +238,7 @@ class _DonationMapState extends State<DonationMap> {
         .listen(
             (data) => data.documents.forEach((doc) => createItemMarker(doc)));
     setState(() {
-      markers = getMarkerSet();
+      // markers;
     });
   }
 
@@ -256,7 +247,7 @@ class _DonationMapState extends State<DonationMap> {
     GeoPoint geo = doc["geo"];
     Marker resultMarker = Marker(
       markerId: MarkerId(doc.documentID),
-      visible: doc["type"] == 2 ? campaignMarkerVisible : eventMarkerVisible,
+      visible: true,
       icon: BitmapDescriptor.defaultMarkerWithHue(typeOfMarker(doc["type"])),
       onTap: () {
         setState(() {
@@ -266,113 +257,122 @@ class _DonationMapState extends State<DonationMap> {
           address_txt = doc["address"];
           exp_txt = (doc['startDate'] != null)
               ? ('' +
-                  DateFormat("dd MMMM yyyy").format(
+                  DateFormat("dd/MM/yyyy").format(
                       DateTime.fromMillisecondsSinceEpoch(doc['startDate'])))
               : "";
           exp_txt += (doc['endDate'] != null)
-              ? (((doc['startDate'] != null) ? 'to ' : "Until") +
-                  DateFormat("dd MMMM yyyy").format(
+              ? (((doc['startDate'] != null) ? ' to ' : "Until ") +
+                  DateFormat("dd/MM/yyyy").format(
                       DateTime.fromMillisecondsSinceEpoch(doc['endDate'])))
               : "";
         });
-        mapScaffold.currentState.showBottomSheet((context) => InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  SlideRightRoute(
-                      page: CampaignScreen(
-                          doc.data, doc.documentID, currentUserId)));
-            },
-            child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 250,
-                child: Column(children: <Widget>[
-                  Flexible(
-                      child: Container(
-                    color: Colors.deepOrange[700],
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.all(5),
-                    child: Text(title_txt,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.clip,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Segoeu',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14)),
-                  ) //)
-                      ),
-                  (exp_txt == "")
-                      ? Container()
-                      : Text(
-                          exp_txt,
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.clip,
-                          style: TextStyle(
-                            fontStyle: FontStyle.italic,
+        mapScaffold.currentState.showBottomSheet(
+            (context) => InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      SlideRightRoute(
+                          page: CampaignScreen(
+                              doc.data, doc.documentID, currentUserId)));
+                },
+                child: Card(
+                    child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 250,
+                        child: Column(children: <Widget>[
+                          Flexible(
+                              child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(5),
+                            child: Text(title_txt,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                    fontFamily: 'Segoeu',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 19)),
+                          ) //)
+                              ),
+                          (exp_txt == "")
+                              ? Container()
+                              : Text(
+                                  exp_txt,
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Icon(
+                                  Icons.location_on,
+                                  size: 17,
+                                ),
+                                Flexible(
+                                    child: Text(
+                                  address_txt,
+                                  //markerInformation[markerId]?.getTitle()??"",
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    fontFamily: 'Segoeu',
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ))
+                              ]),
+                          Divider(
+                            indent: 10,
+                            endIndent: 10,
                           ),
-                        ),
-                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    Icon(
-                      Icons.location_on,
-                      size: 27,
-                    ),
-                    Flexible(
-                        child: Text(
-                      address_txt,
-                      //markerInformation[markerId]?.getTitle()??"",
-                      textAlign: TextAlign.start,
-                      overflow: TextOverflow.clip,
-                      style: TextStyle(
-                        fontFamily: 'Segoeu',
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ))
-                  ]),
-                  Divider(
-                    indent: 10,
-                    endIndent: 10,
-                  ),
-                  Flexible(
-                      child: Text(
-                    "  " + body_txt,
-                    overflow: TextOverflow.clip,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontFamily: 'Segoeu',
-                        fontWeight: FontWeight.normal,
-                        fontSize: 13),
-                  ))
-                ]))));
+                          Flexible(
+                              child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    "  " + body_txt,
+                                    overflow: TextOverflow.clip,
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                        fontFamily: 'Segoeu',
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 13),
+                                  )))
+                        ])))),
+            backgroundColor: Colors.transparent);
       },
-      infoWindow:
-          InfoWindow(title: typeOfMarker_(doc["type"]), snippet: doc["title"]),
+      infoWindow: InfoWindow(
+          title: captions[setLanguage][typeOfMarker_(doc["type"])],
+          snippet: doc["title"]),
       position: LatLng(geo.latitude, geo.longitude),
     );
     setState(() {
       if (doc["type"] == 1)
-        emarkers.add(resultMarker);
+        markers.add(resultMarker);
       else
-        cmarkers.add(resultMarker);
+        markers.add(resultMarker);
     });
   }
 
   String typeOfMarker_(int type) {
     switch (type) {
       case 1:
-        return "Event";
+        return "event";
       case 2:
-        return "Campaign";
+        return "campaign";
     }
   }
 
   double typeOfMarker(int type) {
     switch (type) {
       case 1:
-        return BitmapDescriptor.hueGreen;
+        return 0;
       case 2:
-        return BitmapDescriptor.hueCyan;
+        return 0;
     }
   }
 
@@ -381,8 +381,8 @@ class _DonationMapState extends State<DonationMap> {
     GeoPoint geo = doc["geo"];
     Marker resultMarker = Marker(
       markerId: MarkerId(doc.documentID),
-      visible: itemMarkerVisible,
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+      visible: true,
+      icon: BitmapDescriptor.defaultMarkerWithHue(25),
       onTap: () {
         setState(() {
           markerId = doc.documentID;
@@ -391,78 +391,90 @@ class _DonationMapState extends State<DonationMap> {
           body_txt = doc["describe"];
           exp_txt = (doc['exp'] == null)
               ? ""
-              : DateFormat("dd MMMM yyyy")
+              : DateFormat("dd/MM/yyyy")
                   .format(DateTime.fromMillisecondsSinceEpoch(doc['exp']));
         });
-        mapScaffold.currentState.showBottomSheet((context) => InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  SlideRightRoute(
-                      page: ItemInformationScreen(doc.data, currentUserId)));
-            },
-            child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 220,
-                child: Column(children: <Widget>[
-                  Flexible(
-                      child: Container(
-                          color: Colors.deepOrange[700],
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.all(5),
-                          child: Text(
-                            title_txt,
-                            textAlign: TextAlign.center,
+        mapScaffold.currentState.showBottomSheet(
+            (context) => InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      SlideRightRoute(
+                          page:
+                              ItemInformationScreen(doc.data, currentUserId)));
+                },
+                child: Card(
+                    child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 220,
+                        child: Column(children: <Widget>[
+                          Flexible(
+                              child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.all(5),
+                                  child: Text(
+                                    title_txt,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.clip,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ) //)
+                                  )),
+                          Text(
+                            'Exp: ' + exp_txt,
+                            textAlign: TextAlign.start,
+                            maxLines: null,
                             overflow: TextOverflow.clip,
                             style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14),
-                          ) //)
-                          )),
-                  Text(
-                    'Exp: ' + exp_txt,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.clip,
-                    style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    Icon(
-                      Icons.location_on,
-                      size: 27,
-                    ),
-                    Flexible(
-                        child: Text(
-                      address_txt,
-                      textAlign: TextAlign.start,
-                      overflow: TextOverflow.clip,
-                      style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ))
-                  ]),
-                  Divider(
-                    indent: 10,
-                    endIndent: 10,
-                  ),
-                  Flexible(
-                      child: Text(
-                    "  " + body_txt,
-                    overflow: TextOverflow.clip,
-                    textAlign: TextAlign.start,
-                    style:
-                        TextStyle(fontWeight: FontWeight.normal, fontSize: 13),
-                  ))
-                ]))));
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Icon(
+                                  Icons.location_on,
+                                  size: 17,
+                                ),
+                                Flexible(
+                                    child: Text(
+                                  address_txt,
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ))
+                              ]),
+                          Divider(
+                            indent: 10,
+                            endIndent: 10,
+                          ),
+                          Flexible(
+                              child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    "  " + body_txt,
+                                    overflow: TextOverflow.clip,
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 13),
+                                  )))
+                        ])))),
+            backgroundColor: Colors.transparent);
       },
-      infoWindow: InfoWindow(title: "Item", snippet: doc["title"]),
+      infoWindow: InfoWindow(
+          title: captions[setLanguage]["item"], snippet: doc["title"]),
       position: LatLng(geo.latitude, geo.longitude),
     );
     setState(() {
-      imarkers.add(resultMarker);
+      markers.add(resultMarker);
     });
   }
 }

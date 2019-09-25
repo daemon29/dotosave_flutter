@@ -1,3 +1,4 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/AddCampaign_screen.dart';
 import 'package:LadyBug/Screens/AddPostForOganization_screen.dart';
 import 'package:LadyBug/Widgets/Main_Screen/CampaignCard/CampaignCard.dart';
@@ -5,7 +6,6 @@ import 'package:LadyBug/Widgets/Main_Screen/Card_View/Card_View.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Organization_screen/Oraganization_Top.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 
 class OrganizationScreen extends StatefulWidget {
   final String currentUserID, oid;
@@ -80,7 +80,7 @@ class _OrganizationScreen extends State<OrganizationScreen> {
                 Tab(icon: Icon(Icons.flag)),
               ]),
               title: Text(
-                "Organization",
+                captions[setLanguage]["organization"],
               ),
             ),
             floatingActionButton: FutureBuilder(
@@ -137,7 +137,7 @@ class _OrganizationScreen extends State<OrganizationScreen> {
                             );
                           },
                           child: Icon(
-                            Icons.message,
+                            Icons.send,
                           ));
               },
             ),
@@ -263,7 +263,7 @@ class FollowButtonState extends State<FollowButton> {
                                       .updateData({'follower': list});
                                   setState(() {});
                                 },
-                                child: Text("Follow!"),
+                                child: Text(captions[setLanguage]["follow!"]),
                               )
                             : RaisedButton(
                                 onPressed: () async {
@@ -281,7 +281,7 @@ class FollowButtonState extends State<FollowButton> {
                                       .updateData({'follower': list});
                                   setState(() {});
                                 },
-                                child: Text("Followed"),
+                                child: Text(captions[setLanguage]["followed"]),
                               );
                     })
                 : Container();

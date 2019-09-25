@@ -1,16 +1,17 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:LadyBug/Widgets/SocialIcons.dart';
 import 'package:LadyBug/Customize/CustomeIcon.dart';
 import 'package:LadyBug/Screens/signup_screen.dart';
-import 'donate_screen.dart';
 import 'package:flutter/services.dart';
 import 'main_screen.dart';
 
@@ -190,286 +191,217 @@ class _MyAppState extends State<MyApp> {
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
-    return new Scaffold(
-        resizeToAvoidBottomPadding: false,
-        body: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            Stack(
+    return new WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          resizeToAvoidBottomPadding: false,
+          body: Padding(
+            padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 40),
+            child: ListView(
               children: <Widget>[
-                Positioned(
-                  top: 0,
-                  child: Image.asset("assets/images/main_background.jpg"),
-                ),
-                Positioned(
-                    bottom: 0, child: Image.asset("assets/images/image_02.png"))
-              ],
-            ),
-            SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 40),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                      child: Row(
-                        children: <Widget>[
-                          Image.asset(
-                            "assets/images/logo.png",
-                            width: ScreenUtil.getInstance().setWidth(110),
-                            height: ScreenUtil.getInstance().setHeight(110),
-                          ),
-                          Text("dotosave",
-                              style: TextStyle(
-                                  fontFamily: 'Manjari',
-                                  fontSize: ScreenUtil.getInstance().setSp(46),
-                                  letterSpacing: .6,
-                                  fontWeight: FontWeight.bold))
-                        ],
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: Row(
+                    children: <Widget>[
+                      Image.asset(
+                        "assets/images/logo.png",
+                        width: ScreenUtil.getInstance().setWidth(110),
+                        height: ScreenUtil.getInstance().setHeight(110),
                       ),
+                      Text("dotosave",
+                          style: TextStyle(
+                              fontFamily: 'Manjari',
+                              fontSize: ScreenUtil.getInstance().setSp(46),
+                              letterSpacing: .6,
+                              fontWeight: FontWeight.bold))
+                    ],
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black12,
+                            offset: Offset(0.0, 15.0),
+                            blurRadius: 15.0),
+                        BoxShadow(
+                            color: Colors.black12,
+                            offset: Offset(0.0, -10.0),
+                            blurRadius: 15.0)
+                      ]),
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          captions[setLanguage]['login'],
+                          style: TextStyle(
+                              fontFamily: 'Segoeu',
+                              fontSize: ScreenUtil.getInstance().setSp(40),
+                              letterSpacing: .6),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil.getInstance().setHeight(30),
+                        ),
+                        Text(
+                          "Email",
+                          style: TextStyle(
+                            fontSize: ScreenUtil.getInstance().setSp(26),
+                          ),
+                        ),
+                        TextField(
+                          onSubmitted: (value) {
+                            setState(() {
+                              email = value.trim();
+                            });
+                          },
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                              hintText: captions[setLanguage]['emailhere'],
+                              hintStyle: TextStyle(
+                                  fontFamily: 'Segoeu', fontSize: 12.0)),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil.getInstance().setHeight(30),
+                        ),
+                        Text(captions[setLanguage]['password'],
+                            style: TextStyle(
+                              fontSize: ScreenUtil.getInstance().setSp(26),
+                              fontFamily: 'Segoeu',
+                            )),
+                        TextField(
+                          onSubmitted: (value) {
+                            setState(() {
+                              password = value.trim();
+                            });
+                          },
+                          obscureText: true,
+                          decoration: InputDecoration(
+                              hintText: captions[setLanguage]["passwordhere"],
+                              hintStyle: TextStyle(fontSize: 12.0)),
+                        ),
+                        SizedBox(
+                          height: ScreenUtil.getInstance().setHeight(35),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  captions[setLanguage]["forgotpassword?"],
+                                  style: TextStyle(
+                                      color: Colors.deepOrange[700],
+                                      fontSize:
+                                          ScreenUtil.getInstance().setSp(28)),
+                                )
+                              ],
+                            )),
+                      ],
                     ),
-                    /*
-                    SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(40),//70
-                    ),*/
-                    Container(
-                      width: double.infinity,
-                      //height: MainAxisSize.max,
-                      //height: ScreenUtil.getInstance().setHeight(500),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black12,
-                                offset: Offset(0.0, 15.0),
-                                blurRadius: 15.0),
-                            BoxShadow(
-                                color: Colors.black12,
-                                offset: Offset(0.0, -10.0),
-                                blurRadius: 15.0)
-                          ]),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+                Padding(
+                    padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          RaisedButton(
+                            onPressed: signinWithEmail,
+                            child: Text(
+                              captions[setLanguage]['signin'],
+                            ),
+                          ),
+                        ])),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      horizontalLine(),
+                      Text(
+                        captions[setLanguage]['sociallogin'],
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontFamily: 'Segoeu',
+                        ),
+                      ),
+                      horizontalLine()
+                    ],
+                  ),
+                ),
+                Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Text(
-                              "Login",
-                              style: TextStyle(
-                                  fontFamily: 'Segoeu',
-                                  fontSize: ScreenUtil.getInstance().setSp(40),
-                                  letterSpacing: .6),
+                            SocialIcon(
+                              colors: Colors.black,
+                              iconData: CustomIcons.facebook,
+                              onPressed: () {},
                             ),
-                            SizedBox(
-                              height: ScreenUtil.getInstance().setHeight(30),
+                            SocialIcon(
+                              colors: Colors.black,
+                              iconData: CustomIcons.googlePlus,
+                              onPressed: startGoogleSignIn,
                             ),
-                            Text(
-                              "Email",
-                              style: TextStyle(
-                                fontFamily: "Poppins-Medium",
-                                fontSize: ScreenUtil.getInstance().setSp(26),
-                              ),
-                            ),
-                            TextField(
-                              onSubmitted: (value) {
-                                setState(() {
-                                  email = value.trim();
-                                });
-                              },
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                  hintText: "Type your email here",
-                                  hintStyle: TextStyle(
-                                      fontFamily: 'Segoeu',
-                                      fontSize: 12.0)),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil.getInstance().setHeight(30),
-                            ),
-                            Text("Password",
-                                style: TextStyle(
-                                  fontSize: ScreenUtil.getInstance().setSp(26),
-                                  fontFamily: 'Segoeu',
-                                )),
-                            TextField(
-                              onSubmitted: (value) {
-                                setState(() {
-                                  password = value.trim();
-                                });
-                              },
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                  hintText: "Password . . .",
-                                  hintStyle: TextStyle(
-                                      fontFamily: 'Segoeu',
-                                      fontSize: 12.0)),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil.getInstance().setHeight(35),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    Text(
-                                      "Forgot Password?",
-                                      style: TextStyle(
-                                          fontFamily: 'Segoeu',
-                                          color: Colors.orange,
-                                          fontSize: ScreenUtil.getInstance()
-                                              .setSp(28)),
-                                    )
-                                  ],
-                                )),
                           ],
                         ),
                       ),
-                    ),
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              InkWell(
-                                child: Container(
-                                  width: ScreenUtil.getInstance().setWidth(330),
-                                  height:
-                                      ScreenUtil.getInstance().setHeight(100),
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(colors: [
-                                        Color(0xfff12711),
-                                        Color(0xfff5af19)
-                                      ]),
-                                      borderRadius: BorderRadius.circular(6.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Color(0xfff5af19)
-                                                .withOpacity(.3),
-                                            offset: Offset(0.0, 8.0),
-                                            blurRadius: 8.0)
-                                      ]),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: signinWithEmail,
-                                      child: Center(
-                                        child: Text(
-                                          "SIGN IN",
-                                          style: TextStyle(
-                                              fontFamily: 'Segoeu',
-                                              fontSize: 15,
-                                              letterSpacing: 1.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ])),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                      child: Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          horizontalLine(),
-                          Text(
-                            "Social Login",
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontFamily: 'Segoeu',
-                            ),
-                          ),
-                          horizontalLine()
+                          Text(captions[setLanguage]['newuser?'],
+                              style: TextStyle(
+                                  fontFamily: 'Segoeu',
+                                  fontSize:
+                                      ScreenUtil.getInstance().setSp(26))),
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                return SignUp();
+                              }));
+                            },
+                            child: Text(captions[setLanguage]['signup'],
+                                style: TextStyle(
+                                  color: Colors.deepOrange[700],
+                                )),
+                          )
                         ],
                       ),
-                    ),
-                    Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                SocialIcon(
-                                  colors: Color(0xfff5af19),
-                                  iconData: CustomIcons.facebook,
-                                  onPressed: () {},
-                                ),
-                                SocialIcon(
-                                  colors: Color(0xfff5af19),
-                                  iconData: CustomIcons.googlePlus,
-                                  onPressed: startGoogleSignIn,
-                                ),
-                              ],
-                            ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            captions[setLanguage]['youareorganization?'],
+                            style: TextStyle(
+                                fontSize: ScreenUtil.getInstance().setSp(26)),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text("New User?",
-                                  style: TextStyle(
-                                      fontFamily: 'Segoeu',
-                                      fontSize:
-                                          ScreenUtil.getInstance().setSp(26))),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) {
-                                    return SignUp();
-                                  }));
-                                },
-                                child: Text("Sign Up",
-                                    style: TextStyle(
-                                      color: Color(0xfff5af19),
-                                      fontFamily: 'Segoeu',
-                                    )),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                "You are organisation?",
+                          InkWell(
+                            onTap: organisationSignup,
+                            child: Text(captions[setLanguage]['clickhere'],
                                 style: TextStyle(
-                                    fontFamily: 'Segoeu',
-                                    fontSize:
-                                        ScreenUtil.getInstance().setSp(26)),
-                              ),
-                              InkWell(
-                                onTap: organisationSignup,
-                                child: Text("Click Here",
-                                    style: TextStyle(
-                                      color: Color(0xfff5af19),
-                                      fontFamily: 'Segoeu',
-                                    )),
-                              )
-                            ],
+                                  color: Colors.deepOrange[700],
+                                  fontFamily: 'Segoeu',
+                                )),
                           )
-                        ])
-                  ],
-                ),
-              ),
+                        ],
+                      )
+                    ])
+              ],
             ),
-            Positioned(
-              child: isLoading
-                  ? Container(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Color(0xfff5a623)),
-                        ),
-                      ),
-                      color: Colors.white.withOpacity(0.8),
-                    )
-                  : Container(),
-            ),
-          ],
+          ),
         ));
   }
 }

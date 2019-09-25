@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -34,17 +35,18 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            "Edit Profile",
+            captions[setLanguage]["editprofile"],
           ),
         ),
-        body: FutureBuilder(
-            future: getUserInformation(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return Container();
-              if (snapshot.connectionState == ConnectionState.done)
-                return Edit_Profile_Top(snapshot.data, uid);
-            }));
+        body: Card(
+            child: FutureBuilder(
+                future: getUserInformation(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return Container();
+                  if (snapshot.connectionState == ConnectionState.done)
+                    return Edit_Profile_Top(snapshot.data, uid);
+                })));
   }
 }
 
@@ -65,6 +67,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
   File backgroundimage, avatar;
   Edit_Profile_Top_State(this.user, this.currentuid);
   bool _busy = false;
+  bool isDisable = false;
   var name, bio, nickname;
   @override
   void initState() {
@@ -208,7 +211,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                           child: CachedNetworkImage(
                                               placeholder: (context, url) => Center(
                                                   child:
-                                                       CircularProgressIndicator()),
+                                                      CircularProgressIndicator()),
                                               imageUrl: user['backgroundurl'],
                                               fit: BoxFit.cover))
                                   : Positioned(
@@ -330,7 +333,6 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
               child: TextFormField(
                   controller: name,
                   //maxLength: 35,
-                  enableInteractiveSelection: false,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(30),
                   ],
@@ -341,7 +343,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                       fontWeight: FontWeight.bold),
                   //initialValue: user["name"],
                   decoration: InputDecoration(
-                      border: InputBorder.none, hintText: "Name here!"))),
+                      border: InputBorder.none, hintText: captions[setLanguage]['namehere!']))),
           Divider(
             indent: 10,
             endIndent: 10,
@@ -353,7 +355,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                   Icon(
                     Icons.edit,
                   ),
-                  Text("Nickname",
+                  Text(captions[setLanguage]["nickname"],
                       style: TextStyle(
                           fontFamily: 'Segoeu',
                           color: Colors.black,
@@ -366,11 +368,10 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                   controller: nickname,
                   maxLength: 20,
                   maxLines: 1,
-                  enableInteractiveSelection: false,
                   //initialValue: user["nickname"],
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Add your nickname."))),
+                      hintText: captions[setLanguage]['nicknamehere!']))),
           Divider(
             indent: 10,
             endIndent: 10,
@@ -382,7 +383,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                   Icon(
                     Icons.edit,
                   ),
-                  Text("Bio",
+                  Text(captions[setLanguage]["bio"],
                       style: TextStyle(
                           fontFamily: 'Segoeu',
                           color: Colors.black,
@@ -394,50 +395,26 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
               child: TextFormField(
                   controller: bio,
                   maxLength: 160,
-                  enableInteractiveSelection: false,
                   maxLines: null,
                   //initialValue: user["bio"],
                   decoration: InputDecoration(
-                      border: InputBorder.none, hintText: "Add your bio."))),
-          Divider(
-            indent: 10,
-            endIndent: 10,
-          ),
-          Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.edit,
-                  ),
-                  Text("Bio",
-                      style: TextStyle(
-                          fontFamily: 'Segoeu',
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold))
-                ],
-              )),
-          Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: TextFormField(
-                  controller: bio,
-                  maxLength: 160,
-                  enableInteractiveSelection: false,
-                  maxLines: null,
-                  //initialValue: user["bio"],
-                  decoration: InputDecoration(
-                      border: InputBorder.none, hintText: "Add your bio."))),
+                      border: InputBorder.none, hintText: captions[setLanguage]['biohere!']))),
           Divider(
             indent: 10,
             endIndent: 10,
           ),
           RaisedButton(
-            onPressed: () {
-              submit();
-              Navigator.pop(context);
-            },
+            onPressed: (isDisable)
+                ? null
+                : () {
+                    setState(() {
+                      isDisable = true;
+                    });
+                    submit();
+                    Navigator.pop(context);
+                  },
             child: Text(
-              "Save",
+              captions[setLanguage]["save"],
               style: TextStyle(fontFamily: 'Segoeu'),
             ),
           )

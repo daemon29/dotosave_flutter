@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'dart:math';
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Widgets/ItemtypeList.dart';
 import 'package:LadyBug/Widgets/SlideRightRoute.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -43,11 +43,12 @@ class _DonateScreen extends State<DonateScreen> {
   bool _pickaplacevisibility = true;
   Set<String> items = new Set();
   String _model = ssd;
-  String _address = "Your address will show up here!";
+  String _address = captions[setLanguage]["youraddresswillshowuphere!"];
   List _recognitions;
   double _imageHeight;
   GeoPoint geoPoint;
   String title;
+  bool isDisable = false;
   int exp;
   double _imageWidth;
   bool _busy = false;
@@ -212,6 +213,15 @@ class _DonateScreen extends State<DonateScreen> {
     });
   }
 
+  List<Widget> _getChip(List<dynamic> tags) {
+    List listings = new List<Widget>();
+    for (int i = 0; i < tags.length; ++i) {
+      listings
+          .add(new Chip(label: Text(itemTypeListMap[setLanguage][tags[i]])));
+    }
+    return listings;
+  }
+
   Future loadModel() async {
     Tflite.close();
     try {
@@ -316,8 +326,8 @@ class _DonateScreen extends State<DonateScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            "Donate",
+          title: Text(
+            captions[setLanguage]["donate"],
           ),
         ),
         bottomNavigationBar: null,
@@ -325,10 +335,11 @@ class _DonateScreen extends State<DonateScreen> {
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
             },
-            child: SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
+            child: Card(
+                child: SingleChildScrollView(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 220,
@@ -366,7 +377,9 @@ class _DonateScreen extends State<DonateScreen> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Center(
-                                          child: Text("Information",
+                                          child: Text(
+                                              captions[setLanguage]
+                                                  ["information"],
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontFamily: 'Segoeu',
@@ -374,7 +387,7 @@ class _DonateScreen extends State<DonateScreen> {
                                       SizedBox(
                                         height: 15,
                                       ),
-                                      Text("Title",
+                                      Text(captions[setLanguage]["title"],
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontFamily: 'Segoeu',
@@ -389,7 +402,8 @@ class _DonateScreen extends State<DonateScreen> {
                                           });
                                         },
                                         decoration: InputDecoration(
-                                            hintText: "Title here...",
+                                            hintText: captions[setLanguage]
+                                                ["titlehere..."],
                                             hintStyle: TextStyle(
                                                 fontFamily: 'Segoeu',
                                                 fontSize: 12.0)),
@@ -412,7 +426,8 @@ class _DonateScreen extends State<DonateScreen> {
                                           });
                                         },
                                         decoration: InputDecoration(
-                                            hintText: "Describe this ...",
+                                            hintText: captions[setLanguage]
+                                                ["describehere"],
                                             hintStyle: TextStyle(
                                                 fontFamily: 'Segoeu',
                                                 fontSize: 12.0)),
@@ -420,47 +435,45 @@ class _DonateScreen extends State<DonateScreen> {
                                       SizedBox(
                                         height: 15,
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          const Text(
-                                            "Exp: ",
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                donotpick = false;
-                                                _selectDate(context);
-                                                exp = selectedDate
-                                                    .millisecondsSinceEpoch;
-                                              });
-                                            },
-                                            child: Text(
-                                              (donotpick)
-                                                  ? "Non-expiring(tap to select a day)"
-                                                  : DateFormat('dd-MMMM-yyyy ')
-                                                      .format(selectedDate),
-                                              overflow: TextOverflow.clip,
-                                              style: style_state,
-                                            ),
-                                          ),
-                                          (!donotpick)
-                                              ? InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      donotpick = true;
-                                                      exp = 0;
-                                                    });
-                                                  },
-                                                  child: Icon(Icons.clear))
-                                              : Container()
-                                        ],
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            donotpick = false;
+                                            _selectDate(context);
+                                            exp = selectedDate
+                                                .millisecondsSinceEpoch;
+                                          });
+                                        },
+                                        child: Text(
+                                          captions[setLanguage]["exp"] +
+                                              ": " +
+                                              ((donotpick)
+                                                  ? captions[setLanguage]
+                                                      ["non-exp"]
+                                                  : DateFormat('dd-mm-yyyy ')
+                                                      .format(selectedDate)),
+                                          maxLines: null,
+                                          overflow: TextOverflow.clip,
+                                          style: style_state,
+                                        ),
                                       ),
+                                      (!donotpick)
+                                          ? InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  donotpick = true;
+                                                  exp = 0;
+                                                });
+                                              },
+                                              child: Icon(
+                                                Icons.clear,
+                                                color: Colors.red,
+                                              ))
+                                          : Container(),
                                       SizedBox(
                                         height: 15,
                                       ),
-                                      Text("Address",
+                                      Text(captions[setLanguage]["address"],
                                           style: TextStyle(
                                             fontFamily: 'Segoeu',
                                             fontSize: 15,
@@ -469,6 +482,7 @@ class _DonateScreen extends State<DonateScreen> {
                                         visible: _pickaplacevisibility,
                                         child: Text(
                                           _address,
+                                          maxLines: null,
                                           overflow: TextOverflow.clip,
                                           style: style_state,
                                         ),
@@ -489,7 +503,8 @@ class _DonateScreen extends State<DonateScreen> {
                                               });
                                             },
                                             decoration: InputDecoration(
-                                                hintText: "Enter your address",
+                                                hintText: captions[setLanguage]
+                                                    ["enteryouraddress"],
                                                 hintStyle: TextStyle(
                                                     fontFamily: 'Segoeu',
                                                     fontSize: 12.0)),
@@ -501,18 +516,23 @@ class _DonateScreen extends State<DonateScreen> {
                                           RaisedButton(
                                             onPressed: onSeachBarButtonClick,
                                             padding: const EdgeInsets.all(10.0),
-                                            child: const Text('Pick a place',
+                                            child: Text(
+                                                captions[setLanguage]
+                                                    ['pickaplace'],
                                                 style: TextStyle(
                                                     fontFamily: 'Segoeu',
                                                     fontSize: 13)),
                                           ),
-                                          const Text("  Or  "),
+                                          Text("  " +
+                                              captions[setLanguage]["or"] +
+                                              "  "),
                                           RaisedButton(
                                             padding: const EdgeInsets.all(10.0),
                                             onPressed:
                                                 onGetCurrentLocationClick,
-                                            child: const Text(
-                                                'Get your location',
+                                            child: Text(
+                                                captions[setLanguage]
+                                                    ['getyourlocation'],
                                                 style: TextStyle(
                                                     fontFamily: 'Segoeu',
                                                     fontSize: 13)),
@@ -537,10 +557,13 @@ class _DonateScreen extends State<DonateScreen> {
                                             indexList = result[1];
                                           });
                                         },
-                                        child: Text(
+                                        child: 
                                             (tags.toString() != "[]")
-                                                ? tags.toString()
-                                                : 'Pick tags',
+                                                ? Wrap(
+                                                    children: _getChip(tags),
+                                                  )
+                                                : Text(captions[setLanguage]
+                                                    ['picktags'],
                                             maxLines: null,
                                             overflow: TextOverflow.clip,
                                             style: TextStyle(
@@ -553,14 +576,26 @@ class _DonateScreen extends State<DonateScreen> {
                             ),
                             RaisedButton(
                               padding: const EdgeInsets.all(10.0),
-                              onPressed: submit,
-                              child: const Text('Submit',
-                                  style: TextStyle(
-                                      fontFamily: 'Segoeu', fontSize: 17)),
-                            )
+                              onPressed: (isDisable)
+                                  ? null
+                                  : () {
+                                      submit();
+                                      setState(() {
+                                        isDisable = true;
+                                      });
+                                    },
+                              child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(captions[setLanguage]['submit'],
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontFamily: 'Segoeu'))),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
                           ],
                         ),
                       ))
-                ]))));
+                ])))));
   }
 }

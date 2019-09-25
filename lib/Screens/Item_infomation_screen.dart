@@ -1,5 +1,7 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/Profile_screen.dart';
 import 'package:LadyBug/Screens/chat_screen.dart';
+import 'package:LadyBug/Widgets/ItemtypeList.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +47,8 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
   List<Widget> _getChip(List<dynamic> tags) {
     List listings = new List<Widget>();
     for (int i = 0; i < tags.length; ++i) {
-      listings.add(new Chip(label: Text(tags[i])));
+      listings
+          .add(new Chip(label: Text(itemTypeListMap[setLanguage][tags[i]])));
     }
     return listings;
   }
@@ -76,11 +79,11 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
                     SizedBox(
                       width: 5,
                     ),
-                    Text("Contact")
+                    Text(captions[setLanguage]["contact"])
                   ])),
             ],
             title: Text(
-              "Item",
+              captions[setLanguage]["item"],
             )),
         body: ListView(
           //crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,8 +114,9 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
                     ownerProfile = Map.from(_snapshot.data[0].data);
                     return Padding(
                         padding: EdgeInsets.only(left: 10, right: 10),
-                        child: Row(children: [
-                          Text("Owner: ",
+                        child: Container(
+                            child: Row(children: [
+                          Text(captions[setLanguage]['owner'] + ": ",
                               style: TextStyle(color: Colors.black)),
                           GestureDetector(
                             onTap: () {
@@ -130,7 +134,7 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
                                   fontWeight: FontWeight.w700,
                                 )),
                           )
-                        ]));
+                        ])));
                   }
                 }),
             SizedBox(
@@ -141,10 +145,11 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
                 : Padding(
                     padding: EdgeInsets.only(left: 10, right: 10),
                     child: Text(
-                      'Exp: ' +
-                          DateFormat('dd MMMM yyyy').format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  item["exp"])),
+                      captions[setLanguage]['exp'] +
+                          ': ' +
+                          DateFormat('dd/MM/yyyy').format(
+                              DateTime.fromMillisecondsSinceEpoch(item["exp"])),
+                      maxLines: null,
                       overflow: TextOverflow.clip,
                     )),
             Padding(
@@ -169,7 +174,7 @@ class ItemInformationSCreenState extends State<ItemInformationScreen> {
             Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Text(
-                 item["describe"],
+                  item["describe"],
                   overflow: TextOverflow.clip,
                 )),
             Divider(

@@ -1,3 +1,4 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -11,6 +12,29 @@ final List<String> itemTypeList = [
   'School supplies',
   'Stationary'
 ];
+
+final Map<String, Map<String, String>> itemTypeListMap = {
+  'vi': {
+    'Books': 'Sách',
+    'Clothes': 'Quần áo',
+    'Household goods': 'Đồ gia dụng',
+    'Toys': 'Đồ chơi',
+    'Food': 'Thức ăn',
+    'Money': 'Tiền mặt',
+    'School supplies': 'Đồ dùng học tập',
+    'Stationary': 'Văn phòng phẩm'
+  },
+  'en': {
+    'Books': 'Books',
+    'Clothes': 'Clothes',
+    'Household goods': 'Household goods',
+    'Toys': 'Toys',
+    'Food': 'Food',
+    'Money': 'Money',
+    'School supplies': 'School supplies',
+    'Stationary': 'Stationary'
+  }
+};
 
 class ItemTypeList extends StatefulWidget {
   final List<bool> indexList;
@@ -53,8 +77,9 @@ class ItemTypeListState extends State<ItemTypeList> {
             itemCount: itemTypeList.length,
             itemBuilder: (context, index) {
               return InkWell(
-                  splashColor:
-                      (indexList[index]) ? Colors.white : Colors.deepOrange[600],
+                  splashColor: (indexList[index])
+                      ? Colors.white
+                      : Colors.deepOrange[600],
                   onTap: () {
                     setState(() {
                       indexList[index] = !indexList[index];
@@ -62,9 +87,11 @@ class ItemTypeListState extends State<ItemTypeList> {
                   },
                   child: Container(
                     padding: EdgeInsets.all(5),
-                    color: (indexList[index]) ? Colors.deepOrange[600]: Colors.white,
+                    color: (indexList[index])
+                        ? Colors.deepOrange[600]
+                        : Colors.white,
                     child: Text(
-                      itemTypeList[index],
+                      itemTypeListMap[setLanguage][itemTypeList[index]],
                       style: TextStyle(
                           color:
                               (indexList[index]) ? Colors.white : Colors.black),

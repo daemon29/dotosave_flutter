@@ -1,3 +1,4 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/EditProfile_screen.dart';
 import 'package:LadyBug/Widgets/Main_Screen/CircleAvatar.dart';
 import 'package:LadyBug/Widgets/SlideRightRoute.dart';
@@ -7,19 +8,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Proflie_Top extends StatefulWidget {
-  final String currentuid;
+  final String currentuid, uid;
   final Map<String, dynamic> user;
-  Proflie_Top(this.user, this.currentuid);
+  Proflie_Top(this.user, this.currentuid, this.uid);
   @override
-  _Proflie_Top createState() => _Proflie_Top(this.user, this.currentuid);
+  _Proflie_Top createState() =>
+      _Proflie_Top(this.user, this.currentuid, this.uid);
 }
 
 class _Proflie_Top extends State<Proflie_Top> {
   List<bool> indexList = List.filled(tagsList.length, false);
-  final String currentuid;
+  final String currentuid, uid;
   List<dynamic> tags = [];
   final Map<String, dynamic> user;
-  _Proflie_Top(this.user, this.currentuid);
+  _Proflie_Top(this.user, this.currentuid, this.uid);
   @override
   void initState() {
     tags = user['tag'];
@@ -29,7 +31,7 @@ class _Proflie_Top extends State<Proflie_Top> {
   List<Widget> _getChip(List<dynamic> tags) {
     List listings = new List<Widget>();
     for (int i = 0; i < tags.length; ++i) {
-      listings.add(new Chip(label: Text(tags[i])));
+      listings.add(new Chip(label: Text(itemTagsMap[setLanguage][tags[i]])));
     }
     return listings;
   }
@@ -37,7 +39,7 @@ class _Proflie_Top extends State<Proflie_Top> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
+    return Card(
         child: Column(children: <Widget>[
       SizedBox(
           height: 220,
@@ -122,31 +124,36 @@ class _Proflie_Top extends State<Proflie_Top> {
                 maxLines: 6,
                 overflow: TextOverflow.clip,
               ))),
-      Divider(
-        indent: 10,
-        endIndent: 10,
-        color: Colors.black,
-      ),
+    
       SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Padding(
           padding: EdgeInsets.all(10),
           child: InkWell(
-              onTap: () async {
-                final result = await Navigator.push(
-                    context, SlideRightRoute(page: TagsList(indexList)));
-                Firestore.instance
-                    .collection("User")
-                    .document(currentuid)
-                    .updateData({'tag': result[0]});
-                setState(() {
-                  tags = result[0];
-                  indexList = result[1];
-                });
-              },
-              child: Wrap(
-                children: _getChip(tags),
-              )
+              onTap: (uid == currentuid)
+                  ? () async {
+                      for (int i = 0; i < indexList.length; ++i) {
+                        if (user['tag'].contains(tagsList[i]))
+                          indexList[i] = true;
+                      }
+                      final result = await Navigator.push(
+                          context, SlideRightRoute(page: TagsList(indexList)));
+                      Firestore.instance
+                          .collection("User")
+                          .document(currentuid)
+                          .updateData({'tag': result[0]});
+                      setState(() {
+                        tags = result[0];
+                        indexList = result[1];
+                      });
+                    }
+                  : null,
+              child: (tags.toString() != "[]")
+                  ? Wrap(children: _getChip(tags))
+                  : (uid == currentuid)
+                      ? Text(captions[setLanguage]["picktags"])
+                      : Text("")
+
               /*Text((tags.toString() != "[]") ? tags.toString() : '',
                 maxLines: null,
                 overflow: TextOverflow.clip,
@@ -157,11 +164,6 @@ class _Proflie_Top extends State<Proflie_Top> {
       SizedBox(
         height: 10,
       ),
-      Divider(
-        indent: 10,
-        endIndent: 10,
-        color: Colors.black,
-      )
     ]));
   }
 }

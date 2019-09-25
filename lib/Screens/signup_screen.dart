@@ -1,3 +1,4 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,182 +60,130 @@ class _Signup extends State<SignUp> {
     return new Scaffold(
         appBar: AppBar(
           title: Text(
-            "Sign up",
+            captions[setLanguage]["signup"],
           ),
-          backgroundColor: Color(0xfff5af19),
         ),
         backgroundColor: Colors.white,
-        resizeToAvoidBottomPadding: false,
-        body: Stack(
-          fit: StackFit.expand,
+        body: ListView(
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: Image.asset("assets/images/main_background.jpg"),
-                ),
-                Expanded(
-                  child: Container(),
-                ),
-                Image.asset("assets/images/image_02.png")
-              ],
-            ),
-            SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 60),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Image.asset(
-                          "assets/images/logo.png",
-                          width: ScreenUtil.getInstance().setWidth(110),
-                          height: ScreenUtil.getInstance().setHeight(110),
-                        ),
-                        Text("dotosave",
-                            style: TextStyle(
-                                fontFamily: 'Manjari',
-                                fontSize: ScreenUtil.getInstance().setSp(46),
-                                letterSpacing: .6,
-                                fontWeight: FontWeight.bold))
-                      ],
-                    ),
-                    SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(180),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: ScreenUtil.getInstance().setHeight(500),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black12,
-                                offset: Offset(0.0, 15.0),
-                                blurRadius: 15.0),
-                            BoxShadow(
-                                color: Colors.black12,
-                                offset: Offset(0.0, -10.0),
-                                blurRadius: 15.0)
-                          ]),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              "Signup",
-                              style: TextStyle(
-                                  fontFamily: 'Segoeu',
-                                  fontSize: ScreenUtil.getInstance().setSp(45),
-                                  letterSpacing: .6),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil.getInstance().setHeight(30),
-                            ),
-                            Text(
-                              "Email",
-                              style: TextStyle(
-                                fontFamily: 'Segoeu',
-                                fontSize: ScreenUtil.getInstance().setSp(26),
-                              ),
-                            ),
-                            TextField(
-                              onSubmitted: (value) {
-                                setState(() {
-                                  email = value.trim();
-                                });
-                              },
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                  hintText: "Type your email here",
-                                  hintStyle: TextStyle(
-                                      fontFamily: 'Segoeu',
-                                      color: Colors.grey,
-                                      fontSize: 12.0)),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil.getInstance().setHeight(30),
-                            ),
-                            Text("Password",
-                                style: TextStyle(
-                                  fontSize: ScreenUtil.getInstance().setSp(26),
-                                  fontFamily: 'Segoeu',
-                                )),
-                            TextField(
-                              onSubmitted: (value) {
-                                setState(() {
-                                  password = value.trim();
-                                });
-                              },
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                  hintText: "Password . . .",
-                                  hintStyle: TextStyle(
-                                      fontFamily: 'Segoeu',
-                                      color: Colors.grey,
-                                      fontSize: 12.0)),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil.getInstance().setHeight(35),
-                            ),
-                          ],
-                        ),
+            Padding(
+              padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 20),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Image.asset(
+                        "assets/images/logo.png",
+                        width: ScreenUtil.getInstance().setWidth(110),
+                        height: ScreenUtil.getInstance().setHeight(110),
                       ),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(40),
-                    ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                      Text("dotosave",
+                          style: TextStyle(
+                              fontFamily: 'Manjari',
+                              fontSize: ScreenUtil.getInstance().setSp(46),
+                              letterSpacing: .6,
+                              fontWeight: FontWeight.bold))
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0.0, 15.0),
+                              blurRadius: 15.0),
+                          BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0.0, -10.0),
+                              blurRadius: 15.0)
+                        ]),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          InkWell(
-                            child: Container(
-                              width: ScreenUtil.getInstance().setWidth(330),
-                              height: ScreenUtil.getInstance().setHeight(100),
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(colors: [
-                                    Color(0xfff12711),
-                                    Color(0xfff5af19)
-                                  ]),
-                                  borderRadius: BorderRadius.circular(6.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color:
-                                            Color(0xfff5af19).withOpacity(.3),
-                                        offset: Offset(0.0, 8.0),
-                                        blurRadius: 8.0)
-                                  ]),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: signinWithEmail,
-                                  child: Center(
-                                    child: Text(
-                                      "SIGNUP",
-                                      style: TextStyle(
-                                          fontFamily: 'Segoeu',
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          letterSpacing: 1.0),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                          Text(
+                            captions[setLanguage]["signup"],
+                            style: TextStyle(
+                                fontFamily: 'Segoeu',
+                                fontSize: ScreenUtil.getInstance().setSp(45),
+                                letterSpacing: .6),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil.getInstance().setHeight(30),
+                          ),
+                          Text(
+                            "Email",
+                            style: TextStyle(
+                              fontFamily: 'Segoeu',
+                              fontSize: ScreenUtil.getInstance().setSp(26),
                             ),
                           ),
-                        ]),
-                    SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(40),
+                          TextField(
+                            onSubmitted: (value) {
+                              setState(() {
+                                email = value.trim();
+                              });
+                            },
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                                hintText: captions[setLanguage]["emailhere!"],
+                                hintStyle: TextStyle(
+                                    fontFamily: 'Segoeu',
+                                    color: Colors.grey,
+                                    fontSize: 12.0)),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil.getInstance().setHeight(30),
+                          ),
+                          Text(captions[setLanguage]["password"],
+                              style: TextStyle(
+                                fontSize: ScreenUtil.getInstance().setSp(26),
+                                fontFamily: 'Segoeu',
+                              )),
+                          TextField(
+                            onSubmitted: (value) {
+                              setState(() {
+                                password = value.trim();
+                              });
+                            },
+                            obscureText: true,
+                            decoration: InputDecoration(
+                                hintText: captions[setLanguage]["passwordhere!"],
+                                hintStyle: TextStyle(
+                                    fontFamily: 'Segoeu',
+                                    color: Colors.grey,
+                                    fontSize: 12.0)),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil.getInstance().setHeight(35),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: ScreenUtil.getInstance().setHeight(40),
+                  ),
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    RaisedButton(
+                      onPressed: signinWithEmail,
+                      child: Text(
+                        captions[setLanguage]["signup"],
+                      ),
+                    )
+                  ]),
+                  SizedBox(
+                    height: ScreenUtil.getInstance().setHeight(40),
+                  ),
+                ],
               ),
-            )
+            ),
           ],
         ));
   }

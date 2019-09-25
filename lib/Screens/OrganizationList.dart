@@ -1,9 +1,8 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/Oraganization_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix1;
 import 'package:flutter/widgets.dart';
-import 'package:flutter/widgets.dart' as prefix0;
 
 class OrganizationList extends StatelessWidget {
   final String currentUserID;
@@ -31,13 +30,14 @@ class OrganizationList extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             bottom: TabBar(tabs: [
-              Tab(text: "Following"),
+              Tab(text: captions[setLanguage]["following"]),
               Tab(
-                text: "Yours",
+                text: captions[setLanguage]["yours"],
               ),
             ]),
-            title: Text("Organizations",
-                ),
+            title: Text(
+              captions[setLanguage]["organizations"],
+            ),
           ),
           body: FutureBuilder(
               future: getYourOrganizationList(),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -35,17 +36,18 @@ class EditProfileOrganizaationScreenState
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            "Edit Profile",
+            captions[setLanguage]["editprofile"],
           ),
         ),
-        body: FutureBuilder(
-            future: getUserInformation(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return Container();
-              if (snapshot.connectionState == ConnectionState.done)
-                return Edit_Profile_Top(snapshot.data, oid);
-            }));
+        body: Card(
+            child: FutureBuilder(
+                future: getUserInformation(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return Container();
+                  if (snapshot.connectionState == ConnectionState.done)
+                    return Edit_Profile_Top(snapshot.data, oid);
+                })));
   }
 }
 
@@ -66,6 +68,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
   File backgroundimage, avatar;
   Edit_Profile_Top_State(this.org, this.oid);
   bool _busy = false;
+  bool isDisable = false;
   var name, describe, address;
   @override
   void initState() {
@@ -337,7 +340,6 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
               child: TextFormField(
                   controller: name,
                   //maxLength: 35,
-                  enableInteractiveSelection: false,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(30),
                   ],
@@ -360,7 +362,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                   Icon(
                     Icons.edit,
                   ),
-                  Text("Address",
+                  Text(captions[setLanguage]["address"],
                       style: TextStyle(
                           fontFamily: 'Segoeu',
                           color: Colors.black,
@@ -372,11 +374,10 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
               child: TextFormField(
                   controller: address,
                   maxLength: 120,
-                  enableInteractiveSelection: false,
                   maxLines: null,
                   //initialValue: user["bio"],
                   decoration: InputDecoration(
-                      border: InputBorder.none, hintText: "Add your bio."))),
+                      border: InputBorder.none, hintText: captions[setLanguage]["enteryouraddress"]))),
           Divider(
             indent: 10,
             endIndent: 10,
@@ -388,7 +389,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                   Icon(
                     Icons.edit,
                   ),
-                  Text("Introduction",
+                  Text(captions[setLanguage]["introduction"],
                       style: TextStyle(
                           fontFamily: 'Segoeu',
                           color: Colors.black,
@@ -400,20 +401,25 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
               child: TextFormField(
                   controller: describe,
                   maxLength: 460,
-                  enableInteractiveSelection: false,
                   maxLines: null,
                   //initialValue: user["bio"],
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Tell everyone about your organization."))),
+                      hintText: captions[setLanguage]
+                          ["telleveryoneaboutyourorganization."]))),
           Divider(),
           RaisedButton(
-            onPressed: () {
-              submit();
-              Navigator.pop(context);
-            },
+            onPressed: (isDisable)
+                ? null
+                : () {
+                    setState(() {
+                      isDisable = true;
+                    });
+                    submit();
+                    Navigator.pop(context);
+                  },
             child: Text(
-              "Save",
+              captions[setLanguage]["save"],
               style: TextStyle(fontFamily: 'Segoeu'),
             ),
           )

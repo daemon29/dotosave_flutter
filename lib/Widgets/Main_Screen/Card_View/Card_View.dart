@@ -1,17 +1,29 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Widgets/CommentBox.dart';
 import 'package:LadyBug/Widgets/Comment_Card/Comment_Card.dart';
-import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardBottomBar.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardContent.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardTopBar.dart';
 import 'package:LadyBug/Widgets/SlideRightRoute.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class Card_View extends StatelessWidget {
+class Card_View extends StatefulWidget {
   //String name, uid, content, image;
   Map<String, dynamic> post;
   final currentUserId, postId;
   Card_View(this.postId, this.post, this.currentUserId);
+  @override
+  Card_View_State createState() {
+    // TODO: implement createState
+    return Card_View_State(this.postId, this.post, this.currentUserId);
+  }
+}
+
+class Card_View_State extends State<Card_View> {
+  //String name, uid, content, image;
+  Map<String, dynamic> post;
+  final currentUserId, postId;
+  Card_View_State(this.postId, this.post, this.currentUserId);
   Future getComments() async {
     QuerySnapshot qs = await Firestore.instance
         .collection('Comment')
@@ -43,9 +55,7 @@ class Card_View extends StatelessWidget {
                       SizedBox(
                         height: 10,
                       ),
-                      Divider(
-                        height: 0,
-                      ),
+
                       RaisedButton(
                         color: Colors.white,
                         onPressed: () {
@@ -60,21 +70,68 @@ class Card_View extends StatelessWidget {
                                             child: LinearProgressIndicator());
                                       else if (snapshot.connectionState ==
                                           ConnectionState.done) {
-                                        return ListView.builder(
-                                          itemCount:
-                                              snapshot?.data?.length ?? 0,
-                                          itemBuilder: (context, index) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.waiting)
-                                              return Center(
-                                                  child:
-                                                      LinearProgressIndicator());
-                                            else
-                                              return CommentCard(
-                                                  snapshot.data[index].data,
-                                                  currentUserId);
-                                          },
-                                        );
+                                        return Card(
+                                            color: Colors.grey[100],
+                                            child: Column(children: [
+                                              ListTile(
+                                                  trailing: IconButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      icon: Icon(Icons.clear)),
+                                                  title: Text(
+                                                    captions[setLanguage]
+                                                        ["comment"],
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.black),
+                                                  )),
+                                              Expanded(
+                                                  child: ListView.builder(
+                                                itemCount:
+                                                    (snapshot?.data?.length ??
+                                                        0),
+                                                itemBuilder: (context, index) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting)
+                                                    return Center(
+                                                        child:
+                                                            LinearProgressIndicator());
+                                                  else
+                                                    return CommentCard(
+                                                        snapshot
+                                                            .data[index].data,
+                                                        currentUserId);
+                                                },
+                                              )),
+                                              RaisedButton(
+                                                  padding: EdgeInsets.only(
+                                                      left: 10, right: 10),
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        SlideRightRoute(
+                                                            page: CommentBox(
+                                                                currentUserId,
+                                                                postId,
+                                                                false)));
+                                                  },
+                                                  child: SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: SizedBox(
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          child: Text(captions[
+                                                                  setLanguage][
+                                                              "writeacomment"]))))
+                                            ]));
                                       }
                                     },
                                   ));
@@ -110,13 +167,95 @@ class Card_View extends StatelessWidget {
                       SizedBox(
                         height: 10,
                       ),
-                      Divider(
-                        height: 0,
-                      ),
+
                       // CardBottomBar(postId, post, false, false, false),
                       RaisedButton(
                         color: Colors.white,
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => FutureBuilder(
+                                    future: (getComments()),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting)
+                                        return Center(
+                                            child: LinearProgressIndicator());
+                                      else if (snapshot.connectionState ==
+                                          ConnectionState.done) {
+                                        return Card(
+                                            color: Colors.grey[100],
+                                            child: Column(children: [
+                                              ListTile(
+                                                  trailing: IconButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      icon: Icon(Icons.clear)),
+                                                  title: Text(
+                                                    captions[setLanguage]
+                                                        ["comment"],
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.black),
+                                                  )),
+                                              Expanded(
+                                                  child: ListView.builder(
+                                                itemCount:
+                                                    (snapshot?.data?.length ??
+                                                        0),
+                                                itemBuilder: (context, index) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting)
+                                                    return Center(
+                                                        child:
+                                                            LinearProgressIndicator());
+                                                  else
+                                                    return CommentCard(
+                                                        snapshot
+                                                            .data[index].data,
+                                                        currentUserId);
+                                                },
+                                              )),
+                                              RaisedButton(
+                                                  padding: EdgeInsets.only(
+                                                      left: 10, right: 10),
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        SlideRightRoute(
+                                                            page: CommentBox(
+                                                                currentUserId,
+                                                                postId,
+                                                                false)));
+                                                  },
+                                                  child: SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: SizedBox(
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          child: Text(captions[
+                                                                  setLanguage][
+                                                              "writeacomment"]))))
+                                            ]));
+                                      }
+                                    },
+                                  ));
+                          /*
+                          Navigator.push(
+                              context,
+                              SlideRightRoute(
+                                  page: CommentBox(
+                                      currentUserId, postId, false)));
+                        */
+                        },
                         child: Text("Comment"),
                       )
                     ],

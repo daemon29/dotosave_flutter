@@ -1,3 +1,4 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/Campaign_screen.dart';
 import 'package:LadyBug/Widgets/SlideRightRoute.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,7 +20,6 @@ class CampaignCard extends StatelessWidget {
                   page: CampaignScreen(campaign, postId, currentUserId)));
         },
         child: Card(
-          color: Colors.deepOrange[50],
           //padding: EdgeInsets.all(10),
           child: Column(
             children: <Widget>[
@@ -37,7 +37,7 @@ class CampaignCard extends StatelessWidget {
                               imageUrl: campaign['imageurl'],
                               fit: BoxFit.cover,
                             ))),
-                    Positioned(
+                    /*Positioned(
                         bottom: 0,
                         left: 0,
                         child: SizedBox(
@@ -52,8 +52,18 @@ class CampaignCard extends StatelessWidget {
                                         color: Colors.white,
                                         fontWeight: FontWeight.w700,
                                       ))),
-                            ))),
+                            ))),*/
                   ])),
+              SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Text(campaign['title'],
+                          style: TextStyle(
+                            //color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          )))),
               Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Row(children: <Widget>[
@@ -68,7 +78,7 @@ class CampaignCard extends StatelessWidget {
                         ? Container()
                         : SizedBox(
                             child: Text(
-                            DateFormat(" dd/MMM/yyyy").format(
+                            DateFormat(" dd/MM/yyyy").format(
                                 DateTime.fromMillisecondsSinceEpoch(
                                     campaign['startDate'])),
                             style: TextStyle(fontSize: 12),
@@ -78,9 +88,9 @@ class CampaignCard extends StatelessWidget {
                         : SizedBox(
                             child: Text(
                                 (campaign['startDate'] == null)
-                                    ? " Until"
+                                    ? " " + captions[setLanguage]["until"]
                                     : " - " +
-                                        DateFormat("dd/MMM/yyyy").format(
+                                        DateFormat("dd/MM/yyyy").format(
                                             DateTime.fromMillisecondsSinceEpoch(
                                                 campaign['endDate'])),
                                 style: TextStyle(fontSize: 12))),

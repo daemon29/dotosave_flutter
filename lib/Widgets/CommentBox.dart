@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -127,7 +128,7 @@ class _CommentBox extends State<CommentBox> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Write a comment",
+          title: Text(captions[setLanguage]["writeacomment"],
               style: const TextStyle(
                 fontSize: 22,
                 fontFamily: 'Manjari',
@@ -150,7 +151,8 @@ class _CommentBox extends State<CommentBox> {
                                     TextField(
                                       decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          hintText: 'Write a comment...'),
+                                          hintText: captions[setLanguage]
+                                              ['writeacomment...']),
                                       keyboardType: TextInputType.multiline,
                                       onChanged: (str) {
                                         if (str.length > 0) {
@@ -178,7 +180,7 @@ class _CommentBox extends State<CommentBox> {
                                               top: 2,
                                               child: IconButton(
                                                 icon: Icon(Icons.close),
-                                                tooltip: 'Remove image',
+                                                tooltip: captions[setLanguage]['removeimage'],
                                                 onPressed: () {
                                                   setState(() {
                                                     _visible = false;
@@ -212,6 +214,7 @@ class _CommentBox extends State<CommentBox> {
                                             });
                                           },
                                         ),
+                                        /*
                                         RawMaterialButton(
                                           constraints: BoxConstraints.tight(
                                               Size(36, 36)),
@@ -220,7 +223,7 @@ class _CommentBox extends State<CommentBox> {
                                             size: 32,
                                           ),
                                           onPressed: () {},
-                                        ),
+                                        ),*/
                                         Expanded(
                                           child: Container(),
                                         ),
@@ -232,7 +235,7 @@ class _CommentBox extends State<CommentBox> {
                                               : null,
                                           padding: EdgeInsets.all(0.0),
                                           child: Text(
-                                            "Send",
+                                            captions[setLanguage]["send"],
                                             style: TextStyle(
                                               fontFamily: 'Segoeu',
                                             ),
