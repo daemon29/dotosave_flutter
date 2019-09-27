@@ -40,7 +40,7 @@ class CommentTop extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Post_Owner(name, uid, currentUserID),
+        Post_Owner(name, uid, currentUserID,false),
         Text(
           GetDuration(),
           style: TextStyle(

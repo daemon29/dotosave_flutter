@@ -9,15 +9,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
-class AddPost extends StatefulWidget {
-  final String uid;
-  AddPost(this.uid);
+class AddCampaign_Notification extends StatefulWidget {
+  final String uid, oid, campaignId;
+  AddCampaign_Notification(this.uid, this.oid, this.campaignId);
   @override
-  AddPostState createState() => AddPostState(uid);
+  AddCampaign_NotificationState createState() =>
+      AddCampaign_NotificationState(uid, oid, campaignId);
 }
 
-class AddPostState extends State<AddPost> {
-  final String uid;
+class AddCampaign_NotificationState extends State<AddCampaign_Notification> {
+  final String uid, oid, campaignId;
   File _file = null;
   bool _visible = false;
   bool _send_clickable = false;
@@ -34,7 +35,7 @@ class AddPostState extends State<AddPost> {
     }
   }
 
-  AddPostState(this.uid);
+  AddCampaign_NotificationState(this.uid, this.oid, this.campaignId);
   Future<File> writeToFile(ByteData data, String path) {
     final buffer = data.buffer;
     return new File(path).writeAsBytes(
@@ -56,12 +57,15 @@ class AddPostState extends State<AddPost> {
         if (value.error == null) {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
-            Firestore.instance.collection('Post').document().setData({
-              'type': 'status',
+            Firestore.instance
+                .collection('CampaignNotification')
+                .document()
+                .setData({
               'content': content,
               'image': url,
+              'owner(oid)': oid,
+              'campaign': campaignId,
               'owner': uid,
-              'owner(oid)': "",
               'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
             });
           });
@@ -69,12 +73,12 @@ class AddPostState extends State<AddPost> {
       });
       // image.delete();
     } else {
-      Firestore.instance.collection('Post').document().setData({
-        'type': 'status',
+      Firestore.instance.collection('CampaignNotification').document().setData({
+        'campaign': campaignId,
         'content': content,
         'image': "",
+        'owner(oid)': oid,
         'owner': uid,
-        'owner(oid)': "",
         'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
       });
     }
@@ -86,7 +90,7 @@ class AddPostState extends State<AddPost> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            captions[setLanguage]["createpost"],
+            captions[setLanguage]["createnotification"],
           ),
         ),
         body: ListView(children: [
@@ -94,7 +98,7 @@ class AddPostState extends State<AddPost> {
               padding: EdgeInsets.fromLTRB(1, 1, 1, 10),
               child: Card(
                   child: Padding(
-                      padding: EdgeInsets.only(left: 10,right: 10,bottom: 5, top: 5),
+                      padding: EdgeInsets.all(2),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -107,7 +111,7 @@ class AddPostState extends State<AddPost> {
                                       decoration: InputDecoration(
                                           border: InputBorder.none,
                                           hintText: captions[setLanguage]
-                                              ['whatsonyourmind']),
+                                              ['writeithere...']),
                                       keyboardType: TextInputType.multiline,
                                       onChanged: (str) {
                                         if (str.length > 0) {
@@ -179,8 +183,7 @@ class AddPostState extends State<AddPost> {
                                             size: 32,
                                           ),
                                           onPressed: () {},
-                                        ),
-                                       */
+                                        ),*/
                                         Expanded(
                                           child: Container(),
                                         ),

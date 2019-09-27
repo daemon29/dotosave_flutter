@@ -110,14 +110,13 @@ class _OrganizationTop extends State<OrganizationTop> {
           child: Padding(
               padding: EdgeInsets.only(left: 10),
               child: Text(
-                captions[setLanguage]['address'] + ": " + organization["address"],
+                captions[setLanguage]['address'] +
+                    ": " +
+                    organization["address"],
                 style: TextStyle(fontFamily: 'Segoeu'),
                 maxLines: null,
                 overflow: TextOverflow.clip,
               ))),
-      SizedBox(
-        height: 10,
-      ),
       SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Padding(
@@ -128,9 +127,6 @@ class _OrganizationTop extends State<OrganizationTop> {
                 maxLines: null,
                 overflow: TextOverflow.clip,
               ))),
-      SizedBox(
-        height: 10,
-      ),
     ]));
   }
 }

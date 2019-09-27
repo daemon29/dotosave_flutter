@@ -77,7 +77,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                               });
                         else
                           return Padding(
-                              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                              padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
                               child: Card_View(
                                   snapshot.data[index - 1].documentID,
                                   snapshot.data[index - 1].data,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,11 +11,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Chat extends StatelessWidget {
+class Contact extends StatelessWidget {
   final String peerId;
   final String peerAvatar;
-  Chat({Key, key, @required this.peerId, @required this.peerAvatar})
-      : super(key: key);
+  final String id;
+  Contact(this.id, this.peerId, this.peerAvatar);
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -24,33 +26,28 @@ class Chat extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: new ChatScreen(
-        peerId: peerId,
-        peerAvatar: peerAvatar,
-      ),
+      body: new ContactScreen(this.id, this.peerId, this.peerAvatar),
     );
   }
 }
 
-class ChatScreen extends StatefulWidget {
+class ContactScreen extends StatefulWidget {
   final String peerId;
   final String peerAvatar;
+  final String id;
 
-  ChatScreen({Key key, @required this.peerId, @required this.peerAvatar})
-      : super(key: key);
+  ContactScreen(this.id, this.peerId, this.peerAvatar);
 
   @override
   State createState() =>
-      new ChatScreenState(peerId: peerId, peerAvatar: peerAvatar);
+      new ContactScreenState(this.id, this.peerId, this.peerAvatar);
 }
 
-class ChatScreenState extends State<ChatScreen> {
-  ChatScreenState({Key key, @required this.peerId, @required this.peerAvatar});
-
-  String peerId;
-  String peerAvatar;
-  String id;
-
+class ContactScreenState extends State<ContactScreen> {
+  ContactScreenState(this.id, this.peerId, this.peerAvatar);
+  final String peerId;
+  final String peerAvatar;
+  final String id;
   var listMessage;
   String groupChatId;
   SharedPreferences prefs;
@@ -90,18 +87,17 @@ class ChatScreenState extends State<ChatScreen> {
 
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
-    id = prefs.getString('uid') ?? '';
     if (id.hashCode <= peerId.hashCode) {
       groupChatId = '$id-$peerId';
     } else {
       groupChatId = '$peerId-$id';
     }
-
+/*
     Firestore.instance
         .collection('User')
         .document(id)
         .updateData({'chattingWith': peerId});
-
+*/
     setState(() {});
   }
 
@@ -154,7 +150,7 @@ class ChatScreenState extends State<ChatScreen> {
       textEditingController.clear();
 
       var documentReference = Firestore.instance
-          .collection('Message')
+          .collection('Contact')
           .document(groupChatId)
           .collection(groupChatId)
           .document(DateTime.now().millisecondsSinceEpoch.toString());
@@ -188,7 +184,6 @@ class ChatScreenState extends State<ChatScreen> {
       return Row(
         children: <Widget>[
           document['type'] == 0
-              // Text
               ? Container(
                   child: Text(
                     document['content'],
@@ -762,7 +757,7 @@ class ChatScreenState extends State<ChatScreen> {
                     fontFamily: 'Segoeu', color: primaryColor, fontSize: 15.0),
                 controller: textEditingController,
                 decoration: InputDecoration.collapsed(
-                  hintText: 'Type your message...',
+                  hintText: captions[setLanguage]['typeamessage...'],
                   hintStyle: TextStyle(fontFamily: 'Segoeu', color: greyColor),
                 ),
                 focusNode: focusNode,
@@ -801,7 +796,7 @@ class ChatScreenState extends State<ChatScreen> {
                   valueColor: AlwaysStoppedAnimation<Color>(themeColor)))
           : StreamBuilder(
               stream: Firestore.instance
-                  .collection('Message')
+                  .collection('Contact')
                   .document(groupChatId)
                   .collection(groupChatId)
                   .orderBy('timestamp', descending: true)

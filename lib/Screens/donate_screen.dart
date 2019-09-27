@@ -87,31 +87,51 @@ class _DonateScreen extends State<DonateScreen> {
               this.setState(() {
                 _busy = false;
               });
-              Fluttertoast.showToast(msg: "Upload success");
+              Fluttertoast.showToast(
+                msg: "Upload success",
+                backgroundColor: Colors.deepOrange[700],
+                textColor: Colors.white,
+              );
               Navigator.pop(context);
             }).catchError((error) {
               this.setState(() {
                 _busy = false;
               });
-              Fluttertoast.showToast(msg: error.toString());
+              Fluttertoast.showToast(
+                msg: error.toString(),
+                backgroundColor: Colors.deepOrange[700],
+                textColor: Colors.white,
+              );
             });
           }).catchError((error) {
             this.setState(() {
               _busy = false;
             });
-            Fluttertoast.showToast(msg: error.toString());
+            Fluttertoast.showToast(
+              msg: error.toString(),
+              backgroundColor: Colors.deepOrange[700],
+              textColor: Colors.white,
+            );
           });
         } else {
           setState(() {
             _busy = false;
           });
-          Fluttertoast.showToast(msg: "This file is not an image");
+          Fluttertoast.showToast(
+            msg: "This file is not an image",
+            backgroundColor: Colors.deepOrange[700],
+            textColor: Colors.white,
+          );
         }
       }, onError: (err) {
         setState(() {
           _busy = false;
         });
-        Fluttertoast.showToast(msg: err.toString());
+        Fluttertoast.showToast(
+          msg: err.toString(),
+          backgroundColor: Colors.deepOrange[700],
+          textColor: Colors.white,
+        );
       });
     }
   }
@@ -557,18 +577,18 @@ class _DonateScreen extends State<DonateScreen> {
                                             indexList = result[1];
                                           });
                                         },
-                                        child: 
-                                            (tags.toString() != "[]")
-                                                ? Wrap(
-                                                    children: _getChip(tags),
-                                                  )
-                                                : Text(captions[setLanguage]
+                                        child: (tags.toString() != "[]")
+                                            ? Wrap(
+                                                children: _getChip(tags),
+                                              )
+                                            : Text(
+                                                captions[setLanguage]
                                                     ['picktags'],
-                                            maxLines: null,
-                                            overflow: TextOverflow.clip,
-                                            style: TextStyle(
-                                                fontFamily: 'Segoeu',
-                                                fontSize: 13)),
+                                                maxLines: null,
+                                                overflow: TextOverflow.clip,
+                                                style: TextStyle(
+                                                    fontFamily: 'Segoeu',
+                                                    fontSize: 13)),
                                       ),
                                     ])),
                             SizedBox(

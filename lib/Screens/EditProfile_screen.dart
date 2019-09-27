@@ -103,7 +103,11 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
               this.setState(() {
                 _busy = false;
               });
-              Fluttertoast.showToast(msg: error.toString());
+              Fluttertoast.showToast(
+                msg: error.toString(),
+                backgroundColor: Colors.deepOrange[700],
+                textColor: Colors.white,
+              );
             });
           }).catchError((error) {
             this.setState(() {
@@ -115,13 +119,21 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
           setState(() {
             _busy = false;
           });
-          Fluttertoast.showToast(msg: "This file is not an image");
+          Fluttertoast.showToast(
+            msg: "This file is not an image",
+            backgroundColor: Colors.deepOrange[700],
+            textColor: Colors.white,
+          );
         }
       }, onError: (err) {
         setState(() {
           _busy = false;
         });
-        Fluttertoast.showToast(msg: err.toString());
+        Fluttertoast.showToast(
+          msg: err.toString(),
+          backgroundColor: Colors.deepOrange[700],
+          textColor: Colors.white,
+        );
       });
     }
     if (avatar != null) {
@@ -151,19 +163,31 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
             this.setState(() {
               _busy = false;
             });
-            Fluttertoast.showToast(msg: error.toString());
+            Fluttertoast.showToast(
+              msg: error.toString(),
+              backgroundColor: Colors.deepOrange[700],
+              textColor: Colors.white,
+            );
           });
         } else {
           setState(() {
             _busy = false;
           });
-          Fluttertoast.showToast(msg: "This file is not an image");
+          Fluttertoast.showToast(
+            msg: "This file is not an image",
+            backgroundColor: Colors.deepOrange[700],
+            textColor: Colors.white,
+          );
         }
       }, onError: (err) {
         setState(() {
           _busy = false;
         });
-        Fluttertoast.showToast(msg: err.toString());
+        Fluttertoast.showToast(
+          msg: err.toString(),
+          backgroundColor: Colors.deepOrange[700],
+          textColor: Colors.white,
+        );
       });
     }
     Firestore.instance.collection("User").document(currentuid).updateData({
@@ -343,7 +367,8 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                       fontWeight: FontWeight.bold),
                   //initialValue: user["name"],
                   decoration: InputDecoration(
-                      border: InputBorder.none, hintText: captions[setLanguage]['namehere!']))),
+                      border: InputBorder.none,
+                      hintText: captions[setLanguage]['namehere!']))),
           Divider(
             indent: 10,
             endIndent: 10,
@@ -398,7 +423,8 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                   maxLines: null,
                   //initialValue: user["bio"],
                   decoration: InputDecoration(
-                      border: InputBorder.none, hintText: captions[setLanguage]['biohere!']))),
+                      border: InputBorder.none,
+                      hintText: captions[setLanguage]['biohere!']))),
           Divider(
             indent: 10,
             endIndent: 10,

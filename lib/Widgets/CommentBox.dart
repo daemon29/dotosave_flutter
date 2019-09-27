@@ -80,7 +80,7 @@ class _GetCommentBox extends State<GetCommentBox> {
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
-  var controler;
+  var controller;
   void UpLoadPost() async {
     if (_visible) {
       var uuid = new Uuid();
@@ -96,7 +96,7 @@ class _GetCommentBox extends State<GetCommentBox> {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
             Firestore.instance.collection('Comment').document().setData({
-              'content': controler.text,
+              'content': controller.text,
               'image': url,
               'like': [],
               'owner': uid,
@@ -109,7 +109,7 @@ class _GetCommentBox extends State<GetCommentBox> {
       // image.delete();
     } else {
       Firestore.instance.collection('Comment').document().setData({
-        'content': controler.text,
+        'content': controller.text,
         'image': "",
         'like': [],
         'owner': uid,
@@ -117,6 +117,7 @@ class _GetCommentBox extends State<GetCommentBox> {
         'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
       });
     }
+    controller.text = "";
     Navigator.pop(context);
   }
 
@@ -135,7 +136,7 @@ class _GetCommentBox extends State<GetCommentBox> {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
             Firestore.instance.collection('Comment').document().setData({
-              'content': controler.text,
+              'content': controller.text,
               'image': url,
               'like': [],
               'owner': uid,
@@ -148,7 +149,7 @@ class _GetCommentBox extends State<GetCommentBox> {
       // image.delete();
     } else {
       Firestore.instance.collection('Comment').document().setData({
-        'content': controler.text,
+        'content': controller.text,
         'image': "",
         'like': [],
         'owner': uid,
@@ -156,12 +157,13 @@ class _GetCommentBox extends State<GetCommentBox> {
         'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
       });
     }
+    controller.text = "";
     Navigator.pop(context);
   }
 
   @override
   void initState() {
-    controler = new TextEditingController();
+    controller = new TextEditingController();
     super.initState();
   }
 
@@ -180,7 +182,7 @@ class _GetCommentBox extends State<GetCommentBox> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           TextField(
-                            controller: controler,
+                            controller: controller,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: captions[setLanguage]
@@ -303,7 +305,7 @@ class _GetCommentBoxForBottomSheet extends State<GetCommentBox> {
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
-  var controler;
+  TextEditingController controller;
   void UpLoadPost() async {
     Map<String, dynamic> temp;
     if (_visible) {
@@ -320,7 +322,7 @@ class _GetCommentBoxForBottomSheet extends State<GetCommentBox> {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
             temp = {
-              'content': controler.text,
+              'content': controller.text,
               'image': url,
               'like': [],
               'owner': uid,
@@ -334,7 +336,7 @@ class _GetCommentBoxForBottomSheet extends State<GetCommentBox> {
       // image.delete();
     } else {
       temp = {
-        'content': controler.text,
+        'content': controller.text,
         'image': "",
         'like': [],
         'owner': uid,
@@ -343,7 +345,8 @@ class _GetCommentBoxForBottomSheet extends State<GetCommentBox> {
       };
       Firestore.instance.collection('Comment').document().setData(temp);
     }
-   Navigator.pop(context);
+    controller.text = "";
+    Navigator.pop(context);
   }
 
   void UpLoadPost2() async {
@@ -361,7 +364,7 @@ class _GetCommentBoxForBottomSheet extends State<GetCommentBox> {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
             Firestore.instance.collection('Comment').document().setData({
-              'content': controler.text,
+              'content': controller.text,
               'image': url,
               'like': [],
               'owner': uid,
@@ -374,7 +377,7 @@ class _GetCommentBoxForBottomSheet extends State<GetCommentBox> {
       // image.delete();
     } else {
       Firestore.instance.collection('Comment').document().setData({
-        'content': controler.text,
+        'content': controller.text,
         'image': "",
         'like': [],
         'owner': uid,
@@ -382,12 +385,13 @@ class _GetCommentBoxForBottomSheet extends State<GetCommentBox> {
         'timestamp': DateTime.now().toUtc().millisecondsSinceEpoch
       });
     }
+    controller.text = "";
     Navigator.pop(context);
   }
 
   @override
   void initState() {
-    controler = new TextEditingController();
+    controller = new TextEditingController();
     super.initState();
   }
 
@@ -407,7 +411,7 @@ class _GetCommentBoxForBottomSheet extends State<GetCommentBox> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           TextField(
-                            controller: controler,
+                            controller: controller,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: captions[setLanguage]

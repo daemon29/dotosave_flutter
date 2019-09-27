@@ -112,9 +112,6 @@ class _Proflie_Top extends State<Proflie_Top> {
                       overflow: TextOverflow.clip,
                     ))),
       SizedBox(
-        height: 10,
-      ),
-      SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Padding(
               padding: EdgeInsets.only(left: 10),
@@ -124,11 +121,10 @@ class _Proflie_Top extends State<Proflie_Top> {
                 maxLines: 6,
                 overflow: TextOverflow.clip,
               ))),
-    
       SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.only(left:10),
           child: InkWell(
               onTap: (uid == currentuid)
                   ? () async {
@@ -160,9 +156,6 @@ class _Proflie_Top extends State<Proflie_Top> {
                 style: TextStyle(fontFamily: 'Segoeu', fontSize: 13)),*/
               ),
         ),
-      ),
-      SizedBox(
-        height: 10,
       ),
     ]));
   }

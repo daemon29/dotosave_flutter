@@ -59,7 +59,12 @@ class CardTopBar extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Post_Owner(snapshot.data['name'], id, currentUserID),
+                      (isOid)
+                          ? Post_Owner(
+                              snapshot.data['name'], id, currentUserID, true)
+                          : Post_Owner(
+                              snapshot.data['name'], id, currentUserID, false),
+                     
                       Text(
                         GetDuration(),
                         style:

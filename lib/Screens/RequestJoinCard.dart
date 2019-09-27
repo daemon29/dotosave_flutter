@@ -37,7 +37,7 @@ class JoinCard extends StatelessWidget {
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Post_Owner(snapshot.data['name'], uid, currentUserId),
+                      Post_Owner(snapshot.data['name'], uid, currentUserId,false),
                       Text(request),
                       SizedBox(
                         height: 10,

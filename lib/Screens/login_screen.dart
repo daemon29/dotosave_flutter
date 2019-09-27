@@ -23,13 +23,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  String email = "", password = "";
+  var email, password;
   FirebaseUser currentUser;
   SharedPreferences prefs;
   bool isLoading = false;
   bool isLoogedIn = false;
   @override
   void initState() {
+    email = TextEditingController();
+    password = TextEditingController();
     super.initState();
     isSignIn();
     SystemChrome.setPreferredOrientations([
@@ -41,6 +43,7 @@ class _MyAppState extends State<MyApp> {
     this.setState(() {
       isLoading = true;
     });
+
     prefs = await SharedPreferences.getInstance();
     isLoogedIn = await googleSignIn.isSignedIn();
     if (isLoogedIn) {
@@ -57,18 +60,29 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<Null> signinWithEmail() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
     this.setState(() {
       isLoading = true;
     });
-    if (email == "" || password == "") {
+    if (email.text == "" || password.text == "") {
       this.setState(() {
         isLoading = false;
       });
-      Fluttertoast.showToast(msg: "Email or Password is invalid");
+      Fluttertoast.showToast(
+        msg: "Email or Password is invalid",
+        backgroundColor: Colors.deepOrange[700],
+        textColor: Colors.white,
+      );
       return;
     }
-    final FirebaseUser firebaseUser = await firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: password)
+    FirebaseUser firebaseUser = await firebaseAuth
+        .signInWithEmailAndPassword(email: email.text, password: password.text)
         .catchError((onError) {
       this.setState(() {
         isLoading = false;
@@ -77,7 +91,11 @@ class _MyAppState extends State<MyApp> {
       return;
     });
     if (firebaseUser != null) {
-      Fluttertoast.showToast(msg: "Sign in Success");
+      Fluttertoast.showToast(
+        msg: "Sign in Success",
+        backgroundColor: Colors.deepOrange[700],
+        textColor: Colors.white,
+      );
       this.setState(() {
         isLoading = false;
       });
@@ -90,7 +108,11 @@ class _MyAppState extends State<MyApp> {
                     currentUserId: firebaseUser.uid,
                   )));
     } else {
-      Fluttertoast.showToast(msg: "Sign in fail");
+      Fluttertoast.showToast(
+        msg: "Sign in fail",
+        backgroundColor: Colors.deepOrange[700],
+        textColor: Colors.white,
+      );
       this.setState(() {
         isLoading = false;
       });
@@ -105,6 +127,13 @@ class _MyAppState extends State<MyApp> {
   // }
 
   Future<Null> startGoogleSignIn() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
     prefs = await SharedPreferences.getInstance();
     this.setState(() {
       isLoading = true;
@@ -151,7 +180,11 @@ class _MyAppState extends State<MyApp> {
         await prefs.setString('name', (result.documents[0]['nickname']));
         await prefs.setString('imageurl', (result.documents[0]['imageurl']));
       }
-      Fluttertoast.showToast(msg: "Sign in Success");
+      Fluttertoast.showToast(
+        msg: "Sign in Success",
+        backgroundColor: Colors.deepOrange[700],
+        textColor: Colors.white,
+      );
       this.setState(() {
         isLoading = false;
       });
@@ -163,7 +196,11 @@ class _MyAppState extends State<MyApp> {
               builder: (context) =>
                   Main_Screen(currentUserId: firebaseUser.uid)));
     } else {
-      Fluttertoast.showToast(msg: "Sign in fail");
+      Fluttertoast.showToast(
+        msg: "Sign in fail",
+        backgroundColor: Colors.deepOrange[700],
+        textColor: Colors.white,
+      );
       this.setState(() {
         isLoading = false;
       });
@@ -186,6 +223,7 @@ class _MyAppState extends State<MyApp> {
           color: Colors.black26.withOpacity(.2),
         ),
       );
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
@@ -256,11 +294,7 @@ class _MyAppState extends State<MyApp> {
                           ),
                         ),
                         TextField(
-                          onSubmitted: (value) {
-                            setState(() {
-                              email = value.trim();
-                            });
-                          },
+                          controller: email,
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                               hintText: captions[setLanguage]['emailhere'],
@@ -276,11 +310,7 @@ class _MyAppState extends State<MyApp> {
                               fontFamily: 'Segoeu',
                             )),
                         TextField(
-                          onSubmitted: (value) {
-                            setState(() {
-                              password = value.trim();
-                            });
-                          },
+                          controller: password,
                           obscureText: true,
                           decoration: InputDecoration(
                               hintText: captions[setLanguage]["passwordhere"],

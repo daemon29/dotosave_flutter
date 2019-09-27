@@ -1,4 +1,5 @@
 import 'package:LadyBug/Customize/MultiLanguage.dart';
+import 'package:LadyBug/Screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +13,7 @@ class SignUp extends StatefulWidget {
 
 class _Signup extends State<SignUp> {
   bool isLoading = false;
-  String email, password;
+  var email, password, repassword;
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
@@ -21,35 +22,67 @@ class _Signup extends State<SignUp> {
           color: Colors.black26.withOpacity(.2),
         ),
       );
+
   Future<Null> signinWithEmail() async {
     this.setState(() {
       isLoading = true;
     });
-    if (email == null || password == null) {
+    if (email.text == "" || password.text == "" || repassword.text == "") {
       this.setState(() {
         isLoading = false;
       });
-      Fluttertoast.showToast(msg: "Email or password cannot be empty");
+      Fluttertoast.showToast(
+        msg: "Email or password cannot be empty",
+        backgroundColor: Colors.deepOrange[700],
+        textColor: Colors.white,
+      );
       return;
     } else {
+      if (password.text != repassword.text) {
+        this.setState(() {
+          isLoading = false;
+        });
+        Fluttertoast.showToast(
+          msg: "Your password and re-type password are not match",
+          backgroundColor: Colors.deepOrange[700],
+          textColor: Colors.white,
+        );
+        return;
+      }
       FirebaseUser user = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .createUserWithEmailAndPassword(email: email.text, password: password.text);
       if (user != null) {
         this.setState(() {
           isLoading = false;
         });
-        Fluttertoast.showToast(msg: "Signup success!");
+        Fluttertoast.showToast(
+          msg: "Signup success!",
+          backgroundColor: Colors.deepOrange[700],
+          textColor: Colors.white,
+        );
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DonateScreen(currentUserId: user.uid)));
+                builder: (context) => Main_Screen(currentUserId: user.uid)));
       } else {
-        Fluttertoast.showToast(msg: "Sign in fail");
+        Fluttertoast.showToast(
+          msg: "Sign in fail",
+          backgroundColor: Colors.deepOrange[700],
+          textColor: Colors.white,
+        );
         this.setState(() {
           isLoading = false;
         });
       }
     }
+  }
+
+  @override
+  void initState() {
+    email = TextEditingController();
+    password = TextEditingController();
+    repassword = TextEditingController();
+    super.initState();
   }
 
   @override
@@ -125,14 +158,10 @@ class _Signup extends State<SignUp> {
                             ),
                           ),
                           TextField(
-                            onSubmitted: (value) {
-                              setState(() {
-                                email = value.trim();
-                              });
-                            },
+                            controller: email,
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
-                                hintText: captions[setLanguage]["emailhere!"],
+                                hintText: captions[setLanguage]["emailhere"],
                                 hintStyle: TextStyle(
                                     fontFamily: 'Segoeu',
                                     color: Colors.grey,
@@ -147,14 +176,27 @@ class _Signup extends State<SignUp> {
                                 fontFamily: 'Segoeu',
                               )),
                           TextField(
-                            onSubmitted: (value) {
-                              setState(() {
-                                password = value.trim();
-                              });
-                            },
+                            controller: password,
                             obscureText: true,
                             decoration: InputDecoration(
-                                hintText: captions[setLanguage]["passwordhere!"],
+                                hintText: captions[setLanguage]
+                                    ["passwordhere"],
+                                hintStyle: TextStyle(
+                                    fontFamily: 'Segoeu',
+                                    color: Colors.grey,
+                                    fontSize: 12.0)),
+                          ),
+                          Text(captions[setLanguage]["re-typepassword"],
+                              style: TextStyle(
+                                fontSize: ScreenUtil.getInstance().setSp(26),
+                                fontFamily: 'Segoeu',
+                              )),
+                          TextField(
+                            controller: repassword,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                                hintText: captions[setLanguage]
+                                    ["re-typepassword"],
                                 hintStyle: TextStyle(
                                     fontFamily: 'Segoeu',
                                     color: Colors.grey,
