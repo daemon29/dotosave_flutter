@@ -1,5 +1,8 @@
+import 'dart:core';
 import 'dart:io';
 
+import 'package:LadyBug/Customize/MultiLanguage.dart';
+import 'package:LadyBug/Widgets/ItemtypeList.dart';
 import 'package:LadyBug/Widgets/SlideRightRoute.dart';
 import 'package:LadyBug/Widgets/TagsList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,19 +32,20 @@ class AddCampaign extends StatefulWidget {
 class AddCampaignState extends State<AddCampaign> {
   final String oid;
   AddCampaignState(this.oid);
+  List<bool> itemIndexList = List.filled(itemTypeList.length, false);
   List<bool> indexList = List.filled(tagsList.length, false);
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: place_api);
   GeoPoint geoPoint;
   bool _visible = false;
   bool _vol = false, _do = false;
   int _selectedType = 2;
+  bool isDisable = false;
   bool _pickaplacevisibility = true;
-  String _address = "Your address will show up here!";
+  String _address = captions[setLanguage]["youraddresswillshowuphere!"];
   TextStyle style_state = TextStyle(
-    fontFamily: 'Segoeu',
     fontStyle: FontStyle.italic,
   );
-  List<String> organizer = [], tags = [];
+  List<String> organizer = [], tags = [], itemtags = [];
   bool _busy = false;
   File _image;
   final title = TextEditingController(),
@@ -62,22 +66,51 @@ class AddCampaignState extends State<AddCampaign> {
     super.dispose();
   }
 
-  DateTime selectedDate = DateTime.now();
+  DateTime startDate = DateTime.now(), endDate = DateTime.now();
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
+        initialDate: startDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != startDate)
       setState(() {
-        selectedDate = picked;
+        startDate = picked;
       });
+  }
+
+  Future<Null> __selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: endDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != endDate)
+      setState(() {
+        endDate = picked;
+      });
+  }
+
+  List<Widget> _getChip(List<dynamic> tags) {
+    List listings = new List<Widget>();
+    for (int i = 0; i < tags.length; ++i) {
+      listings
+          .add(new Chip(label: Text(itemTypeListMap[setLanguage][tags[i]])));
+    }
+    return listings;
+  }
+
+  List<Widget> _getChip2(List<dynamic> tags) {
+    List listings = new List<Widget>();
+    for (int i = 0; i < tags.length; ++i) {
+      listings.add(new Chip(label: Text(itemTagsMap[setLanguage][tags[i]])));
+    }
+    return listings;
   }
 
   bool notpicked1 = true, notpicked2 = true;
   String imageurl;
-  int startDate, endDate;
+
   Future submit() async {
     this.setState(() {
       _busy = true;
@@ -98,18 +131,19 @@ class AddCampaignState extends State<AddCampaign> {
         if (value.error == null) {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
-            GeoPoint geoPoint = GeoPoint(90, -90);
             Firestore.instance.collection("Campaign").document().setData({
               'title': title.text,
               "introduction": introduction.text,
               'detail': detail.text,
               "imageurl": url,
               'address': _address,
-              'startDate': startDate,
-              'endDate': endDate,
+              'startDate':
+                  (notpicked1) ? null : startDate.millisecondsSinceEpoch,
+              'endDate': (notpicked2) ? null : endDate.millisecondsSinceEpoch,
               'organizer': organizer,
               "geo": geoPoint,
-              'tags': tags,
+              'tag': tags,
+              'itemtag': _do ? itemtags : [],
               'needvol': _vol,
               'needdonor': _do,
               'type': _selectedType,
@@ -118,30 +152,51 @@ class AddCampaignState extends State<AddCampaign> {
               this.setState(() {
                 _busy = false;
               });
-              Fluttertoast.showToast(msg: "Upload success");
+              Fluttertoast.showToast(
+                msg: "Upload success",
+                backgroundColor: Colors.deepOrange[700],
+                textColor: Colors.white,
+              );
+              Navigator.pop(context);
             }).catchError((error) {
               this.setState(() {
                 _busy = false;
               });
-              Fluttertoast.showToast(msg: error.toString());
+              Fluttertoast.showToast(
+                msg: error.toString(),
+                backgroundColor: Colors.deepOrange[700],
+                textColor: Colors.white,
+              );
             });
           }).catchError((error) {
             this.setState(() {
               _busy = false;
             });
-            Fluttertoast.showToast(msg: error.toString());
+            Fluttertoast.showToast(
+              msg: error.toString(),
+              backgroundColor: Colors.deepOrange[700],
+              textColor: Colors.white,
+            );
           });
         } else {
           setState(() {
             _busy = false;
           });
-          Fluttertoast.showToast(msg: "This file is not an image");
+          Fluttertoast.showToast(
+            msg: "This file is not an image",
+            backgroundColor: Colors.deepOrange[700],
+            textColor: Colors.white,
+          );
         }
       }, onError: (err) {
         setState(() {
           _busy = false;
         });
-        Fluttertoast.showToast(msg: err.toString());
+        Fluttertoast.showToast(
+          msg: err.toString(),
+          backgroundColor: Colors.deepOrange[700],
+          textColor: Colors.white,
+        );
       });
     }
   }
@@ -208,11 +263,9 @@ class AddCampaignState extends State<AddCampaign> {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: Text("Create Campaign",
-              style: const TextStyle(
-                fontSize: 22,
-                fontFamily: 'Manjari',
-              )),
+          title: Text(
+            captions[setLanguage]['createcampaign'],
+          ),
         ),
         body: ListView(
           // crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,14 +281,13 @@ class AddCampaignState extends State<AddCampaign> {
                       top: 2,
                       child: IconButton(
                         icon: Icon(Icons.close),
-                        tooltip: 'Remove image',
+                        tooltip: captions[setLanguage]['removeimage'],
                         onPressed: () {
                           setState(() {
                             _visible = false;
                           });
                         },
                         iconSize: 32,
-                        color: Colors.blue,
                       ),
                     ),
                   ],
@@ -243,16 +295,13 @@ class AddCampaignState extends State<AddCampaign> {
             Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: RaisedButton(
-                  color: Colors.blue,
                   child: Row(children: [
                     Icon(
                       Icons.image,
-                      color: Colors.white,
                       size: 32,
                     ),
                     Text(
-                      " Add a banner!",
-                      style: TextStyle(color: Colors.white),
+                      captions[setLanguage]["addabanner!"],
                     )
                   ]),
                   onPressed: () async {
@@ -267,7 +316,7 @@ class AddCampaignState extends State<AddCampaign> {
                 )),
             Padding(
                 padding: EdgeInsets.only(left: 10),
-                child: Text("Title",
+                child: Text(captions[setLanguage]["title"],
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
@@ -278,11 +327,11 @@ class AddCampaignState extends State<AddCampaign> {
                   controller: title,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Enter a title/name...'),
+                      hintText: captions[setLanguage]['Enter a title/name...']),
                 )),
             Padding(
                 padding: EdgeInsets.only(left: 10),
-                child: Text("Introduction",
+                child: Text(captions[setLanguage]["introduction"],
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.w700))),
             Padding(
@@ -294,11 +343,11 @@ class AddCampaignState extends State<AddCampaign> {
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Introduce your campaign...'),
+                      hintText: captions[setLanguage]['introduceyourcampaign']),
                 )),
             Padding(
                 padding: EdgeInsets.only(left: 10),
-                child: Text("Detail",
+                child: Text(captions[setLanguage]["detail"],
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.w700))),
             Padding(
@@ -309,12 +358,13 @@ class AddCampaignState extends State<AddCampaign> {
                   maxLines: null,
                   maxLength: 700,
                   decoration: InputDecoration(
-                      border: InputBorder.none, hintText: 'Tell more...'),
+                      border: InputBorder.none,
+                      hintText: captions[setLanguage]['tellmore']),
                 )),
             Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Row(children: [
-                  Text("From: ",
+                  Text(captions[setLanguage]['from'] + ": ",
                       style: TextStyle(
                           fontFamily: 'Segoeu',
                           fontSize: 16,
@@ -323,20 +373,19 @@ class AddCampaignState extends State<AddCampaign> {
                     onTap: () {
                       _selectDate(context);
                       setState(() {
-                        startDate = selectedDate.millisecondsSinceEpoch;
                         notpicked1 = false;
                       });
                     },
                     child: notpicked1
-                        ? Text("Select a day")
-                        : Text(DateFormat("dd MMMM yyyy").format(
-                            DateTime.fromMillisecondsSinceEpoch(startDate))),
+                        ? Text(captions[setLanguage]['selectaday'])
+                        : Text(DateFormat("dd/MM/yyyy").format(startDate)),
                   ),
                   (!notpicked1)
                       ? InkWell(
                           onTap: () {
-                            notpicked1 = true;
-                            startDate = null;
+                            setState(() {
+                              notpicked1 = true;
+                            });
                           },
                           child: Icon(Icons.clear))
                       : Container()
@@ -344,30 +393,28 @@ class AddCampaignState extends State<AddCampaign> {
             Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Row(children: [
-                  Text("To: ",
+                  Text(captions[setLanguage]['to'] + ": ",
                       style: TextStyle(
                           fontFamily: 'Segoeu',
                           fontSize: 16,
                           fontWeight: FontWeight.w700)),
                   InkWell(
                     onTap: () {
-                      _selectDate(context);
-
+                      __selectDate(context);
                       setState(() {
-                        endDate = selectedDate.millisecondsSinceEpoch;
                         notpicked2 = false;
                       });
                     },
                     child: notpicked2
-                        ? Text("Select a day")
-                        : Text(DateFormat("dd MMMM yyyy").format(
-                            DateTime.fromMillisecondsSinceEpoch(endDate))),
+                        ? Text(captions[setLanguage]['selectaday'])
+                        : Text(DateFormat("dd/MM/yyyy").format(endDate)),
                   ),
                   (!notpicked2)
                       ? InkWell(
                           onTap: () {
-                            notpicked2 = true;
-                            endDate = null;
+                            setState(() {
+                              notpicked2 = true;
+                            });
                           },
                           child: Icon(Icons.clear))
                       : Container()
@@ -383,26 +430,23 @@ class AddCampaignState extends State<AddCampaign> {
                   children: <Widget>[
                     Flexible(
                         child: RaisedButton(
-                            textColor: Colors.white,
                             onPressed: onSeachBarButtonClick,
                             padding: const EdgeInsets.all(0.0),
                             child: Container(
-                              color: Colors.blue,
                               padding: const EdgeInsets.all(10.0),
-                              child: const Text('Pick a place',
+                              child: Text(captions[setLanguage]['pickaplace'],
                                   style: TextStyle(
                                       fontFamily: 'Segoeu', fontSize: 13)),
                             ))),
                     const Text("  Or  "),
                     Flexible(
                         child: RaisedButton(
-                            textColor: Colors.white,
                             padding: const EdgeInsets.all(0.0),
                             onPressed: onGetCurrentLocationClick,
                             child: Container(
-                              color: Colors.blue,
                               padding: const EdgeInsets.all(10.0),
-                              child: const Text('Get your location',
+                              child: Text(
+                                  captions[setLanguage]['getyourlocation'],
                                   style: TextStyle(
                                       fontFamily: 'Segoeu', fontSize: 13)),
                             )))
@@ -414,6 +458,7 @@ class AddCampaignState extends State<AddCampaign> {
                   padding: EdgeInsets.only(left: 10, right: 10),
                   child: Text(
                     _address,
+                    maxLines: null,
                     overflow: TextOverflow.clip,
                     style: style_state,
                   )),
@@ -429,23 +474,20 @@ class AddCampaignState extends State<AddCampaign> {
                         setState(() {
                           _address = value;
                           style_state = TextStyle(
-                            fontFamily: 'Segoeu',
                             fontStyle: FontStyle.normal,
                           );
                         });
                       },
                       decoration: InputDecoration(
-                          hintText: "Enter your address",
-                          hintStyle: TextStyle(
-                              fontFamily: 'Segoeu',
-                              color: Colors.grey,
-                              fontSize: 12.0)),
+                          hintText: captions[setLanguage]['enteryouraddress'],
+                          hintStyle:
+                              TextStyle(fontFamily: 'Segoeu', fontSize: 12.0)),
                     ))),
             Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Row(children: <Widget>[
                   Flexible(
-                      child: Text("Type: ",
+                      child: Text(captions[setLanguage]['type'],
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 16,
@@ -461,11 +503,11 @@ class AddCampaignState extends State<AddCampaign> {
                     items: [
                       DropdownMenuItem(
                         value: 2,
-                        child: Text("Campaign"),
+                        child: Text(captions[setLanguage]['campaign']),
                       ),
                       DropdownMenuItem(
                         value: 1,
-                        child: Text("Event"),
+                        child: Text(captions[setLanguage]['event']),
                       )
                     ],
                   )),
@@ -487,7 +529,8 @@ class AddCampaignState extends State<AddCampaign> {
                         });
                       },
                     )),
-                    Flexible(child: Text("Need volunteers")),
+                    Flexible(
+                        child: Text(captions[setLanguage]["needvolunteers"])),
                     Flexible(
                         child: Checkbox(
                       value: _do,
@@ -497,7 +540,7 @@ class AddCampaignState extends State<AddCampaign> {
                         });
                       },
                     )),
-                    Flexible(child: Text("Need donors")),
+                    Flexible(child: Text(captions[setLanguage]["needdonors"])),
                   ],
                 )),
             Padding(
@@ -506,45 +549,71 @@ class AddCampaignState extends State<AddCampaign> {
                     //TODO choose tags
                     Visibility(
                   visible: _do,
-                  child: Text("What do you need?",
-                      style: TextStyle(
-                        fontSize: 16,
-                      )),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: InkWell(
+                      onTap: () async {
+                        final result = await Navigator.push(context,
+                            SlideRightRoute(page: ItemTypeList(itemIndexList)));
+
+                        setState(() {
+                          itemtags = result[0];
+                          itemIndexList = result[1];
+                        });
+                      },
+                      child: (itemtags.toString() != "[]")
+                          ? Wrap(
+                              children: _getChip(itemtags),
+                            )
+                          : Text(captions[setLanguage]['picktags'],
+                              maxLines: null,
+                              overflow: TextOverflow.clip,
+                              style: TextStyle(
+                                  fontFamily: 'Segoeu', fontSize: 13)),
+                    ),
+                  ),
                 )),
+
             Padding(
-              padding: EdgeInsets.all(10),
-              child: Row(children: [
-                Text("Tags: ",
+                padding: EdgeInsets.all(10),
+                child: Text("Tags: ",
                     style: TextStyle(
                         fontFamily: 'Segoeu',
                         fontSize: 16,
-                        fontWeight: FontWeight.w700)),
-                InkWell(
-                  onTap: () async {
-                    final result = await Navigator.push(
-                        context, SlideRightRoute(page: TagsList(indexList)));
+                        fontWeight: FontWeight.w700))),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: InkWell(
+                onTap: () async {
+                  final result = await Navigator.push(
+                      context, SlideRightRoute(page: TagsList(indexList)));
 
-                    setState(() {
-                      tags = result[0];
-                      indexList = result[1];
-                    });
-                  },
-                  splashColor: Colors.blue,
-                  child: Text(
-                      (tags.toString() != "[]") ? tags.toString() : 'Pick tags',
-                      maxLines: null,
-                      overflow: TextOverflow.clip,
-                      style: TextStyle(fontFamily: 'Segoeu', fontSize: 13)),
-                ),
-              ]),
+                  setState(() {
+                    tags = result[0];
+                    indexList = result[1];
+                  });
+                },
+                child: (tags.toString() != "[]")
+                    ? Wrap(
+                        children: _getChip2(tags),
+                      )
+                    : Text(captions[setLanguage]['picktags'],
+                        maxLines: null,
+                        overflow: TextOverflow.clip,
+                        style: TextStyle(fontFamily: 'Segoeu', fontSize: 13)),
+              ),
             ),
             RaisedButton(
-              color: Colors.blue,
-              onPressed: () {
-                submit();
-              },
-              child: Text("Create!",
-                  style: TextStyle(fontSize: 16, color: Colors.white)),
+              onPressed: (isDisable)
+                  ? null
+                  : () {
+                      setState(() {
+                        isDisable = true;
+                      });
+                      submit();
+                    },
+              child: Text(captions[setLanguage]['create!'],
+                  style: TextStyle(fontSize: 16)),
             ),
           ],
         ));

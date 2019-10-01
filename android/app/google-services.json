@@ -8,12 +8,73 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:335428403872:android:b39135b1362b213f",
+        "android_client_info": {
+          "package_name": "com.example.ladybugmap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335428403872-e4l8r9hvugfrv3ridca6ch179crda0th.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ladybugmap",
+            "certificate_hash": "0572cac2790150747c9cdb18c9afe35a53fccf91"
+          }
+        },
+        {
+          "client_id": "335428403872-f4l6ptd7lenh4kita77lcf05c5ukdqg5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFgvq9PWpMej20AWrKZZA52672RzjwQF8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "335428403872-f4l6ptd7lenh4kita77lcf05c5ukdqg5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:335428403872:android:60bc1dcef5bfb622",
         "android_client_info": {
           "package_name": "com.ladybug.co"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "335428403872-9moisuv6sqi7o3pnfv70tnglgv2aofb3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ladybug.co",
+            "certificate_hash": "b28d9cbf692e43755c223f55ae334d4e8fe20f41"
+          }
+        },
+        {
+          "client_id": "335428403872-4147edvvor82utcnss4i5e3dn5cvl3fi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ladybug.co",
+            "certificate_hash": "bbf0d815513ab4fa3ea06b3f90286728c9a5e103"
+          }
+        },
+        {
+          "client_id": "335428403872-knlc6tqmfn26oickjliolgdlintlurn6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ladybug.co",
+            "certificate_hash": "0572cac2790150747c9cdb18c9afe35a53fccf91"
+          }
+        },
         {
           "client_id": "335428403872-deibvgfs2jia9i5t62f5hldnt243qapk.apps.googleusercontent.com",
           "client_type": 1,

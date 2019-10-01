@@ -1,13 +1,9 @@
-import 'package:LadyBug/Screens/AddCampaign_screen.dart';
-import 'package:LadyBug/Screens/EditProfile_screen.dart';
-import 'package:LadyBug/Screens/Item_infomation_screen.dart';
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/OrganizationList.dart';
-import 'package:LadyBug/Screens/Profile_screen.dart';
+import 'package:LadyBug/Screens/Setting.dart';
 import 'package:LadyBug/Screens/donationmap_screen.dart';
 import 'package:LadyBug/Screens/friend_screen.dart';
 import 'package:LadyBug/Screens/loading_screen.dart';
-import 'package:LadyBug/Screens/login_screen.dart';
-import 'package:LadyBug/Widgets/Main_Screen/Campaign_screen/Campaign_screen_top.dart';
 import 'package:LadyBug/Widgets/Main_Screen/CircleAvatar.dart';
 import 'package:LadyBug/Screens/donate_screen.dart';
 import 'package:LadyBug/Widgets/SlideRightRoute.dart';
@@ -56,31 +52,34 @@ class HomeDrawer extends StatelessWidget {
                           overflow: TextOverflow.clip,
                           maxLines: 2,
                           style: TextStyle(
-                              fontFamily: 'Segoeu',
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                            fontFamily: 'Segoeu',
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       )
                     ]),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                    ),
+                    decoration: BoxDecoration(color: Colors.deepOrange[50]),
                   ),
+                  /*
                   ListTile(
                     leading: Icon(
                       Icons.notifications,
-                      color: Colors.black,
+                                            color: Colors.black
+
                     ),
                     title: Text('Notifications'),
                     onTap: () {},
                   ),
+                  
+                  */
                   ListTile(
                     leading: Icon(
                       Icons.group_work,
                       color: Colors.black,
                     ),
-                    title: Text('Organizations'),
+                    title: Text(captions[setLanguage]['organizations']),
                     onTap: () {
                       // Update the state of the app.
                       // ...
@@ -91,22 +90,16 @@ class HomeDrawer extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                    leading: Icon(
-                      Icons.map,
-                      color: Colors.black,
-                    ),
-                    title: Text('Donation map'),
+                    leading: Icon(Icons.map, color: Colors.black),
+                    title: Text(captions[setLanguage]['map']),
                     onTap: () {
                       Navigator.push(context,
                           SlideRightRoute(page: DonationMap(currentUserId)));
                     },
                   ),
                   ListTile(
-                    leading: Icon(
-                      Icons.assistant,
-                      color: Colors.black,
-                    ),
-                    title: Text('Donate goods'),
+                    leading: Icon(Icons.card_giftcard, color: Colors.black),
+                    title: Text(captions[setLanguage]['donate']),
                     onTap: () {
                       Navigator.push(
                           context,
@@ -117,11 +110,8 @@ class HomeDrawer extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                      leading: Icon(
-                        Icons.message,
-                        color: Colors.black,
-                      ),
-                      title: Text('Messages'),
+                      leading: Icon(Icons.send, color: Colors.black),
+                      title: Text(captions[setLanguage]['message']),
                       onTap: () {
                         Navigator.push(
                             context,
@@ -134,7 +124,7 @@ class HomeDrawer extends StatelessWidget {
                   ListTile(
                     leading: Icon(
                       Icons.group,
-                      color: Colors.black,
+                      color: Colors.black
                     ),
                     title: Text('Friends'),
                     onTap: () {
@@ -148,11 +138,19 @@ class HomeDrawer extends StatelessWidget {
                     },
                   ),
 */
+                  ListTile(
+                    leading: Icon(Icons.settings, color: Colors.black),
+                    title: Text(captions[setLanguage]['setting']),
+                    onTap: () {
+                      Navigator.push(
+                          context, SlideRightRoute(page: SettingScreen()));
+                    },
+                  ),
                   /*
                   ListTile(
                     leading: Icon(
                       Icons.account_circle,
-                      color: Colors.black,
+                      color: Colors.black
                     ),
                     title: Text('Profile'),
                     onTap: () {
@@ -165,11 +163,8 @@ class HomeDrawer extends StatelessWidget {
                   ),
                   */
                   ListTile(
-                      leading: Icon(
-                        Icons.keyboard_return,
-                        color: Colors.black,
-                      ),
-                      title: Text('Log out'),
+                      leading: Icon(Icons.keyboard_return, color: Colors.black),
+                      title: Text(captions[setLanguage]['logout']),
                       onTap: () async {
                         await FirebaseAuth.instance.signOut().then((value) {
                           print("***** log out");

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -32,22 +33,20 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[50],
         appBar: AppBar(
-          title: Text("Edit Profile",
-              style: const TextStyle(
-                fontSize: 22,
-                fontFamily: 'Manjari',
-              )),
+          title: Text(
+            captions[setLanguage]["editprofile"],
+          ),
         ),
-        body: FutureBuilder(
-            future: getUserInformation(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return Container();
-              if (snapshot.connectionState == ConnectionState.done)
-                return Edit_Profile_Top(snapshot.data, uid);
-            }));
+        body: Card(
+            child: FutureBuilder(
+                future: getUserInformation(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return Container();
+                  if (snapshot.connectionState == ConnectionState.done)
+                    return Edit_Profile_Top(snapshot.data, uid);
+                })));
   }
 }
 
@@ -68,6 +67,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
   File backgroundimage, avatar;
   Edit_Profile_Top_State(this.user, this.currentuid);
   bool _busy = false;
+  bool isDisable = false;
   var name, bio, nickname;
   @override
   void initState() {
@@ -103,7 +103,11 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
               this.setState(() {
                 _busy = false;
               });
-              Fluttertoast.showToast(msg: error.toString());
+              Fluttertoast.showToast(
+                msg: error.toString(),
+                backgroundColor: Colors.deepOrange[700],
+                textColor: Colors.white,
+              );
             });
           }).catchError((error) {
             this.setState(() {
@@ -115,13 +119,21 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
           setState(() {
             _busy = false;
           });
-          Fluttertoast.showToast(msg: "This file is not an image");
+          Fluttertoast.showToast(
+            msg: captions[setLanguage]["This file is not an image"],
+            backgroundColor: Colors.deepOrange[700],
+            textColor: Colors.white,
+          );
         }
       }, onError: (err) {
         setState(() {
           _busy = false;
         });
-        Fluttertoast.showToast(msg: err.toString());
+        Fluttertoast.showToast(
+          msg: err.toString(),
+          backgroundColor: Colors.deepOrange[700],
+          textColor: Colors.white,
+        );
       });
     }
     if (avatar != null) {
@@ -151,19 +163,31 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
             this.setState(() {
               _busy = false;
             });
-            Fluttertoast.showToast(msg: error.toString());
+            Fluttertoast.showToast(
+              msg: error.toString(),
+              backgroundColor: Colors.deepOrange[700],
+              textColor: Colors.white,
+            );
           });
         } else {
           setState(() {
             _busy = false;
           });
-          Fluttertoast.showToast(msg: "This file is not an image");
+          Fluttertoast.showToast(
+            msg: captions[setLanguage]["This file is not an image"],
+            backgroundColor: Colors.deepOrange[700],
+            textColor: Colors.white,
+          );
         }
       }, onError: (err) {
         setState(() {
           _busy = false;
         });
-        Fluttertoast.showToast(msg: err.toString());
+        Fluttertoast.showToast(
+          msg: err.toString(),
+          backgroundColor: Colors.deepOrange[700],
+          textColor: Colors.white,
+        );
       });
     }
     Firestore.instance.collection("User").document(currentuid).updateData({
@@ -209,8 +233,9 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                           left: 0,
                                           right: 0,
                                           child: CachedNetworkImage(
-                                              placeholder: (context, url) =>
-                                                  CircularProgressIndicator(),
+                                              placeholder: (context, url) => Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
                                               imageUrl: user['backgroundurl'],
                                               fit: BoxFit.cover))
                                   : Positioned(
@@ -227,10 +252,8 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                       right: 5,
                                       child: Container(
                                           padding: EdgeInsets.all(5),
-                                          color: Colors.grey[300],
                                           child: Icon(
                                             Icons.edit,
-                                            color: Colors.grey[700],
                                           )),
                                     )
                                   : Positioned(
@@ -244,10 +267,8 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                           },
                                           child: Container(
                                               padding: EdgeInsets.all(5),
-                                              color: Colors.grey[300],
                                               child: Icon(
                                                 Icons.clear,
-                                                color: Colors.grey[700],
                                               ))),
                                     )
                             ])),
@@ -271,8 +292,8 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                   height: 120,
                                   decoration: BoxDecoration(
                                       border: Border.all(
-                                          color: Colors.white,
-                                          width: 120 * 0.03),
+                                          width: 120 * 0.03,
+                                          color: Colors.white),
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
@@ -283,8 +304,8 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                   height: 120,
                                   decoration: BoxDecoration(
                                       border: Border.all(
-                                          color: Colors.white,
-                                          width: 120 * 0.03),
+                                          width: 120 * 0.03,
+                                          color: Colors.white),
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
@@ -296,14 +317,13 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                   child: Container(
                                       padding: EdgeInsets.all(5),
                                       decoration: BoxDecoration(
-                                        color: Colors.grey[300],
+                                        color: Colors.deepOrange[50],
                                         border: Border.all(color: Colors.white),
                                         shape: BoxShape.circle,
                                       ),
-                                      //color: Colors.grey[400],
                                       child: Icon(
                                         Icons.edit,
-                                        color: Colors.grey[700],
+                                        color: Colors.deepOrange[700],
                                       )),
                                 )
                               : Positioned(
@@ -318,15 +338,14 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                                     child: Container(
                                         padding: EdgeInsets.all(5),
                                         decoration: BoxDecoration(
-                                          color: Colors.grey[300],
+                                          color: Colors.deepOrange[50],
                                           border:
                                               Border.all(color: Colors.white),
                                           shape: BoxShape.circle,
                                         ),
-                                        //color: Colors.grey[400],
                                         child: Icon(
                                           Icons.clear,
-                                          color: Colors.grey[700],
+                                          color: Colors.deepOrange[700],
                                         )),
                                   ))
                         ]),
@@ -338,7 +357,6 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
               child: TextFormField(
                   controller: name,
                   //maxLength: 35,
-                  enableInteractiveSelection: false,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(30),
                   ],
@@ -349,9 +367,11 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                       fontWeight: FontWeight.bold),
                   //initialValue: user["name"],
                   decoration: InputDecoration(
-                      border: InputBorder.none, hintText: "Name here!"))),
+                      border: InputBorder.none,
+                      hintText: captions[setLanguage]['namehere!']))),
           Divider(
-            color: Colors.grey,
+            indent: 10,
+            endIndent: 10,
           ),
           Padding(
               padding: EdgeInsets.only(left: 10),
@@ -359,9 +379,8 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                 children: <Widget>[
                   Icon(
                     Icons.edit,
-                    color: Colors.grey[700],
                   ),
-                  Text("Nickname",
+                  Text(captions[setLanguage]["nickname"],
                       style: TextStyle(
                           fontFamily: 'Segoeu',
                           color: Colors.black,
@@ -374,13 +393,13 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                   controller: nickname,
                   maxLength: 20,
                   maxLines: 1,
-                  enableInteractiveSelection: false,
                   //initialValue: user["nickname"],
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Add your nickname."))),
+                      hintText: captions[setLanguage]['nicknamehere!']))),
           Divider(
-            color: Colors.grey,
+            indent: 10,
+            endIndent: 10,
           ),
           Padding(
               padding: EdgeInsets.only(left: 10),
@@ -388,9 +407,8 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
                 children: <Widget>[
                   Icon(
                     Icons.edit,
-                    color: Colors.grey[700],
                   ),
-                  Text("Bio",
+                  Text(captions[setLanguage]["bio"],
                       style: TextStyle(
                           fontFamily: 'Segoeu',
                           color: Colors.black,
@@ -402,23 +420,28 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
               child: TextFormField(
                   controller: bio,
                   maxLength: 160,
-                  enableInteractiveSelection: false,
                   maxLines: null,
                   //initialValue: user["bio"],
                   decoration: InputDecoration(
-                      border: InputBorder.none, hintText: "Add your bio."))),
+                      border: InputBorder.none,
+                      hintText: captions[setLanguage]['biohere!']))),
           Divider(
-            color: Colors.grey,
+            indent: 10,
+            endIndent: 10,
           ),
           RaisedButton(
-            color: Colors.blue,
-            onPressed: () {
-              submit();
-              Navigator.pop(context);
-            },
+            onPressed: (isDisable)
+                ? null
+                : () {
+                    setState(() {
+                      isDisable = true;
+                    });
+                    submit();
+                    Navigator.pop(context);
+                  },
             child: Text(
-              "Save",
-              style: TextStyle(fontFamily: 'Segoeu', color: Colors.white),
+              captions[setLanguage]["save"],
+              style: TextStyle(fontFamily: 'Segoeu'),
             ),
           )
         ]));

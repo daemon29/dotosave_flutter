@@ -31,32 +31,37 @@ class _CommentCard extends State<CommentCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
+        color: Colors.grey[50],
         child: FutureBuilder(
-      future: getPostOwner(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return Center(child: CircularProgressIndicator());
-        else if (snapshot.connectionState == ConnectionState.done) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              MyCircleAvatar(comment['owner'], snapshot.data['imageurl'], 40.0,
-                  currentUserId, true, false),
-              SizedBox(
-                width: 10,
-              ),
-              Flexible(
-                  child: Column(
+          future: getPostOwner(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Container();
+            else if (snapshot.connectionState == ConnectionState.done) {
+              return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  CommentTop(
-                      comment['owner'],
-                      snapshot.data['name'],
-                      DateTime.fromMillisecondsSinceEpoch(comment['timestamp']),
-                      currentUserId),
-                  CommentContent(comment['content'], comment['image'], true,
-                      comment['owner'], currentUserId),
-                  Row(
+                  MyCircleAvatar(comment['owner'], snapshot.data['imageurl'],
+                      40.0, currentUserId, true, false),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Flexible(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      CommentTop(
+                          comment['owner'],
+                          snapshot.data['name'],
+                          DateTime.fromMillisecondsSinceEpoch(
+                              comment['timestamp']),
+                          currentUserId),
+                      CommentContent(comment['content'], comment['image'], true,
+                          comment['owner'], currentUserId),
+                      SizedBox(
+                        height: 10,
+                      )
+                      /* Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         IconButton(
@@ -73,13 +78,13 @@ class _CommentCard extends State<CommentCard> {
                             fontFamily: 'Segoeu',
                           ),
                         ),
-                      ])
+                      ])*/
+                    ],
+                  ))
                 ],
-              ))
-            ],
-          );
-        }
-      },
-    ));
+              );
+            }
+          },
+        ));
   }
 }

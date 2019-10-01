@@ -1,4 +1,3 @@
-import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardBottomBar.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardContent.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/CardTopBar.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,7 @@ class PostTop extends StatelessWidget {
     return (post['owner(oid)'] == "")
         ? Card(
             child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                 CardTopBar(post['owner'], time, currentUserId, false),
@@ -24,27 +24,32 @@ class PostTop extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                Divider(
-                  height: 0,
-                ),
-                CardBottomBar(postId, post, false, false, false),
+
+                //CardBottomBar(postId, post, false, false, false),
               ]))
         : Card(
             child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                 CardTopBar(post['owner(oid)'], time, currentUserId, true),
                 SizedBox(
                   height: 10,
                 ),
-                CardContent(postId, post, true, post['owner(oid)'], currentUserId),
+                CardContent(
+                    postId, post, true, post['owner(oid)'], currentUserId),
                 SizedBox(
                   height: 10,
                 ),
-                Divider(
-                  height: 0,
-                ),
-                CardBottomBar(postId, post, false, false, false),
+
+                /*Center(
+                    child: Text(
+                  "Comment",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.deepOrange[900]),
+                ))*/
+                //  CardBottomBar(postId, post, false, false, false),
               ]));
   }
 }

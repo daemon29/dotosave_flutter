@@ -1,3 +1,8 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
+import 'package:LadyBug/Screens/Oraganization_screen.dart';
+import 'package:LadyBug/Widgets/ItemtypeList.dart';
+import 'package:LadyBug/Widgets/SlideRightRoute.dart';
+import 'package:LadyBug/Widgets/TagsList.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,8 +11,10 @@ import 'package:intl/intl.dart';
 
 //import 'package:intl/date_symbols.dart';
 class CampainScreenTop extends StatelessWidget {
+  final uid;
   final Map<String, dynamic> campaign;
-  CampainScreenTop(this.campaign);
+
+  CampainScreenTop(this.campaign, this.uid);
 
   Future<DocumentSnapshot> getOrgName(String oid) async {
     DocumentSnapshot ds =
@@ -15,14 +22,31 @@ class CampainScreenTop extends StatelessWidget {
     return ds;
   }
 
+  List<Widget> _getChip(List<dynamic> tags) {
+    List listings = new List<Widget>();
+    for (int i = 0; i < tags.length; ++i) {
+      listings.add(new Chip(label: Text(itemTagsMap[setLanguage][tags[i]])));
+    }
+    return listings;
+  }
+
+  List<Widget> _getChip1(List<dynamic> tags) {
+    List listings = new List<Widget>();
+    for (int i = 0; i < tags.length; ++i) {
+      listings
+          .add(new Chip(label: Text(itemTypeListMap[setLanguage][tags[i]])));
+    }
+    return listings;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Column(
+        child: ListView(
       children: <Widget>[
         Stack(children: [
           CachedNetworkImage(
-            placeholder: (context, url) => CircularProgressIndicator(),
+            placeholder: (context, url) => LinearProgressIndicator(),
             imageUrl: campaign['imageurl'],
             fit: BoxFit.contain,
           ),
@@ -33,14 +57,15 @@ class CampainScreenTop extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(5),
                   width: MediaQuery.of(context).size.width,
-                  color: Colors.blue.withOpacity(0.8),
+                  color: Colors.deepOrange[700].withOpacity(0.8),
                   child: Text(campaign["title"],
                       overflow: TextOverflow.clip,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white)),
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                      )),
                 ),
               )),
         ]),
@@ -57,7 +82,7 @@ class CampainScreenTop extends StatelessWidget {
                   ? Container()
                   : SizedBox(
                       child: Text(
-                      DateFormat(" dd/MMM/yyyy").format(
+                      DateFormat(" dd/MM/yyyy").format(
                           DateTime.fromMillisecondsSinceEpoch(
                               campaign['startDate'])),
                     )),
@@ -66,9 +91,9 @@ class CampainScreenTop extends StatelessWidget {
                   : SizedBox(
                       child: Text(
                       (campaign['startDate'] == null)
-                          ? " Until"
+                          ? " " + captions[setLanguage]["until"]
                           : " - " +
-                              DateFormat("dd/MMM/yyyy").format(
+                              DateFormat("dd/MM/yyyy").format(
                                   DateTime.fromMillisecondsSinceEpoch(
                                       campaign['endDate'])),
                     )),
@@ -88,15 +113,13 @@ class CampainScreenTop extends StatelessWidget {
         Divider(
           indent: 10,
           endIndent: 10,
-          color: Colors.blue,
         ),
         SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Container(
-                //color: Colors.blue[400],
                 padding: EdgeInsets.only(left: 10, bottom: 5),
                 child: Text(
-                  "Introduction",
+                  captions[setLanguage]["introduction"],
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       color: Colors.black, fontWeight: FontWeight.w700),
@@ -110,14 +133,12 @@ class CampainScreenTop extends StatelessWidget {
         Divider(
           indent: 10,
           endIndent: 10,
-          color: Colors.blue,
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Container(
-              //color: Colors.blue[400],
               padding: EdgeInsets.only(left: 10, bottom: 5),
-              child: Text("Organizers",
+              child: Text(captions[setLanguage]["organizers"],
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       color: Colors.black, fontWeight: FontWeight.w700))),
@@ -127,7 +148,7 @@ class CampainScreenTop extends StatelessWidget {
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: campaign["organizer"].length ?? 0,
+                    itemCount: campaign["organizer"]?.length ?? 0,
                     itemBuilder: (context, index) {
                       return FutureBuilder(
                           future: getOrgName(campaign["organizer"][index]),
@@ -137,16 +158,79 @@ class CampainScreenTop extends StatelessWidget {
                               return Container();
                             else if (_snapshot.connectionState ==
                                 ConnectionState.done)
-                              return Text(_snapshot.data['name']);
+                              return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        SlideRightRoute(
+                                            page: OrganizationScreen(uid,
+                                                campaign["organizer"][index])));
+                                  },
+                                  child: Text(
+                                    _snapshot.data['name'],
+                                    maxLines: null,
+                                    overflow: TextOverflow.clip,
+                                  ));
                             else
                               return Container();
                           });
                     }))),
+        (campaign['itemTag'].toString() != "[]")
+            ? Divider(
+                indent: 10,
+                endIndent: 10,
+              )
+            : Container(),
+        (campaign['itemTag'].toString() != "[]")
+            ? SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                    padding: EdgeInsets.only(left: 10, bottom: 5),
+                    child: Text(
+                      captions[setLanguage]['need'],
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w700),
+                    )))
+            : Container(),
+        (campaign['itemTag'].toString() != "[]")
+            ? Padding(
+                padding: EdgeInsets.all(10),
+                child: Wrap(
+                  children: _getChip1(campaign['itemtag']),
+                ) /*Text(
+            'Tags ' + campaign['tag'].toString(),
+            maxLines: null,
+            overflow: TextOverflow.clip,
+          ),*/
+                )
+            : Container(),
         Divider(
           indent: 10,
           endIndent: 10,
-          color: Colors.blue,
         ),
+        SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+                padding: EdgeInsets.only(left: 10, bottom: 5),
+                child: Text(
+                  "Tags:",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w700),
+                ))),
+        (campaign['tag'].toString() != "[]")
+            ? Padding(
+                padding: EdgeInsets.all(10),
+                child: Wrap(
+                  children: _getChip(campaign['tag']),
+                ) /*Text(
+            'Tags ' + campaign['tag'].toString(),
+            maxLines: null,
+            overflow: TextOverflow.clip,
+          ),*/
+                )
+            : Container()
       ],
     ));
   }

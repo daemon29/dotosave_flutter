@@ -1,7 +1,8 @@
 import 'dart:io';
-import 'dart:math';
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Widgets/ItemtypeList.dart';
 import 'package:LadyBug/Widgets/SlideRightRoute.dart';
+import 'package:LadyBug/Widgets/TagsList.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +34,67 @@ class _DonateScreen extends State<DonateScreen> {
   PersistentBottomSheetController controller;
   List<bool> indexList = List.filled(itemTypeList.length, false);
   List<String> tags = [];
-
+  Map<String, dynamic> modelClass = {
+    'bicycle': 'Vehicle',
+    'car': 'Vehicle',
+    'motorcycle': 'Vehicle',
+    'backpack': 'Bag',
+    'umbrella': 'Household goods',
+    'handbag': 'Bag',
+    'tie': 'Clothes',
+    'suitcase': 'Bag',
+    'frisbee': 'Toys',
+    'skis': 'Sport',
+    'snowboard': 'Sport',
+    'sports ball': 'Sport',
+    'kite': 'Toys',
+    'baseball bat': 'Sport',
+    'baseball glove': 'Sport',
+    'skateboard': 'Sport',
+    'surfboard': 'Sport',
+    'tennis racket': 'Sport',
+    'bottle': 'Household goods',
+    'wine glass': 'Household goods',
+    'cup': 'Household goods',
+    'fork': 'Household goods',
+    'knife': 'Household goods',
+    'spoon': 'Household goods',
+    'bowl': 'Household goods',
+    'banana': 'Food',
+    'apple': 'Food',
+    'sandwich': 'Food',
+    'orange': 'Food',
+    'broccoli': 'Food',
+    'carrot': 'Food',
+    'hot dog': 'Food',
+    'pizza': 'Food',
+    'donut': 'Food',
+    'cake': 'Food',
+    'chair': 'Household goods',
+    'couch': 'Household goods',
+    'potted plant': 'Decor',
+    'bed': 'Household goods',
+    'dining table': 'Household goods',
+    'toilet': 'Household goods',
+    'tv': 'Electronic',
+    'laptop': 'Electronic',
+    'mouse': 'Electronic',
+    'remote': 'Electronic',
+    'keyboard': 'Electronic',
+    'cell phone': 'Electronic',
+    'microwave': 'Household goods',
+    'oven': 'Household goods',
+    'toaster': 'Household goods',
+    'sink': 'Household goods',
+    'refrigerator': 'Household goods',
+    'book': 'Books',
+    'clock': 'Household goods',
+    'vase': 'Decor',
+    'scissors': 'Stationary',
+    'teddy bear': 'Toys',
+    'hair drier': 'Household goods',
+    'toothbrush': 'Household goods'
+  };
   File _image;
   TextStyle style_state = TextStyle(
     fontFamily: 'Segoeu',
@@ -43,11 +104,12 @@ class _DonateScreen extends State<DonateScreen> {
   bool _pickaplacevisibility = true;
   Set<String> items = new Set();
   String _model = ssd;
-  String _address = "Your address will show up here!";
+  String _address = captions[setLanguage]["youraddresswillshowuphere!"];
   List _recognitions;
   double _imageHeight;
   GeoPoint geoPoint;
   String title;
+  bool isDisable = false;
   int exp;
   double _imageWidth;
   bool _busy = false;
@@ -73,7 +135,6 @@ class _DonateScreen extends State<DonateScreen> {
         if (value.error == null) {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then((url) {
-            GeoPoint geoPoint = GeoPoint(90, -90);
             Firestore.instance.collection("Item").document().setData({
               'title': title,
               "describe": body,
@@ -82,35 +143,56 @@ class _DonateScreen extends State<DonateScreen> {
               'address': _address,
               'owner': currentUserId,
               "geo": geoPoint,
-              'tags':tags
+              'tag': tags
             }).then((onValue) {
               this.setState(() {
                 _busy = false;
               });
-              Fluttertoast.showToast(msg: "Upload success");
+              Fluttertoast.showToast(
+                msg: captions[setLanguage]["Upload success"],
+                backgroundColor: Colors.deepOrange[700],
+                textColor: Colors.white,
+              );
+              Navigator.pop(context);
             }).catchError((error) {
               this.setState(() {
                 _busy = false;
               });
-              Fluttertoast.showToast(msg: error.toString());
+              Fluttertoast.showToast(
+                msg: error.toString(),
+                backgroundColor: Colors.deepOrange[700],
+                textColor: Colors.white,
+              );
             });
           }).catchError((error) {
             this.setState(() {
               _busy = false;
             });
-            Fluttertoast.showToast(msg: error.toString());
+            Fluttertoast.showToast(
+              msg: error.toString(),
+              backgroundColor: Colors.deepOrange[700],
+              textColor: Colors.white,
+            );
           });
         } else {
           setState(() {
             _busy = false;
           });
-          Fluttertoast.showToast(msg: "This file is not an image");
+          Fluttertoast.showToast(
+            msg: captions[setLanguage]["This file is not an image"],
+            backgroundColor: Colors.deepOrange[700],
+            textColor: Colors.white,
+          );
         }
       }, onError: (err) {
         setState(() {
           _busy = false;
         });
-        Fluttertoast.showToast(msg: err.toString());
+        Fluttertoast.showToast(
+          msg: err.toString(),
+          backgroundColor: Colors.deepOrange[700],
+          textColor: Colors.white,
+        );
       });
     }
   }
@@ -212,6 +294,15 @@ class _DonateScreen extends State<DonateScreen> {
     });
   }
 
+  List<Widget> _getChip(List<dynamic> tags) {
+    List listings = new List<Widget>();
+    for (int i = 0; i < tags.length; ++i) {
+      listings
+          .add(new Chip(label: Text(itemTypeListMap[setLanguage][tags[i]])));
+    }
+    return listings;
+  }
+
   Future loadModel() async {
     Tflite.close();
     try {
@@ -259,30 +350,39 @@ class _DonateScreen extends State<DonateScreen> {
     double factorY = _imageHeight / _imageWidth * screen.width;
     Color blue = Color.fromRGBO(37, 213, 253, 1.0);
     return _recognitions.map((re) {
-      return Positioned(
-        left: re["rect"]["x"] * factorX,
-        top: re["rect"]["y"] * factorY,
-        width: re["rect"]["w"] * factorX,
-        height: re["rect"]["h"] * factorY,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            border: Border.all(
-              color: blue,
-              width: 2,
+      if (re["detectedClass"] != "???") {
+        if (!tags.contains(
+          modelClass["${re["detectedClass"]}"],
+        ))
+          setState(() {
+            tags.add(modelClass["${re["detectedClass"]}"]);
+          });
+        return Positioned(
+          left: re["rect"]["x"] * factorX,
+          top: re["rect"]["y"] * factorY,
+          width: re["rect"]["w"] * factorX,
+          height: re["rect"]["h"] * factorY,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              border: Border.all(
+                color: blue,
+                width: 2,
+              ),
+            ),
+            child: Text(
+              itemTypeListMap[setLanguage]
+                  [modelClass["${re["detectedClass"]}"]],
+              style: TextStyle(
+                fontFamily: 'Segoeu',
+                background: Paint()..color = blue,
+                fontSize: 12.0,
+              ),
             ),
           ),
-          child: Text(
-            "${re["detectedClass"]} ${(re["confidenceInClass"] * 100).toStringAsFixed(0)}%",
-            style: TextStyle(
-              fontFamily: 'Segoeu',
-              background: Paint()..color = blue,
-              color: Colors.white,
-              fontSize: 12.0,
-            ),
-          ),
-        ),
-      );
+        );
+      }
+      return Container();
     }).toList();
   }
 
@@ -317,22 +417,20 @@ class _DonateScreen extends State<DonateScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Donate",
-              style: const TextStyle(
-                fontSize: 22,
-                fontFamily: 'Manjari',
-              )),
-          backgroundColor: Colors.blue,
+          title: Text(
+            captions[setLanguage]["donate"],
+          ),
         ),
         bottomNavigationBar: null,
         body: new GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
             },
-            child: SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
+            child: Card(
+                child: SingleChildScrollView(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 220,
@@ -342,19 +440,6 @@ class _DonateScreen extends State<DonateScreen> {
                   ),
                   Container(
                       width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black12,
-                                offset: Offset(0.0, 15.0),
-                                blurRadius: 15.0),
-                            BoxShadow(
-                                color: Colors.black12,
-                                offset: Offset(0.0, -10.0),
-                                blurRadius: 15.0)
-                          ]),
                       child: Padding(
                         padding:
                             EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
@@ -369,10 +454,8 @@ class _DonateScreen extends State<DonateScreen> {
                                       onPressed: () {
                                         predictImagePicker();
                                       },
-                                      color: Colors.blue,
                                       child: Icon(
                                         Icons.add_a_photo,
-                                        color: Colors.white,
                                       ),
                                     )
                                   ],
@@ -385,7 +468,9 @@ class _DonateScreen extends State<DonateScreen> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Center(
-                                          child: Text("Information",
+                                          child: Text(
+                                              captions[setLanguage]
+                                                  ["information"],
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontFamily: 'Segoeu',
@@ -393,7 +478,7 @@ class _DonateScreen extends State<DonateScreen> {
                                       SizedBox(
                                         height: 15,
                                       ),
-                                      Text("Title",
+                                      Text(captions[setLanguage]["title"],
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontFamily: 'Segoeu',
@@ -408,16 +493,16 @@ class _DonateScreen extends State<DonateScreen> {
                                           });
                                         },
                                         decoration: InputDecoration(
-                                            hintText: "Title here...",
+                                            hintText: captions[setLanguage]
+                                                ["titlehere..."],
                                             hintStyle: TextStyle(
                                                 fontFamily: 'Segoeu',
-                                                color: Colors.grey,
                                                 fontSize: 12.0)),
                                       ),
                                       SizedBox(
                                         height: 15,
                                       ),
-                                      Text("Describe",
+                                      Text(captions[setLanguage]['describe'],
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontFamily: 'Segoeu',
@@ -432,54 +517,54 @@ class _DonateScreen extends State<DonateScreen> {
                                           });
                                         },
                                         decoration: InputDecoration(
-                                            hintText: "Describe this ...",
+                                            hintText: captions[setLanguage]
+                                                ["describehere"],
                                             hintStyle: TextStyle(
                                                 fontFamily: 'Segoeu',
-                                                color: Colors.grey,
                                                 fontSize: 12.0)),
                                       ),
                                       SizedBox(
                                         height: 15,
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          const Text(
-                                            "Exp: ",
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                donotpick = false;
-                                                _selectDate(context);
-                                                exp = selectedDate
-                                                    .millisecondsSinceEpoch;
-                                              });
-                                            },
-                                            child: Text(
-                                              (donotpick)
-                                                  ? "Non-expiring(tap to select a day)"
-                                                  : DateFormat('dd-MMMM-yyyy ')
-                                                      .format(selectedDate),
-                                              overflow: TextOverflow.clip,
-                                              style: style_state,
-                                            ),
-                                          ),
-                                          (!donotpick)
-                                              ? InkWell(
-                                                  onTap: () {
-                                                    donotpick = true;
-                                                    exp = 0;
-                                                  },
-                                                  child: Icon(Icons.clear))
-                                              : Container()
-                                        ],
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            donotpick = false;
+                                            _selectDate(context);
+                                            exp = selectedDate
+                                                .millisecondsSinceEpoch;
+                                          });
+                                        },
+                                        child: Text(
+                                          captions[setLanguage]["exp"] +
+                                              ": " +
+                                              ((donotpick)
+                                                  ? captions[setLanguage]
+                                                      ["non-exp"]
+                                                  : DateFormat('dd-mm-yyyy ')
+                                                      .format(selectedDate)),
+                                          maxLines: null,
+                                          overflow: TextOverflow.clip,
+                                          style: style_state,
+                                        ),
                                       ),
+                                      (!donotpick)
+                                          ? InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  donotpick = true;
+                                                  exp = 0;
+                                                });
+                                              },
+                                              child: Icon(
+                                                Icons.clear,
+                                                color: Colors.red,
+                                              ))
+                                          : Container(),
                                       SizedBox(
                                         height: 15,
                                       ),
-                                      Text("Address",
+                                      Text(captions[setLanguage]["address"],
                                           style: TextStyle(
                                             fontFamily: 'Segoeu',
                                             fontSize: 15,
@@ -488,6 +573,7 @@ class _DonateScreen extends State<DonateScreen> {
                                         visible: _pickaplacevisibility,
                                         child: Text(
                                           _address,
+                                          maxLines: null,
                                           overflow: TextOverflow.clip,
                                           style: style_state,
                                         ),
@@ -508,10 +594,10 @@ class _DonateScreen extends State<DonateScreen> {
                                               });
                                             },
                                             decoration: InputDecoration(
-                                                hintText: "Enter your address",
+                                                hintText: captions[setLanguage]
+                                                    ["enteryouraddress"],
                                                 hintStyle: TextStyle(
                                                     fontFamily: 'Segoeu',
-                                                    color: Colors.grey,
                                                     fontSize: 12.0)),
                                           )),
                                       Row(
@@ -519,77 +605,94 @@ class _DonateScreen extends State<DonateScreen> {
                                             MainAxisAlignment.start,
                                         children: <Widget>[
                                           RaisedButton(
-                                            textColor: Colors.white,
                                             onPressed: onSeachBarButtonClick,
-                                            color: Colors.blue,
                                             padding: const EdgeInsets.all(10.0),
-                                            child: const Text('Pick a place',
+                                            child: Text(
+                                                captions[setLanguage]
+                                                    ['pickaplace'],
                                                 style: TextStyle(
                                                     fontFamily: 'Segoeu',
                                                     fontSize: 13)),
                                           ),
-                                          const Text("  Or  "),
+                                          Text("  " +
+                                              captions[setLanguage]["or"] +
+                                              "  "),
                                           RaisedButton(
-                                            textColor: Colors.white,
-                                            color: Colors.blue,
                                             padding: const EdgeInsets.all(10.0),
                                             onPressed:
                                                 onGetCurrentLocationClick,
-                                            child: const Text(
-                                                'Get your location',
+                                            child: Text(
+                                                captions[setLanguage]
+                                                    ['getyourlocation'],
                                                 style: TextStyle(
                                                     fontFamily: 'Segoeu',
                                                     fontSize: 13)),
                                           ),
                                         ],
                                       ),
-                                      Row(children: [
-                                        Text("Tags: ",
-                                            style: TextStyle(
-                                                fontFamily: 'Segoeu',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700)),
-                                        InkWell(
-                                          onTap: () async {
-                                            final result = await Navigator.push(
-                                                context,
-                                                SlideRightRoute(
-                                                    page: ItemTypeList(
-                                                        indexList)));
+                                      Text("Tags: ",
+                                          style: TextStyle(
+                                              fontFamily: 'Segoeu',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700)),
+                                      InkWell(
+                                        onTap: () async {
+                                          for (int i = 0;
+                                              i < indexList.length;
+                                              ++i) {
+                                            if (tags.contains(itemTypeList[i]))
+                                              indexList[i] = true;
+                                          }
+                                          final result = await Navigator.push(
+                                              context,
+                                              SlideRightRoute(
+                                                  page:
+                                                      ItemTypeList(indexList)));
 
-                                            setState(() {
-                                              tags = result[0];
-                                              indexList = result[1];
-                                            });
-                                          },
-                                          splashColor: Colors.blue,
-                                          child: Text(
-                                              (tags.toString() != "[]")
-                                                  ? tags.toString()
-                                                  : 'Pick tags',
-                                              maxLines: null,
-                                              overflow: TextOverflow.clip,
-                                              style: TextStyle(
-                                                  fontFamily: 'Segoeu',
-                                                  fontSize: 13)),
-                                        ),
-                                      ]),
+                                          setState(() {
+                                            tags = result[0];
+                                            indexList = result[1];
+                                          });
+                                        },
+                                        child: (tags.toString() != "[]")
+                                            ? Wrap(
+                                                children: _getChip(tags),
+                                              )
+                                            : Text(
+                                                captions[setLanguage]
+                                                    ['picktags'],
+                                                maxLines: null,
+                                                overflow: TextOverflow.clip,
+                                                style: TextStyle(
+                                                    fontFamily: 'Segoeu',
+                                                    fontSize: 13)),
+                                      ),
                                     ])),
                             SizedBox(
                               height: 10,
                             ),
                             RaisedButton(
-                              textColor: Colors.white,
                               padding: const EdgeInsets.all(10.0),
-                              onPressed: submit,
-                              color: Colors.blue,
-                              child: const Text('Submit',
-                                  style: TextStyle(
-                                      fontFamily: 'Segoeu', fontSize: 17)),
-                            )
+                              onPressed: (isDisable)
+                                  ? null
+                                  : () {
+                                      submit();
+                                      setState(() {
+                                        isDisable = true;
+                                      });
+                                    },
+                              child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(captions[setLanguage]['submit'],
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontFamily: 'Segoeu'))),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
                           ],
                         ),
                       ))
-                ]))));
+                ])))));
   }
 }

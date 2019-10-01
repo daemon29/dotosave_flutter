@@ -1,3 +1,4 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/AddPost_screen.dart';
 import 'package:LadyBug/Screens/donationmap_screen.dart';
 import 'package:LadyBug/Screens/friend_screen.dart';
@@ -50,15 +51,11 @@ class _Main_Screen extends State<Main_Screen> {
               key: _scaffoldKey,
               drawer: HomeDrawer(currentUserId),
               appBar: AppBar(
+                title: Text(captions[setLanguage]['home']),
                 bottom: TabBar(tabs: [
                   Tab(icon: Icon(Icons.flag)),
                   Tab(icon: Icon(Icons.forum)),
                 ]),
-                title: const Text("Home",
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontFamily: 'Manjari',
-                    )),
                 actions: <Widget>[
                   IconButton(
                     icon: Icon(
@@ -76,7 +73,7 @@ class _Main_Screen extends State<Main_Screen> {
                   ),
                   IconButton(
                     icon: Icon(
-                      Icons.send,
+                      Icons.card_giftcard,
                     ),
                     onPressed: () {
                       Navigator.of(context).push(
@@ -91,7 +88,7 @@ class _Main_Screen extends State<Main_Screen> {
                     },
                   ),
                   IconButton(
-                      icon: Icon(Icons.message),
+                      icon: Icon(Icons.send),
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -104,11 +101,9 @@ class _Main_Screen extends State<Main_Screen> {
                         );
                       })
                 ],
-                actionsIconTheme: IconThemeData(color: Colors.white),
                 leading: IconButton(
                   icon: const Icon(
                     Icons.menu,
-                    color: Colors.white,
                   ),
                   onPressed: () {
                     _scaffoldKey.currentState.openDrawer();
@@ -120,43 +115,72 @@ class _Main_Screen extends State<Main_Screen> {
         Flexible(
             child: ,*/
                   TabBarView(children: [
-                FutureBuilder(
-                    future: (getCampaigns()),
+                Column(children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.all(10),
+                    color: Colors.white,
+                    child: Text(
+                      captions[setLanguage]['campaigns'],
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
+                    ),
+                  ),
+                  Expanded(
+                      child: FutureBuilder(
+                          future: (getCampaigns()),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting)
+                              return SizedBox();
+                            else {
+                              return ListView.builder(
+                                  itemCount: snapshot?.data?.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 5, left: 5, right: 5),
+                                        child: CampaignCard(
+                                            snapshot.data[index].data,
+                                            snapshot.data[index].documentID,
+                                            currentUserId));
+                                  });
+                            }
+                          }))
+                ]),
+                Column(children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.all(10),
+                    color: Colors.white,
+                    child: Text(
+                      captions[setLanguage]['posts'],
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
+                    ),
+                  ),
+                  Expanded(
+                      child: FutureBuilder(
+                    future: (getPosts()),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting)
-                        return Center(child: CircularProgressIndicator());
+                        return SizedBox();
                       else {
                         return ListView.builder(
                             itemCount: snapshot.data.length,
                             itemBuilder: (context, index) {
                               return Padding(
-                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                  child: CampaignCard(
-                                      snapshot.data[index].data,
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 5, right: 5),
+                                  child: Card_View(
                                       snapshot.data[index].documentID,
+                                      snapshot.data[index].data,
                                       currentUserId));
                             });
                       }
-                    }),
-                FutureBuilder(
-                  future: (getPosts()),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting)
-                      return Center(child: CircularProgressIndicator());
-                    else {
-                      return ListView.builder(
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                child: Card_View(
-                                    snapshot.data[index].documentID,
-                                    snapshot.data[index].data,
-                                    currentUserId));
-                          });
-                    }
-                  },
-                )
+                    },
+                  ))
+                ])
               ]),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
@@ -172,9 +196,7 @@ class _Main_Screen extends State<Main_Screen> {
                 },
                 child: Icon(
                   Icons.create,
-                  color: Colors.white,
                 ),
-                backgroundColor: Colors.blue,
               ),
               // bottomNavigationBar: MyBottomNavigationBar(context, currentUserId, 0),
             )));

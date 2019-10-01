@@ -33,7 +33,7 @@ class CommentContent extends StatelessWidget {
                     maxHeight: 350,
                   ),
                   child: CachedNetworkImage(
-                    placeholder: (context, url) => CircularProgressIndicator(),
+                    placeholder: (context, url) => LinearProgressIndicator(),
                     imageUrl: image,
                     fit: BoxFit.scaleDown,
                   ))

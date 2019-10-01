@@ -1,28 +1,55 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 final List<String> itemTypeList = [
-  'Orphanage',
-  'Children',
-  'Shelter',
-  'Senior citizen',
-  'Rural area',
-  'Food',
-  'Toys',
-  'Textbook',
-  'Stationary',
+  'Books',
   'Clothes',
-  'Spring',
-  'Winter',
-  'Mid-autumn',
-  'Children’s day',
-  'Environment',
-  'Pollution',
-  'Community',
-  'Donation',
-  'Disablers',
-  'Jobs'
+  'Household goods',
+  'Toys',
+  'Food',
+  'Money',
+  'School supplies',
+  'Stationary',
+  'Electronic',
+  'Decor',
+  'Sport',
+  'Bag',
+  'Vehicle'
 ];
+
+final Map<String, Map<String, String>> itemTypeListMap = {
+  'vi': {
+    'Electronic': 'Thiết bị điện tử',
+    'Books': 'Sách',
+    'Clothes': 'Quần áo',
+    'Household goods': 'Đồ gia dụng',
+    'Toys': 'Đồ chơi',
+    'Food': 'Thức ăn',
+    'Money': 'Tiền mặt',
+    'School supplies': 'Đồ dùng học tập',
+    'Stationary': 'Văn phòng phẩm',
+    'Decor': 'Đồ trang trí',
+    'Sport': 'Thể thao',
+    'Bag': 'Túi',
+    'Vehicle': 'Xe'
+  },
+  'en': {
+    'Bag': 'Bag',
+    'Sport': 'Sport',
+    'Decor': 'Decor',
+    'Electronic': 'Electronic Devices',
+    'Books': 'Books',
+    'Clothes': 'Clothes',
+    'Household goods': 'Household goods',
+    'Toys': 'Toys',
+    'Food': 'Food',
+    'Money': 'Money',
+    'School supplies': 'School supplies',
+    'Stationary': 'Stationary',
+    'Vehicle': 'Vehicle'
+  }
+};
 
 class ItemTypeList extends StatefulWidget {
   final List<bool> indexList;
@@ -43,17 +70,15 @@ class ItemTypeListState extends State<ItemTypeList> {
         appBar: AppBar(
           actions: <Widget>[
             RaisedButton(
-                textColor: Colors.white,
                 onPressed: () {
                   List<String> resultList = List();
-                  for(int i = 0; i<indexList.length;++i){
-                     if(indexList[i]) resultList.add(itemTypeList[i]);
+                  for (int i = 0; i < indexList.length; ++i) {
+                    if (indexList[i]) resultList.add(itemTypeList[i]);
                   }
-                  Navigator.pop(context, [resultList,indexList]);
+                  Navigator.pop(context, [resultList, indexList]);
                 },
-                color: Colors.blue[400],
                 child: Text(
-                  "Done",
+                  captions[setLanguage]["done"],
                   //style: TextStyle(fontSize: 11),
                 ))
           ],
@@ -67,8 +92,9 @@ class ItemTypeListState extends State<ItemTypeList> {
             itemCount: itemTypeList.length,
             itemBuilder: (context, index) {
               return InkWell(
-                  splashColor:
-                      (indexList[index]) ? Colors.white : Colors.blue[400],
+                  splashColor: (indexList[index])
+                      ? Colors.white
+                      : Colors.deepOrange[600],
                   onTap: () {
                     setState(() {
                       indexList[index] = !indexList[index];
@@ -76,9 +102,11 @@ class ItemTypeListState extends State<ItemTypeList> {
                   },
                   child: Container(
                     padding: EdgeInsets.all(5),
-                    color: (indexList[index]) ? Colors.blue[400] : Colors.white,
+                    color: (indexList[index])
+                        ? Colors.deepOrange[600]
+                        : Colors.white,
                     child: Text(
-                      itemTypeList[index],
+                      itemTypeListMap[setLanguage][itemTypeList[index]],
                       style: TextStyle(
                           color:
                               (indexList[index]) ? Colors.white : Colors.black),

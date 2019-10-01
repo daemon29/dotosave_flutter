@@ -1,3 +1,4 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,13 +21,11 @@ class FriendScreenState extends State<FriendScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Message',
-            style: const TextStyle(
-              fontSize: 22,
-              fontFamily: 'Manjari',
-            )),
+        title: Text(captions[setLanguage]['message'],
+            ),
       ),
       body: WillPopScope(
+        onWillPop: null,
         child: Stack(
           children: <Widget>[
             Container(
@@ -74,7 +73,7 @@ class FriendScreenState extends State<FriendScreen> {
     if (document['uid'] == currentUserId) {
       return Container();
     } else {
-      return Container(
+      return Card(
         child: FlatButton(
           child: Row(
             children: <Widget>[
@@ -112,7 +111,7 @@ class FriendScreenState extends State<FriendScreen> {
                         child: Text(
                           '${document['name']}',
                           style: TextStyle(
-                              fontFamily: 'Segoeu', color: Color(0xff203152)),
+                              fontFamily: 'Segoeu', color: Colors.deepOrange[900]),
                         ),
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
@@ -133,7 +132,6 @@ class FriendScreenState extends State<FriendScreen> {
                           peerAvatar: document['imageurl'],
                         )));
           },
-          color: Color(0xffE8E8E8),
           padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),

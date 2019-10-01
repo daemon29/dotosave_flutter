@@ -1,7 +1,6 @@
+import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/Owner.dart';
-import 'package:LadyBug/Widgets/Main_Screen/CircleAvatar.dart';
 import 'package:LadyBug/const.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -12,27 +11,27 @@ class CommentTop extends StatelessWidget {
   String GetDuration() {
     Duration temp = DateTime.now().difference(time);
     if (temp > Duration(days: 365)) {
-      return DateFormat('dd MMMM yyyy').format(time);
+      return DateFormat('dd/MM/yyyy').format(time);
     }
     if (temp > Duration(days: 7)) {
-      return DateFormat('dd MMMM').format(time);
+      return DateFormat('dd mm').format(time);
     }
     if (temp >= Duration(days: 1)) {
       return (temp.inDays == 1)
-          ? 'Yesterday'
-          : temp.inDays.toString() + ' days';
+          ? captions[setLanguage]['yesterday']
+          : temp.inDays.toString() + ' ' + captions[setLanguage]['days'];
     }
     if (temp >= Duration(hours: 1)) {
       return (temp.inHours == 1)
-          ? '1 hour'
-          : temp.inHours.toString() + ' hours';
+          ? '1 ' + captions[setLanguage]['hour']
+          : temp.inHours.toString() + ' ' + captions[setLanguage]['hours'];
     }
     if (temp >= Duration(minutes: 1)) {
       return (temp.inMinutes == 1)
-          ? '1 min'
-          : temp.inMinutes.toString() + ' mins';
+          ? '1 ' + captions[setLanguage]['min']
+          : temp.inMinutes.toString() + ' ' + captions[setLanguage]['mins'];
     }
-    return 'Now';
+    return captions[setLanguage]['now'];
   }
 
   @override
@@ -41,7 +40,7 @@ class CommentTop extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Post_Owner(name, uid),
+        Post_Owner(name, uid, currentUserID,false),
         Text(
           GetDuration(),
           style: TextStyle(

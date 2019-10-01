@@ -19,11 +19,9 @@ class Chat extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Chat',
-            style: const TextStyle(
-              fontSize: 22,
-              fontFamily: 'Manjari',
-            )),
+        title: new Text(
+          'Chat',
+        ),
         centerTitle: true,
       ),
       body: new ChatScreen(
@@ -142,7 +140,11 @@ class ChatScreenState extends State<ChatScreen> {
       setState(() {
         isLoading = false;
       });
-      Fluttertoast.showToast(msg: 'This file is not an image');
+      Fluttertoast.showToast(
+        msg: 'This file is not an image',
+        backgroundColor: Colors.deepOrange[700],
+        textColor: Colors.white,
+      );
     });
   }
 
@@ -172,7 +174,11 @@ class ChatScreenState extends State<ChatScreen> {
       listScrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
-      Fluttertoast.showToast(msg: 'Nothing to send');
+      Fluttertoast.showToast(
+        msg: 'Nothing to send',
+        backgroundColor: Colors.deepOrange[700],
+        textColor: Colors.white,
+      );
     }
   }
 
@@ -382,7 +388,7 @@ class ChatScreenState extends State<ChatScreen> {
             isLastMessageLeft(index)
                 ? Container(
                     child: Text(
-                      DateFormat('dd MMM kk:mm').format(
+                      DateFormat('ddMMkk:mm').format(
                           DateTime.fromMillisecondsSinceEpoch(
                               int.parse(document['timestamp']))),
                       style: TextStyle(
@@ -699,9 +705,8 @@ class ChatScreenState extends State<ChatScreen> {
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       ),
       decoration: new BoxDecoration(
-          border:
-              new Border(top: new BorderSide(color: greyColor2, width: 0.5)),
-          color: Colors.white),
+        border: new Border(top: new BorderSide(color: greyColor2, width: 0.5)),
+      ),
       padding: EdgeInsets.all(5.0),
       height: 180.0,
     );
@@ -753,11 +758,12 @@ class ChatScreenState extends State<ChatScreen> {
           Flexible(
             child: Container(
               child: TextField(
-                style: TextStyle(fontFamily: 'Segoeu',color: primaryColor, fontSize: 15.0),
+                style: TextStyle(
+                    fontFamily: 'Segoeu', color: primaryColor, fontSize: 15.0),
                 controller: textEditingController,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Type your message...',
-                  hintStyle: TextStyle(fontFamily: 'Segoeu',color: greyColor),
+                  hintStyle: TextStyle(fontFamily: 'Segoeu', color: greyColor),
                 ),
                 focusNode: focusNode,
               ),
