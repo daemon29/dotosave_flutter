@@ -80,7 +80,7 @@ class _Proflie_Top extends State<Proflie_Top> {
                                   page: EditProfileScreen(currentuid)));
                         },
                         child: Text(
-                          "Edit profile",
+                          captions[setLanguage]["editprofile"],
                           style: TextStyle(fontFamily: 'Segoeu', fontSize: 13),
                         ),
                       ),

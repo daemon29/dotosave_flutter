@@ -32,7 +32,7 @@ class LoadingState extends State<Loading> {
 
       return contents;
     } catch (e) {
-      return 'en';
+      return 'vi';
     }
   }
 

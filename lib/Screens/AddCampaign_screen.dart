@@ -91,6 +91,23 @@ class AddCampaignState extends State<AddCampaign> {
       });
   }
 
+  List<Widget> _getChip(List<dynamic> tags) {
+    List listings = new List<Widget>();
+    for (int i = 0; i < tags.length; ++i) {
+      listings
+          .add(new Chip(label: Text(itemTypeListMap[setLanguage][tags[i]])));
+    }
+    return listings;
+  }
+
+  List<Widget> _getChip2(List<dynamic> tags) {
+    List listings = new List<Widget>();
+    for (int i = 0; i < tags.length; ++i) {
+      listings.add(new Chip(label: Text(itemTagsMap[setLanguage][tags[i]])));
+    }
+    return listings;
+  }
+
   bool notpicked1 = true, notpicked2 = true;
   String imageurl;
 
@@ -310,7 +327,7 @@ class AddCampaignState extends State<AddCampaign> {
                   controller: title,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Enter a title/name...'),
+                      hintText: captions[setLanguage]['Enter a title/name...']),
                 )),
             Padding(
                 padding: EdgeInsets.only(left: 10),
@@ -544,13 +561,15 @@ class AddCampaignState extends State<AddCampaign> {
                           itemIndexList = result[1];
                         });
                       },
-                      child: Text(
-                          (itemtags.toString() != "[]")
-                              ? itemtags.toString()
-                              : captions[setLanguage]['picktags'],
-                          maxLines: null,
-                          overflow: TextOverflow.clip,
-                          style: TextStyle(fontFamily: 'Segoeu', fontSize: 13)),
+                      child: (itemtags.toString() != "[]")
+                          ? Wrap(
+                              children: _getChip(itemtags),
+                            )
+                          : Text(captions[setLanguage]['picktags'],
+                              maxLines: null,
+                              overflow: TextOverflow.clip,
+                              style: TextStyle(
+                                  fontFamily: 'Segoeu', fontSize: 13)),
                     ),
                   ),
                 )),
@@ -574,13 +593,14 @@ class AddCampaignState extends State<AddCampaign> {
                     indexList = result[1];
                   });
                 },
-                child: Text(
-                    (tags.toString() != "[]")
-                        ? tags.toString()
-                        : captions[setLanguage]['picktags'],
-                    maxLines: null,
-                    overflow: TextOverflow.clip,
-                    style: TextStyle(fontFamily: 'Segoeu', fontSize: 13)),
+                child: (tags.toString() != "[]")
+                    ? Wrap(
+                        children: _getChip2(tags),
+                      )
+                    : Text(captions[setLanguage]['picktags'],
+                        maxLines: null,
+                        overflow: TextOverflow.clip,
+                        style: TextStyle(fontFamily: 'Segoeu', fontSize: 13)),
               ),
             ),
             RaisedButton(

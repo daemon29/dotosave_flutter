@@ -10,11 +10,17 @@ final List<String> itemTypeList = [
   'Food',
   'Money',
   'School supplies',
-  'Stationary'
+  'Stationary',
+  'Electronic',
+  'Decor',
+  'Sport',
+  'Bag',
+  'Vehicle'
 ];
 
 final Map<String, Map<String, String>> itemTypeListMap = {
   'vi': {
+    'Electronic': 'Thiết bị điện tử',
     'Books': 'Sách',
     'Clothes': 'Quần áo',
     'Household goods': 'Đồ gia dụng',
@@ -22,9 +28,17 @@ final Map<String, Map<String, String>> itemTypeListMap = {
     'Food': 'Thức ăn',
     'Money': 'Tiền mặt',
     'School supplies': 'Đồ dùng học tập',
-    'Stationary': 'Văn phòng phẩm'
+    'Stationary': 'Văn phòng phẩm',
+    'Decor': 'Đồ trang trí',
+    'Sport': 'Thể thao',
+    'Bag': 'Túi',
+    'Vehicle': 'Xe'
   },
   'en': {
+    'Bag': 'Bag',
+    'Sport': 'Sport',
+    'Decor': 'Decor',
+    'Electronic': 'Electronic Devices',
     'Books': 'Books',
     'Clothes': 'Clothes',
     'Household goods': 'Household goods',
@@ -32,7 +46,8 @@ final Map<String, Map<String, String>> itemTypeListMap = {
     'Food': 'Food',
     'Money': 'Money',
     'School supplies': 'School supplies',
-    'Stationary': 'Stationary'
+    'Stationary': 'Stationary',
+    'Vehicle': 'Vehicle'
   }
 };
 
@@ -63,7 +78,7 @@ class ItemTypeListState extends State<ItemTypeList> {
                   Navigator.pop(context, [resultList, indexList]);
                 },
                 child: Text(
-                  "Done",
+                  captions[setLanguage]["done"],
                   //style: TextStyle(fontSize: 11),
                 ))
           ],

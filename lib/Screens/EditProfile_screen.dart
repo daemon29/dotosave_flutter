@@ -120,7 +120,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
             _busy = false;
           });
           Fluttertoast.showToast(
-            msg: "This file is not an image",
+            msg: captions[setLanguage]["This file is not an image"],
             backgroundColor: Colors.deepOrange[700],
             textColor: Colors.white,
           );
@@ -174,7 +174,7 @@ class Edit_Profile_Top_State extends State<Edit_Profile_Top> {
             _busy = false;
           });
           Fluttertoast.showToast(
-            msg: "This file is not an image",
+            msg: captions[setLanguage]["This file is not an image"],
             backgroundColor: Colors.deepOrange[700],
             textColor: Colors.white,
           );

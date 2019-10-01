@@ -198,14 +198,14 @@ class _DonationMapState extends State<DonationMap> {
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     mapController.animateCamera(CameraUpdate.newLatLngZoom(
         new LatLng(userLocation.latitude, userLocation.longitude), 18));
-    createMarkerList(userLocation, 5000);
+    createMarkerList(userLocation, 50000);
   }
 
   Future<void> getLastKnownLocation() async {
     userLocation = await Geolocator().getLastKnownPosition();
     mapController.animateCamera(CameraUpdate.newLatLngZoom(
         new LatLng(userLocation.latitude, userLocation.longitude), 18));
-    createMarkerList(userLocation, 5000);
+    createMarkerList(userLocation, 50000);
   }
 
   void createMarkerList(Position location, double radius) {

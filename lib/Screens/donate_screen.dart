@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Widgets/ItemtypeList.dart';
 import 'package:LadyBug/Widgets/SlideRightRoute.dart';
+import 'package:LadyBug/Widgets/TagsList.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +34,67 @@ class _DonateScreen extends State<DonateScreen> {
   PersistentBottomSheetController controller;
   List<bool> indexList = List.filled(itemTypeList.length, false);
   List<String> tags = [];
-
+  Map<String, dynamic> modelClass = {
+    'bicycle': 'Vehicle',
+    'car': 'Vehicle',
+    'motorcycle': 'Vehicle',
+    'backpack': 'Bag',
+    'umbrella': 'Household goods',
+    'handbag': 'Bag',
+    'tie': 'Clothes',
+    'suitcase': 'Bag',
+    'frisbee': 'Toys',
+    'skis': 'Sport',
+    'snowboard': 'Sport',
+    'sports ball': 'Sport',
+    'kite': 'Toys',
+    'baseball bat': 'Sport',
+    'baseball glove': 'Sport',
+    'skateboard': 'Sport',
+    'surfboard': 'Sport',
+    'tennis racket': 'Sport',
+    'bottle': 'Household goods',
+    'wine glass': 'Household goods',
+    'cup': 'Household goods',
+    'fork': 'Household goods',
+    'knife': 'Household goods',
+    'spoon': 'Household goods',
+    'bowl': 'Household goods',
+    'banana': 'Food',
+    'apple': 'Food',
+    'sandwich': 'Food',
+    'orange': 'Food',
+    'broccoli': 'Food',
+    'carrot': 'Food',
+    'hot dog': 'Food',
+    'pizza': 'Food',
+    'donut': 'Food',
+    'cake': 'Food',
+    'chair': 'Household goods',
+    'couch': 'Household goods',
+    'potted plant': 'Decor',
+    'bed': 'Household goods',
+    'dining table': 'Household goods',
+    'toilet': 'Household goods',
+    'tv': 'Electronic',
+    'laptop': 'Electronic',
+    'mouse': 'Electronic',
+    'remote': 'Electronic',
+    'keyboard': 'Electronic',
+    'cell phone': 'Electronic',
+    'microwave': 'Household goods',
+    'oven': 'Household goods',
+    'toaster': 'Household goods',
+    'sink': 'Household goods',
+    'refrigerator': 'Household goods',
+    'book': 'Books',
+    'clock': 'Household goods',
+    'vase': 'Decor',
+    'scissors': 'Stationary',
+    'teddy bear': 'Toys',
+    'hair drier': 'Household goods',
+    'toothbrush': 'Household goods'
+  };
   File _image;
   TextStyle style_state = TextStyle(
     fontFamily: 'Segoeu',
@@ -88,7 +149,7 @@ class _DonateScreen extends State<DonateScreen> {
                 _busy = false;
               });
               Fluttertoast.showToast(
-                msg: "Upload success",
+                msg: captions[setLanguage]["Upload success"],
                 backgroundColor: Colors.deepOrange[700],
                 textColor: Colors.white,
               );
@@ -118,7 +179,7 @@ class _DonateScreen extends State<DonateScreen> {
             _busy = false;
           });
           Fluttertoast.showToast(
-            msg: "This file is not an image",
+            msg: captions[setLanguage]["This file is not an image"],
             backgroundColor: Colors.deepOrange[700],
             textColor: Colors.white,
           );
@@ -289,29 +350,39 @@ class _DonateScreen extends State<DonateScreen> {
     double factorY = _imageHeight / _imageWidth * screen.width;
     Color blue = Color.fromRGBO(37, 213, 253, 1.0);
     return _recognitions.map((re) {
-      return Positioned(
-        left: re["rect"]["x"] * factorX,
-        top: re["rect"]["y"] * factorY,
-        width: re["rect"]["w"] * factorX,
-        height: re["rect"]["h"] * factorY,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            border: Border.all(
-              color: blue,
-              width: 2,
+      if (re["detectedClass"] != "???") {
+        if (!tags.contains(
+          modelClass["${re["detectedClass"]}"],
+        ))
+          setState(() {
+            tags.add(modelClass["${re["detectedClass"]}"]);
+          });
+        return Positioned(
+          left: re["rect"]["x"] * factorX,
+          top: re["rect"]["y"] * factorY,
+          width: re["rect"]["w"] * factorX,
+          height: re["rect"]["h"] * factorY,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              border: Border.all(
+                color: blue,
+                width: 2,
+              ),
+            ),
+            child: Text(
+              itemTypeListMap[setLanguage]
+                  [modelClass["${re["detectedClass"]}"]],
+              style: TextStyle(
+                fontFamily: 'Segoeu',
+                background: Paint()..color = blue,
+                fontSize: 12.0,
+              ),
             ),
           ),
-          child: Text(
-            "${re["detectedClass"]} ${(re["confidenceInClass"] * 100).toStringAsFixed(0)}%",
-            style: TextStyle(
-              fontFamily: 'Segoeu',
-              background: Paint()..color = blue,
-              fontSize: 12.0,
-            ),
-          ),
-        ),
-      );
+        );
+      }
+      return Container();
     }).toList();
   }
 
@@ -431,7 +502,7 @@ class _DonateScreen extends State<DonateScreen> {
                                       SizedBox(
                                         height: 15,
                                       ),
-                                      Text("Describe",
+                                      Text(captions[setLanguage]['describe'],
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontFamily: 'Segoeu',
@@ -566,6 +637,12 @@ class _DonateScreen extends State<DonateScreen> {
                                               fontWeight: FontWeight.w700)),
                                       InkWell(
                                         onTap: () async {
+                                          for (int i = 0;
+                                              i < indexList.length;
+                                              ++i) {
+                                            if (tags.contains(itemTypeList[i]))
+                                              indexList[i] = true;
+                                          }
                                           final result = await Navigator.push(
                                               context,
                                               SlideRightRoute(

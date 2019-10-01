@@ -107,14 +107,26 @@ final Map<String, Map<String, String>> captions = {
     'joinrequest': 'Join request',
     'typeamessage...': 'Type a message ...',
     're-typepassword': 'Re-type password',
-      'notification': 'Notification',
+    'notification': 'Notification',
     'writeithere...': 'Write it here ...',
-    'createnotification': 'Create Notification'
+    'createnotification': 'Create Notification',
+    'This file is not an image': 'This file is not an image',
+    'Nothing to send': 'Nothing to send',
+    'Upload success': 'Upload success',
+    "Email or Password is invalid": "Email or Password is invalid",
+    'Login fail': 'Login fail',
+    'Sign in Success': 'Sign in Success',
+    'Sign in fail': 'Sign in fail',
+    "Email or password cannot be empty": "Email or password cannot be empty",
+    "Your password and re-type password do not match":
+        "Your password and re-type password do not match",
+    "Signup success!": "Signup success!",
+    'Enter a title/name...': 'Enter a title/name...'
   },
   'vi': {
     'login': 'Đăng nhập',
     'signin': 'Đăng nhập',
-    'signup': 'Đăng kí',
+    'signup': 'Đăng ký',
     'addabanner!': 'Tải lên ảnh biểu ngữ!',
     'password': 'Mật khẩu',
     'emailhere': 'Nhập email ...',
@@ -219,6 +231,19 @@ final Map<String, Map<String, String>> captions = {
     're-typepassword': 'Nhập lại mật khẩu',
     'notification': 'Thông báo',
     'writeithere...': 'Viết gì đó ...',
-    'createnotification': 'Viết thông báo'
+    'createnotification': 'Viết thông báo',
+    'This file is not an image': 'Đây không phải là tệp hình ảnh',
+    'Nothing to send': 'Không có gì để gửi',
+    'Upload success': 'Tải lên thành công',
+    "Email or Password is invalid": 'Email hoặc mật khẩu không phù hợp',
+    'Login fail': 'Đăng nhập thất bại',
+    'Sign in Success': 'Đăng nhập thành công',
+    'Sign in fail': 'Đăng nhập thất bại',
+    "Email or password cannot be empty":
+        'Email và mật khẩu không được bỏ trống',
+    "Your password and re-type password do not match":
+        'Mật khẩu nhập lại không khớp',
+    "Signup success!": 'Đăng ký thành công',
+    'Enter a title/name...': 'Vui lòng nhập tiêu đề/ tên'
   },
 };

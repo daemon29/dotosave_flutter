@@ -32,7 +32,7 @@ class _Signup extends State<SignUp> {
         isLoading = false;
       });
       Fluttertoast.showToast(
-        msg: "Email or password cannot be empty",
+        msg: captions[setLanguage]["Email or password cannot be empty"],
         backgroundColor: Colors.deepOrange[700],
         textColor: Colors.white,
       );
@@ -43,20 +43,22 @@ class _Signup extends State<SignUp> {
           isLoading = false;
         });
         Fluttertoast.showToast(
-          msg: "Your password and re-type password are not match",
+          msg: captions[setLanguage]
+              ["Your password and re-type password do not match"],
           backgroundColor: Colors.deepOrange[700],
           textColor: Colors.white,
         );
         return;
       }
       FirebaseUser user = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email.text, password: password.text);
+          .createUserWithEmailAndPassword(
+              email: email.text, password: password.text);
       if (user != null) {
         this.setState(() {
           isLoading = false;
         });
         Fluttertoast.showToast(
-          msg: "Signup success!",
+          msg: captions[setLanguage]["Signup success!"],
           backgroundColor: Colors.deepOrange[700],
           textColor: Colors.white,
         );
@@ -66,7 +68,7 @@ class _Signup extends State<SignUp> {
                 builder: (context) => Main_Screen(currentUserId: user.uid)));
       } else {
         Fluttertoast.showToast(
-          msg: "Sign in fail",
+          msg: captions[setLanguage]["Sign in fail"],
           backgroundColor: Colors.deepOrange[700],
           textColor: Colors.white,
         );
@@ -179,8 +181,7 @@ class _Signup extends State<SignUp> {
                             controller: password,
                             obscureText: true,
                             decoration: InputDecoration(
-                                hintText: captions[setLanguage]
-                                    ["passwordhere"],
+                                hintText: captions[setLanguage]["passwordhere"],
                                 hintStyle: TextStyle(
                                     fontFamily: 'Segoeu',
                                     color: Colors.grey,

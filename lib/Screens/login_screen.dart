@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
         isLoading = false;
       });
       Fluttertoast.showToast(
-        msg: "Email or Password is invalid",
+        msg: captions[setLanguage]["Email or Password is invalid"],
         backgroundColor: Colors.deepOrange[700],
         textColor: Colors.white,
       );
@@ -87,12 +87,12 @@ class _MyAppState extends State<MyApp> {
       this.setState(() {
         isLoading = false;
       });
-      Fluttertoast.showToast(msg: "Login fail" + onError.toString());
+      Fluttertoast.showToast(msg: captions[setLanguage]["Login fail"] + onError.toString());
       return;
     });
     if (firebaseUser != null) {
       Fluttertoast.showToast(
-        msg: "Sign in Success",
+        msg: captions[setLanguage]["Sign in Success"],
         backgroundColor: Colors.deepOrange[700],
         textColor: Colors.white,
       );
@@ -109,7 +109,7 @@ class _MyAppState extends State<MyApp> {
                   )));
     } else {
       Fluttertoast.showToast(
-        msg: "Sign in fail",
+        msg: captions[setLanguage]["Sign in fail"],
         backgroundColor: Colors.deepOrange[700],
         textColor: Colors.white,
       );
@@ -181,7 +181,7 @@ class _MyAppState extends State<MyApp> {
         await prefs.setString('imageurl', (result.documents[0]['imageurl']));
       }
       Fluttertoast.showToast(
-        msg: "Sign in Success",
+        msg: captions[setLanguage]["Sign in Success"],
         backgroundColor: Colors.deepOrange[700],
         textColor: Colors.white,
       );
@@ -197,7 +197,7 @@ class _MyAppState extends State<MyApp> {
                   Main_Screen(currentUserId: firebaseUser.uid)));
     } else {
       Fluttertoast.showToast(
-        msg: "Sign in fail",
+        msg: captions[setLanguage]["Sign in fail"],
         backgroundColor: Colors.deepOrange[700],
         textColor: Colors.white,
       );
@@ -208,7 +208,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future organisationSignup() async {
-    const url = 'https://www.facebook.com/';
+    const url = 'https://forms.gle/JCg5CXdKbFh4uBo87';
     if (await canLaunch(url)) {
       await launch(url);
     } else
