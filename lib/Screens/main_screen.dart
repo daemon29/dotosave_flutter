@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:LadyBug/Customize/MultiLanguage.dart';
 import 'package:LadyBug/Screens/AddPost_screen.dart';
 import 'package:LadyBug/Screens/donationmap_screen.dart';
@@ -6,6 +9,7 @@ import 'package:LadyBug/Widgets/HomeDrawer.dart';
 import 'package:LadyBug/Widgets/Main_Screen/CampaignCard/CampaignCard.dart';
 import 'package:LadyBug/Widgets/Main_Screen/Card_View/Card_View.dart';
 import 'package:LadyBug/Screens/donate_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,10 +25,11 @@ GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 
 class _Main_Screen extends State<Main_Screen> {
   final String currentUserId;
+  final FirebaseMessaging fm = FirebaseMessaging();
+  StreamSubscription streamSubscription;
+
   Firestore _firestore = Firestore.instance;
-
   _Main_Screen({Key key, @required this.currentUserId});
-
   Future getPosts() async {
     QuerySnapshot qs = await _firestore
         .collection('Post')
@@ -33,12 +38,63 @@ class _Main_Screen extends State<Main_Screen> {
     return qs.documents;
   }
 
+  _saveDeviceToken() async {
+    String fmToken = await fm.getToken();
+    if (fmToken != null) {
+      var tokens = _firestore
+          .collection("User")
+          .document(currentUserId)
+          .collection("Token")
+          .document(fmToken);
+      await tokens.setData({'token': fmToken});
+    }
+  }
+
   Future getCampaigns() async {
     QuerySnapshot qs = await _firestore
         .collection('Campaign')
         .orderBy('timestamp', descending: true)
         .getDocuments();
     return qs.documents;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _saveDeviceToken();
+    if (Platform.isIOS) {
+      streamSubscription = fm.onIosSettingsRegistered.listen((onData) {});
+      fm.requestNotificationPermissions(IosNotificationSettings());
+    }
+    fm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(message['notification']['title']),
+              subtitle: Text(message['notification']['body']),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        // TODO optional
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        // TODO optional
+      },
+    );
   }
 
   @override

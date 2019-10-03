@@ -54,14 +54,15 @@ dependencies:
   google_maps_webservice: ^0.0.14
   http: ^0.12.0+2
   flutter_image_compress: ^0.6.3
+  firebase_messaging: 5.1.2
   #geoflutterfire: 2.0.3+5
 
 dev_dependencies:
-  flutter_launcher_icons: 
+  flutter_launcher_icons:
   flutter_test:
     sdk: flutter
 flutter_icons:
-  android: "launcher_icon" 
+  android: "launcher_icon"
   ios: true
   image_path: "assets/images/logo.png"
 # For information on the generic Dart part of this file, see the
@@ -114,7 +115,7 @@ flutter:
     # example:
   fonts:
     - family: Manjari
-      fonts: 
+      fonts:
         - asset: fonts/Manjari-Regular.ttf
     - family: Segoeu
       fonts:
